@@ -197,7 +197,7 @@ class ChatChannelRepositoryNotifier extends _$ChatChannelRepositoryNotifier {
     _messages.addAll(messages);
     // Hide buttons if we add messages
     state = state.copyWith(replyButtons: null);
-    controller.add(ChatState(state: state, messages: _messages));
+    controller.add(ChatState(state: state, messages: List.of(_messages)));
   }
 
   void upsertChunkMessages(TextChunk message) {
@@ -219,7 +219,7 @@ class ChatChannelRepositoryNotifier extends _$ChatChannelRepositoryNotifier {
 
     // Hide buttons if we add messages
     state = state.copyWith(replyButtons: null);
-    controller.add(ChatState(state: state, messages: _messages));
+    controller.add(ChatState(state: state, messages: List.of(_messages)));
   }
 
   Future<Post?> sendMessage({
