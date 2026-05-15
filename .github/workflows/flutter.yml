@@ -1,0 +1,94 @@
+name: Flutter
+
+on:
+  push:
+    branches: ["main", "publish"]
+    tags-ignore: ["**"]
+  pull_request:
+    branches: ["main", "publish"]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.38.7
+
+      - name: Create CI env file
+        run: |
+          cat > .env <<EOF
+          API_URL=${API_URL:-api.example.invalid}
+          REDIRECT_URL=${REDIRECT_URL:-com.example.amsl.app://login-callback}
+          AUTH_URL=${AUTH_URL:-https://auth.example.invalid/realms/example}
+          AUTH_CLIENT_ID=${AUTH_CLIENT_ID:-amsl-mobile}
+          SITE_ID=${SITE_ID:-1}
+          MATOMO_URL=${MATOMO_URL:-https://analytics.example.invalid/matomo.php}
+          SENTRY_URL=${SENTRY_URL:-}
+          FIREBASE_PROJECT_NUMBER=${FIREBASE_PROJECT_NUMBER:-100000000000}
+          FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID:-amsl-ci}
+          FIREBASE_STORAGE_BUCKET=${FIREBASE_STORAGE_BUCKET:-amsl-ci.appspot.com}
+          ANDROID_FIREBASE_MOBILE_SDK_APP_ID=${ANDROID_FIREBASE_MOBILE_SDK_APP_ID:-1:100000000000:android:aaaaaaaaaaaaaaaaaaaaaa}
+          ANDROID_FIREBASE_OAUTH_CLIENT_ID=${ANDROID_FIREBASE_OAUTH_CLIENT_ID:-100000000000-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.apps.googleusercontent.com}
+          ANDROID_FIREBASE_API_KEY=${ANDROID_FIREBASE_API_KEY:-AIzaSyAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA}
+          IOS_FIREBASE_API_KEY=${IOS_FIREBASE_API_KEY:-AIzaSyBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB}
+          IOS_FIREBASE_GCM_SENDER_ID=${IOS_FIREBASE_GCM_SENDER_ID:-100000000000}
+          IOS_FIREBASE_GOOGLE_APP_ID=${IOS_FIREBASE_GOOGLE_APP_ID:-1:100000000000:ios:bbbbbbbbbbbbbbbbbbbbbb}
+          EOF
+
+      - name: Setup local generated files
+        run: make setup-local
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Analyze
+        run: flutter analyze
+
+      - name: Format check
+        run: dart format --set-exit-if-changed .
+
+  build_android:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: 3.38.7
+
+      - name: Create CI env file
+        run: |
+          cat > .env <<EOF
+          API_URL=${API_URL:-api.example.invalid}
+          REDIRECT_URL=${REDIRECT_URL:-com.example.amsl.app://login-callback}
+          AUTH_URL=${AUTH_URL:-https://auth.example.invalid/realms/example}
+          AUTH_CLIENT_ID=${AUTH_CLIENT_ID:-amsl-mobile}
+          SITE_ID=${SITE_ID:-1}
+          MATOMO_URL=${MATOMO_URL:-https://analytics.example.invalid/matomo.php}
+          SENTRY_URL=${SENTRY_URL:-}
+          FIREBASE_PROJECT_NUMBER=${FIREBASE_PROJECT_NUMBER:-100000000000}
+          FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID:-amsl-ci}
+          FIREBASE_STORAGE_BUCKET=${FIREBASE_STORAGE_BUCKET:-amsl-ci.appspot.com}
+          ANDROID_FIREBASE_MOBILE_SDK_APP_ID=${ANDROID_FIREBASE_MOBILE_SDK_APP_ID:-1:100000000000:android:aaaaaaaaaaaaaaaaaaaaaa}
+          ANDROID_FIREBASE_OAUTH_CLIENT_ID=${ANDROID_FIREBASE_OAUTH_CLIENT_ID:-100000000000-aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.apps.googleusercontent.com}
+          ANDROID_FIREBASE_API_KEY=${ANDROID_FIREBASE_API_KEY:-AIzaSyAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA}
+          IOS_FIREBASE_API_KEY=${IOS_FIREBASE_API_KEY:-AIzaSyBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB}
+          IOS_FIREBASE_GCM_SENDER_ID=${IOS_FIREBASE_GCM_SENDER_ID:-100000000000}
+          IOS_FIREBASE_GOOGLE_APP_ID=${IOS_FIREBASE_GOOGLE_APP_ID:-1:100000000000:ios:bbbbbbbbbbbbbbbbbbbbbb}
+          EOF
+
+      - name: Setup local generated files
+        run: make setup-local
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Build Android (dev flavor)
+        run: flutter build apk --flavor dev lib/main_dev.dart --debug

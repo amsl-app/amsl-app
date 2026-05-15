@@ -1,0 +1,6 @@
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path_ios: "assets/icon/dev/icon_with_background.png"
+  image_path: "assets/icon/dev/icon.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21

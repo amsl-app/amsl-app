@@ -1,0 +1,4 @@
+lib/flavors.dart filter=flavorsclean
+android/app/google-services.json filter=firebasejsonclean
+ios/Runner/GoogleService-Info.plist filter=firebaseplistclean
+ios/Runner.xcodeproj/project.pbxproj filter=pbxprojclean

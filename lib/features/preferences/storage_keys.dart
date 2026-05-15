@@ -1,0 +1,37 @@
+enum StorageKey {
+  token("token"),
+  apiSecure("apiSecure"),
+  apiAuthority("apiAuthority"),
+  idTokenHint("id_token_hint"),
+  idToken("id_token"),
+  accessToken("accessToken"),
+  refreshToken("refreshToken"),
+  accessTokenExpiresAt("access_token_expires_at"),
+  allowTracking("allow_tracking"),
+  allowCrashReporting("allow_crash_reporting"),
+  lastInteraction("lastInteraction"),
+  lastSummaryTrigger("last_summary_trigger"),
+  showEvaluationHint("showEvaluationHint"),
+  firstAssessmentDone("firstAssessmentDone"),
+  hintAlreadyShown("hintAlreadyShown"),
+  activateClickableSession("activate_clickable_session"),
+  showRestartInCourse("show_restart_in_course"),
+  templateAndCourse("template_and_course"),
+  debugAppVariant("debug_app_variant"),
+  debugStatusBarDisabled("debug_status_bar_disabled"),
+  moduleNotificationEnabled("allow_module_notification"),
+  moduleNotificationTimeHour("module_notification_time_hour"),
+  moduleNotificationTimeMinute("module_notification_time_minute"),
+  sessionLockNotificationEnabled("allow_session_lock_notification"),
+  notificationEnabled("allow_notification"),
+  notificationTimeHour("notification_time_hour"),
+  notificationTimeMinute("notification_time_minute"),
+  acceptOpenAI("accept_openai"),
+  acceptOpenAIAssistant("accept_openai_assistant"),
+  acceptOpenAIChat("accept_openai_chat"),
+  acceptOpenAIQuiz("accept_openai_quiz"),
+  dismissedOnBoarding("dismissed_onboarding");
+
+  const StorageKey(this.key);
+  final String key;
+}
