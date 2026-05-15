@@ -2,10 +2,10 @@ name: Flutter
 
 on:
   push:
-    branches: ["main", "publish"]
+    branches: ["main"]
     tags-ignore: ["**"]
   pull_request:
-    branches: ["main", "publish"]
+    branches: ["main"]
 
 jobs:
   lint:

@@ -2,10 +2,10 @@ name: REUSE
 
 on:
   push:
-    branches: ["main", "publish"]
+    branches: ["main"]
     tags-ignore: ["**"]
   pull_request:
-    branches: ["main", "publish"]
+    branches: ["main"]
 
 permissions:
   contents: read
