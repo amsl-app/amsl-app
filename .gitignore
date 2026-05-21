@@ -53,6 +53,7 @@ app.*.map.json
 
 # env
 .env
+.env.*
 *.env
 !.env.example
 lib/env/env.g.dart
