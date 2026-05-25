@@ -61,7 +61,7 @@ final class ChannelChatStepStream extends ChatChannelSource {
 
   @override
   Future<List<ChatStepEntry>?> reconnect() async {
-    await connectToWebsocket(true);
+    await connectToWebsocket(false);
     return null;
   }
 
