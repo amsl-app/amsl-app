@@ -72,7 +72,7 @@ jobs:
           AUTH_CLIENT_ID=${AUTH_CLIENT_ID:-amsl-mobile}
           SITE_ID=${SITE_ID:-1}
           MATOMO_URL=${MATOMO_URL:-https://analytics.example.invalid/matomo.php}
-          SENTRY_URL=${SENTRY_URL:-}
+          SENTRY_URL=${SENTRY_URL:-https://sentry.example.invalid}
           FIREBASE_PROJECT_NUMBER=${FIREBASE_PROJECT_NUMBER:-100000000000}
           FIREBASE_PROJECT_ID=${FIREBASE_PROJECT_ID:-amsl-ci}
           FIREBASE_STORAGE_BUCKET=${FIREBASE_STORAGE_BUCKET:-amsl-ci.appspot.com}
