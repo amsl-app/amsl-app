@@ -22,7 +22,7 @@ class HikariPod extends _$HikariPod {
 
   @override
   Hikari build() {
-    final logInState = ref.read(loginProvider);
+    final logInState = ref.watch(loginProvider);
     if (logInState is Authenticated) {
       return Hikari(
         apiClient: HikariApiClient(

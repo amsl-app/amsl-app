@@ -49,7 +49,7 @@ class HikariApiClient extends BaseHikariApiClient {
         rawResponse: rawResponse,
       );
       return result;
-    } on HikariException {
+    } on HikariUnauthorizedException {
       log.info("calling onUnauthorized");
       await onUnauthorized.call();
       rethrow;
