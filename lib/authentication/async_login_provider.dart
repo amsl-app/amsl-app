@@ -206,6 +206,8 @@ class AsyncLoginNotifier extends _$AsyncLoginNotifier {
       await secureStorage.delete(key: StorageKey.idToken.key);
       await secureStorage.delete(key: StorageKey.refreshToken.key);
       await secureStorage.delete(key: StorageKey.accessTokenExpiresAt.key);
+      final sharedPreferences = ref.watch(storagesProvider).shared;
+      await sharedPreferences.clear();
       state = AsyncValue.data(Unauthenticated());
       log.info("logout successful");
     }
