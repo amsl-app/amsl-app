@@ -50,7 +50,7 @@ final class HikariPodProvider extends $NotifierProvider<HikariPod, Hikari> {
   }
 }
 
-String _$hikariPodHash() => r'dd0336162fd7647cc68e34264b72b9bdb7d1688d';
+String _$hikariPodHash() => r'7e62db65238b738f967fe6ce244761acf49801f9';
 
 abstract class _$HikariPod extends $Notifier<Hikari> {
   Hikari build();

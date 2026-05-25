@@ -29,7 +29,10 @@ final class ToolsProvider
         retry: null,
         name: r'toolsProvider',
         isAutoDispose: true,
-        dependencies: <ProviderOrFamily>[variantPodProvider],
+        dependencies: <ProviderOrFamily>[
+          variantPodProvider,
+          moduleConfigurationProviderProvider,
+        ],
         $allTransitiveDependencies: <ProviderOrFamily>{
           ToolsProvider.$allTransitiveDependencies0,
           ToolsProvider.$allTransitiveDependencies1,
@@ -37,6 +40,10 @@ final class ToolsProvider
           ToolsProvider.$allTransitiveDependencies3,
           ToolsProvider.$allTransitiveDependencies4,
           ToolsProvider.$allTransitiveDependencies5,
+          ToolsProvider.$allTransitiveDependencies6,
+          ToolsProvider.$allTransitiveDependencies7,
+          ToolsProvider.$allTransitiveDependencies8,
+          ToolsProvider.$allTransitiveDependencies9,
         },
       );
 
@@ -51,6 +58,14 @@ final class ToolsProvider
       VariantPodProvider.$allTransitiveDependencies3;
   static final $allTransitiveDependencies5 =
       VariantPodProvider.$allTransitiveDependencies4;
+  static final $allTransitiveDependencies6 =
+      moduleConfigurationProviderProvider;
+  static final $allTransitiveDependencies7 =
+      ModuleConfigurationProviderProvider.$allTransitiveDependencies4;
+  static final $allTransitiveDependencies8 =
+      ModuleConfigurationProviderProvider.$allTransitiveDependencies5;
+  static final $allTransitiveDependencies9 =
+      ModuleConfigurationProviderProvider.$allTransitiveDependencies6;
 
   @override
   String debugGetCreateSourceHash() => _$toolsHash();
@@ -67,4 +82,4 @@ final class ToolsProvider
   }
 }
 
-String _$toolsHash() => r'4eb780eb9776a49938073583e36d2e700604cfeb';
+String _$toolsHash() => r'880c352ebde8b2fa4597c9bf1fcf6b7bd659738b';
