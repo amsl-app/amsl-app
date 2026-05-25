@@ -3,6 +3,7 @@ import 'package:amsl_app/features/pdf/repository/pdf_store.dart';
 import 'package:amsl_app/models/tori/theme/module_theme.dart';
 import 'package:amsl_app/widgets/async_value_extension.dart';
 import 'package:amsl_app/widgets/error/error_bar.dart';
+import 'package:amsl_app/widgets/loading/skeleton_loading_screen_text.dart';
 import 'package:open_file/open_file.dart';
 import 'package:pdfx/pdfx.dart';
 import 'package:flutter/material.dart';
@@ -160,6 +161,7 @@ class _PDFViewerTabState extends ConsumerState<PDFViewerTab>
               ],
             );
           },
+          loadingBuilder: (context) => SkeletonLoadingScreenText(),
         );
   }
 }
