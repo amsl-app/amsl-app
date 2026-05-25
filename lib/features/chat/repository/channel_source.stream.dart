@@ -4,6 +4,8 @@ final class ChannelChatStepStream extends ChatChannelSource {
   static final log = Logger("ChannelChatStepStream");
   WebSocketChannel? channel;
   bool _isClosing = false;
+  bool _isConnecting = false;
+  StreamSubscription? _chatSubscription;
   late final StreamController<(int, List<ChatStepEntry>)> controller;
   late final StreamController<bool> connectionStateController;
 
@@ -27,6 +29,8 @@ final class ChannelChatStepStream extends ChatChannelSource {
   @override
   Future close() async {
     _isClosing = true;
+    await _chatSubscription?.cancel();
+    _chatSubscription = null;
     await channel?.sink.close(status.normalClosure);
     channel = null;
     log.info(
@@ -66,6 +70,12 @@ final class ChannelChatStepStream extends ChatChannelSource {
   }
 
   Future connectToWebsocket(bool history_needed) async {
+    if (_isConnecting) {
+      log.info(
+        "Already connecting to websocket for $sessionId in Module $moduleId - skipping",
+      );
+      return;
+    }
     try {
       if (channel == null) {
         log.info(
@@ -81,9 +91,12 @@ final class ChannelChatStepStream extends ChatChannelSource {
         );
         return;
       }
+      _isConnecting = true;
       channel = await initialize(moduleId: moduleId, sessionId: sessionId);
+      _isConnecting = false;
       connectionStateController.add(true);
-      hikari.moduleApi
+      await _chatSubscription?.cancel();
+      _chatSubscription = hikari.moduleApi
           .streamChat(channel!)
           .listen(
             (response) {
@@ -126,6 +139,7 @@ final class ChannelChatStepStream extends ChatChannelSource {
           );
       _sendConnectionInfo(history_needed);
     } on Exception catch (error, stacktrace) {
+      _isConnecting = false;
       controller.addError(error, stacktrace);
       log.severe(
         "Failed to initialize websocket connection",
