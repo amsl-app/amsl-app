@@ -41,11 +41,7 @@ class PlannerAssistantSheet extends HookConsumerWidget {
         );
         if (result.isEmpty) {
           if (context.mounted) {
-            showMessage(
-              context,
-              label: 'Keine Einträge erkannt',
-              error: true,
-            );
+            showMessage(context, label: 'Keine Einträge erkannt', error: true);
           }
           return;
         }
@@ -79,19 +75,21 @@ class PlannerAssistantSheet extends HookConsumerWidget {
 
       isConfirming.value = true;
       try {
-        await ref.read(plannerProviderProvider.notifier).bulkCreateEntries(
-          entries
-              .map(
-                (e) => NewPlannerEntry(
-                  date: kOldDateFormat.format(e.date),
-                  title: e.title!,
-                  priority: e.priority,
-                  moduleId: e.module,
-                  sessionId: e.session,
-                ),
-              )
-              .toList(),
-        );
+        await ref
+            .read(plannerProviderProvider.notifier)
+            .bulkCreateEntries(
+              entries
+                  .map(
+                    (e) => NewPlannerEntry(
+                      date: kOldDateFormat.format(e.date),
+                      title: e.title!,
+                      priority: e.priority,
+                      moduleId: e.module,
+                      sessionId: e.session,
+                    ),
+                  )
+                  .toList(),
+            );
         if (context.mounted) Navigator.of(context).pop();
       } on HikariException catch (_) {
         if (context.mounted) showMessage(context, error: true);

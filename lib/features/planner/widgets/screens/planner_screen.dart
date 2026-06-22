@@ -45,10 +45,7 @@ class PlannerScreen extends HookConsumerWidget {
               ref,
               initialDate: tabController.index == 1 ? selectedDate.value : null,
             ),
-            icon: Icon(
-              Icons.add,
-              color: theme.colorScheme.onTertiaryContainer,
-            ),
+            icon: Icon(Icons.add, color: theme.colorScheme.onTertiaryContainer),
             tooltip: 'Neuer Eintrag',
           ),
         ],
@@ -78,9 +75,7 @@ class PlannerScreen extends HookConsumerWidget {
         controller: tabController,
         children: [
           const PlannerListView(),
-          PlannerCalendarView(
-            onDaySelected: (day) => selectedDate.value = day,
-          ),
+          PlannerCalendarView(onDaySelected: (day) => selectedDate.value = day),
         ],
       ),
     );

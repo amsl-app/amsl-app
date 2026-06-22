@@ -161,9 +161,7 @@ class PlannerIcalSheet extends ConsumerWidget {
                           onPressed: () => Navigator.of(ctx).pop(true),
                           child: Text(
                             'Widerrufen',
-                            style: TextStyle(
-                              color: theme.colorScheme.onError,
-                            ),
+                            style: TextStyle(color: theme.colorScheme.onError),
                           ),
                         ),
                       ],

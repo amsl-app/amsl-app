@@ -7,7 +7,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 part 'planner.g.dart';
 
 /// Groups entries by their day (time component stripped), preserving order.
-Map<DateTime, List<PlannerEntry>> groupEntriesByDay(List<PlannerEntry> entries) {
+Map<DateTime, List<PlannerEntry>> groupEntriesByDay(
+  List<PlannerEntry> entries,
+) {
   final map = <DateTime, List<PlannerEntry>>{};
   for (final entry in entries) {
     final day = DateTime(entry.date.year, entry.date.month, entry.date.day);
@@ -25,10 +27,12 @@ class PlannerProvider extends _$PlannerProvider {
       final entries = await hikari.plannerApi.getEntries();
       return _sortedByDate(entries);
     } on HikariException catch (e) {
-      throw e.copyWith(resolve: () {
-        ref.invalidateSelf();
-        return future;
-      });
+      throw e.copyWith(
+        resolve: () {
+          ref.invalidateSelf();
+          return future;
+        },
+      );
     }
   }
 
@@ -114,9 +118,7 @@ class PlannerProvider extends _$PlannerProvider {
     final hikari = ref.read(hikariPodProvider);
     try {
       await hikari.plannerApi.deleteEntry(id);
-      state = AsyncData(
-        (state.value ?? []).where((e) => e.id != id).toList(),
-      );
+      state = AsyncData((state.value ?? []).where((e) => e.id != id).toList());
     } on HikariException catch (e) {
       throw e.copyWith(resolve: () => deleteEntry(id));
     }
@@ -147,10 +149,12 @@ class IcalTokenProvider extends _$IcalTokenProvider {
     try {
       return await hikari.plannerApi.getIcalToken();
     } on HikariException catch (e) {
-      throw e.copyWith(resolve: () {
-        ref.invalidateSelf();
-        return future;
-      });
+      throw e.copyWith(
+        resolve: () {
+          ref.invalidateSelf();
+          return future;
+        },
+      );
     }
   }
 

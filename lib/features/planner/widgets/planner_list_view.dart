@@ -94,4 +94,3 @@ class PlannerListView extends ConsumerWidget {
     );
   }
 }
-
