@@ -93,4 +93,11 @@ class HikariPlannerApi {
           for (final e in json as List) NewPlannerEntry.fromJson(e),
         ],
       );
+
+  Future<String> getIcalToken() => hikari.get(
+    '/planner/ical-token',
+    transform: (json) => json['token'] as String,
+  );
+
+  Future<void> deleteIcalToken() => hikari.delete('/planner/ical-token');
 }

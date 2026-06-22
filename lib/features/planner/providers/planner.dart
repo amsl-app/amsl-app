@@ -138,3 +138,40 @@ class PlannerProvider extends _$PlannerProvider {
   List<PlannerEntry> _sortedByDate(List<PlannerEntry> entries) =>
       entries..sort((a, b) => a.date.compareTo(b.date));
 }
+
+@Riverpod(keepAlive: true, dependencies: [HikariPod])
+class IcalTokenProvider extends _$IcalTokenProvider {
+  @override
+  Future<String?> build() async {
+    final hikari = ref.watch(hikariPodProvider);
+    try {
+      return await hikari.plannerApi.getIcalToken();
+    } on HikariException catch (e) {
+      throw e.copyWith(resolve: () {
+        ref.invalidateSelf();
+        return future;
+      });
+    }
+  }
+
+  Future<void> revoke() async {
+    final hikari = ref.read(hikariPodProvider);
+    try {
+      await hikari.plannerApi.deleteIcalToken();
+      state = const AsyncData(null);
+    } on HikariException catch (e) {
+      throw e.copyWith(resolve: revoke);
+    }
+  }
+
+  Future<void> regenerate() async {
+    state = const AsyncLoading();
+    final hikari = ref.read(hikariPodProvider);
+    try {
+      final token = await hikari.plannerApi.getIcalToken();
+      state = AsyncData(token);
+    } on HikariException catch (e) {
+      throw e.copyWith(resolve: regenerate);
+    }
+  }
+}

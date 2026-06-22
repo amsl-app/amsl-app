@@ -2,6 +2,7 @@ import 'package:amsl_app/constants.dart';
 import 'package:amsl_app/features/modules/providers/module_configuration.dart';
 import 'package:amsl_app/features/planner/providers/planner.dart';
 import 'package:amsl_app/features/planner/widgets/planner_page_dots.dart';
+import 'package:amsl_app/models/hikari/planner/new_planner_entry.dart';
 import 'package:amsl_app/models/hikari/planner/planner_entry.dart';
 import 'package:amsl_app/models/tori/modules/module.dart';
 import 'package:amsl_app/models/tori/modules/session.dart';
@@ -400,29 +401,37 @@ void showCreateEntrySheet(
 
     final notifier = ref.read(plannerProviderProvider.notifier);
 
-    for (final newEntry in newEntries) {
-      if (newEntry.id != null) {
-        await notifier.updateEntry(
-          newEntry.id!,
-          date: kOldDateFormat.format(newEntry.date),
-          title: newEntry.title,
-          priority: newEntry.priority,
-          moduleId: newEntry.module,
-          sessionId: newEntry.session,
-          clearModule: newEntry.module == null,
-          clearSession: newEntry.session == null,
-        );
-      } else {
-        final created = await notifier.createEntry(
-          date: kOldDateFormat.format(newEntry.date),
-          title: newEntry.title!,
-          priority: newEntry.priority,
-          moduleId: newEntry.module,
-          sessionId: newEntry.session,
-        );
-        newEntry.id = created.id;
-      }
+    if (newEntries.length == 1 && entry != null) {
+      // Single entry in edit mode, just update it.
+      final e = newEntries.first;
+      await notifier.updateEntry(
+        e.id!,
+        date: kOldDateFormat.format(e.date),
+        title: e.title,
+        priority: e.priority,
+        moduleId: e.module,
+        sessionId: e.session,
+        clearModule: e.module == null,
+        clearSession: e.session == null,
+      );
+      if (context.mounted) Navigator.of(context).pop();
+      return;
     }
+
+    await notifier.bulkCreateEntries(
+      newEntries
+          .where((e) => e.id == null)
+          .map(
+            (e) => NewPlannerEntry(
+              date: kOldDateFormat.format(e.date),
+              title: e.title!,
+              priority: e.priority,
+              moduleId: e.module,
+              sessionId: e.session,
+            ),
+          )
+          .toList(),
+    );
     if (context.mounted) Navigator.of(context).pop();
   }
 

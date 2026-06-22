@@ -2,6 +2,7 @@ import 'package:amsl_app/constants.dart';
 import 'package:amsl_app/features/planner/widgets/create_entry_sheet.dart';
 import 'package:amsl_app/features/planner/widgets/planner_assistant_sheet.dart';
 import 'package:amsl_app/features/planner/widgets/planner_calendar_view.dart';
+import 'package:amsl_app/features/planner/widgets/planner_ical_sheet.dart';
 import 'package:amsl_app/features/planner/widgets/planner_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -30,6 +31,14 @@ class PlannerScreen extends HookConsumerWidget {
           ),
         ),
         actions: [
+          IconButton(
+            onPressed: () => showPlannerIcalSheet(context, ref),
+            icon: Icon(
+              Icons.calendar_month_outlined,
+              color: theme.colorScheme.onTertiaryContainer,
+            ),
+            tooltip: 'Kalender abonnieren',
+          ),
           IconButton(
             onPressed: () => showCreateEntrySheet(
               context,
