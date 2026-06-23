@@ -11,11 +11,13 @@ class PlannerPriorityBadge extends StatelessWidget {
     _ => const Color(0xFFFFEBEE),
   };
 
-  Color _fg() => switch (priority) {
+  static Color priorityColor(int priority) => switch (priority) {
     1 => const Color(0xFF2E7D32),
     2 => const Color(0xFFE65100),
     _ => const Color(0xFFC62828),
   };
+
+  Color _fg() => priorityColor(priority);
 
   String _label() => switch (priority) {
     1 => 'Niedrig',

@@ -30,7 +30,8 @@ enum StorageKey {
   acceptOpenAIAssistant("accept_openai_assistant"),
   acceptOpenAIChat("accept_openai_chat"),
   acceptOpenAIQuiz("accept_openai_quiz"),
-  dismissedOnBoarding("dismissed_onboarding");
+  dismissedOnBoarding("dismissed_onboarding"),
+  homeCardOrder("home_card_order");
 
   const StorageKey(this.key);
   final String key;

@@ -55,7 +55,7 @@ Navigation uses `go_router` (v17). The router is created in `lib/router.dart` an
 
 ### API Layer: Hikari
 
-`lib/hikari/` is the HTTP/WebSocket client layer. `HikariApiClient` wraps an `http` client with automatic token injection (via `AuthController`) and retry logic. It exposes domain APIs via `Hikari` (a facade): `assessmentApi`, `journalApi`, `moduleApi`, `userApi`, `utilApi`, `quizApi`.
+`lib/hikari/` is the HTTP/WebSocket client layer. `HikariApiClient` wraps an `http` client with automatic token injection (via `AuthController`) and retry logic. It exposes domain APIs via `Hikari` (a facade): `assessmentApi`, `journalApi`, `moduleApi`, `plannerApi`, `userApi`, `utilApi`, `quizApi`.
 
 `HikariPod` (in `lib/providers/hikari_provider.dart`) is the Riverpod provider for `Hikari`. It throws `AuthenticationException` when the user is unauthenticated, triggering automatic logout on 401s.
 
@@ -87,6 +87,9 @@ Key features:
 - **quiz** — spaced-repetition quiz sessions
 - **journal** — reflection journal with mood tracking
 - **profile** — user settings, notifications, debug panel
+- **planner** — weekly study planner with iCal export (no repository layer; providers + widgets only)
+
+Other features exist (`focus_timer`, `history`, `notifications`, `tracking`, `upgrade_check`, etc.) but follow the same directory conventions.
 
 ### Themes
 
@@ -108,6 +111,20 @@ These generators are in use — run `build_runner` after modifying annotated fil
 - `json_serializable` → JSON serialization
 - `riverpod_generator` → provider boilerplate
 - `theme_tailor` → theme extension classes
+
+### Code Guidelines
+
+- **Widgets over functions**: Always define reusable UI as `StatelessWidget`/`ConsumerWidget` classes, never as functions returning `Widget`.
+- **Shared widget library**: Before building a new non-feature-specific component, check `lib/widgets/` first. If a suitable widget doesn't exist, add the new component there rather than inline or inside a feature.
+- **Async handling**: Always use `lib/widgets/async_value_extension.dart` for rendering `AsyncValue` and `Future` in widgets (`.build(context, builder: ...)` / `.handle(...)`). Do not use `when()` or raw `FutureBuilder` directly.
+- **Notifications**: Always use `showMessage(context, label: ...)` for success messages and `showException(context, error)` for errors (both in `lib/widgets/error/error_bar.dart`). Never use `ScaffoldMessenger` or `SnackBar` directly.
+- **Bottom sheets / dialogs**: Always use `showAmslBottomSheet(context: context, ...)` which wraps `AmslDialog` (`lib/widgets/dialogs/amsl_dialog.dart`). Never use `showModalBottomSheet` or `showDialog` directly.
+- **Colors**: Always use `Theme.of(context).colorScheme` or custom theme extensions. Never hardcode colors (`Color(0x...)`, `Colors.red`, etc.).
+
+### Feature Flags (Variants)
+
+`lib/variants.dart` defines `Variant`, a per-user feature flag set (`journalEnabled`, `keyCompetenceEnabled`, `onboardingEnabled`). The server assigns each user a variant; `variantProvider` in `lib/features/profile/providers/variant_provider.dart` resolves it (falling back to `Variant.all()` for debug overrides). Widgets gate features by reading `ref.watch(variantProvider)`.
+
 
 ### Git Clean Filters
 

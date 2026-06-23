@@ -11,10 +11,11 @@ import '../../../widgets/cached_image.dart';
 class ModuleCard extends HookConsumerWidget {
   static final log = Logger("ModuleCard");
 
-  const ModuleCard({super.key, required this.module, this.onTap});
+  const ModuleCard({super.key, required this.module, this.onTap, this.action});
 
   final ModuleAssessmentSet module;
   final GestureTapCallback? onTap;
+  final Widget? action;
 
   Widget _buildImage(String? image) {
     final Widget? child;
@@ -113,6 +114,7 @@ class ModuleCard extends HookConsumerWidget {
                               percent: getPercent(module),
                             ),
                           ),
+                          if (action != null) ...[const Gap(8), action!],
                         ],
                       ),
                     ),

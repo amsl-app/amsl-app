@@ -44,6 +44,7 @@ class _RoundedCornerButtonState extends State<RoundedCornerButton> {
             if (widget.icon != null) ...[
               const SizedBox(width: 8),
               Icon(
+                size: 16,
                 widget.icon,
                 color: loading ? Colors.transparent : widget.labelColor,
               ),
