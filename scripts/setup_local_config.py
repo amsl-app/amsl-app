@@ -23,6 +23,7 @@ FLAVORS_KEYS = [
     "AUTH_CLIENT_ID",
     "REDIRECT_URL",
     "SITE_ID",
+    "CDN_URL",
 ]
 OPTIONAL_KEYS = ["IOS_DEVELOPMENT_TEAM"]
 
@@ -205,6 +206,16 @@ def write_flavors_dart(flavor_envs: dict[str, dict[str, str]]) -> None:
             "qa": qa["MATOMO_URL"],
             "staging": staging["MATOMO_URL"],
             "prod": prod["MATOMO_URL"],
+        },
+    )
+    content = _update_getter_cases(
+        content,
+        "cdnUrl",
+        {
+            "dev": dev["CDN_URL"],
+            "qa": qa["CDN_URL"],
+            "staging": staging["CDN_URL"],
+            "prod": prod["CDN_URL"],
         },
     )
 
