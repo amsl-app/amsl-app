@@ -119,6 +119,19 @@ class F {
     }
   }
 
+  static String get cdnUrl {
+    switch (appFlavor) {
+      case Flavor.dev:
+        return 'cdn.amsl.app';
+      case Flavor.qa:
+        return 'cdn.amsl.app';
+      case Flavor.staging:
+        return 'cdn.amsl.app';
+      case Flavor.prod:
+        return 'cdn.amsl.app';
+    }
+  }
+
   static bool get debugEnabled {
     switch (appFlavor) {
       case Flavor.dev:
