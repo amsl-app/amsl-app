@@ -234,7 +234,7 @@ class _AppScreenState extends ConsumerState<AppScreen>
                           dismissOnboarding();
                         },
                         content:
-                            "Bevor du los legts. Lass mich dir eine Einführung geben. Du kannst sie jederzeit später in den Modulen finden und nachholen.",
+                            "Bevor du los legts. Lass mich dir eine Einführung geben.",
                         buttonBar: [
                           RoundedCornerButton(
                             label: "Los gehts",

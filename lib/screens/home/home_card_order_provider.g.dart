@@ -45,7 +45,7 @@ final class HomeCardOrderProvider
   }
 }
 
-String _$homeCardOrderHash() => r'4614aa7ffdb101723eacc96dd7705c05bec10797';
+String _$homeCardOrderHash() => r'5571d4df1d9b28d4ddc672e8d57b0cb108693243';
 
 abstract class _$HomeCardOrder extends $Notifier<List<HomeCardId>> {
   List<HomeCardId> build();

@@ -49,8 +49,10 @@ class EvaluationGroupChart extends StatelessWidget {
     final theme = Theme.of(context);
     return Column(
       children: [
-        Text("$title:", style: theme.textTheme.titleMedium),
-        const Gap(10),
+        if (title.isNotEmpty) ...[
+          Text("$title:", style: theme.textTheme.titleMedium),
+          const Gap(10),
+        ],
         LayoutBuilder(
           builder: (context, constraints) {
             double leftPadding =

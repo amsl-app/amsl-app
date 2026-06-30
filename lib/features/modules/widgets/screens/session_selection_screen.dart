@@ -104,16 +104,7 @@ class _SessionSelectionScreenState
               child: Text(moduleAssessmentSet.module.title),
             ),
             backgroundColor: moduleTheme.color,
-            actions: [
-              if (hasAssessment)
-                IconButton(
-                  icon: const Icon(Icons.analytics_outlined),
-                  onPressed: () => context.goNamed(
-                    "assessment_evaluation",
-                    pathParameters: {"moduleID": moduleAssessmentSet.module.id},
-                  ),
-                ),
-            ],
+            actions: const [],
           ),
           body: Stack(
             children: [
@@ -371,7 +362,7 @@ class _SessionSelectionScreenState
             bottomBar: true,
             buttonBar: [
               RoundedCornerButton(
-                label: "Zur Evaluation",
+                label: "Zum Selbstmanagement",
                 onTap: () {
                   setState(() {
                     sharedPreferences.setBool(
@@ -379,15 +370,12 @@ class _SessionSelectionScreenState
                       false,
                     );
                   });
-                  context.goNamed(
-                    "assessment_evaluation",
-                    pathParameters: {"moduleID": module.id},
-                  );
+                  context.goNamed("self_management");
                 },
               ),
             ],
             content:
-                "Du hast deinen ersten Selbsttest abgeschlossen. Du kannst über das Icon oben rechts auf die Auswertung zugreifen.",
+                "Du hast deinen ersten Selbsttest abgeschlossen. Deine Auswertung findest du im Selbstmanagement-Tool auf der Startseite.",
           ),
         ],
       ),

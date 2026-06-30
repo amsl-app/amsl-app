@@ -1,5 +1,4 @@
 import 'package:amsl_app/authentication/async_login_provider.dart';
-import 'package:amsl_app/features/assessment/widgets/screens/assessment_evaluation_screen.dart';
 import 'package:amsl_app/features/assessment/widgets/screens/assessment_screen.dart';
 import 'package:amsl_app/features/chat/widgets/chat_screen/chat_screen.dart';
 import 'package:amsl_app/features/journal/widgets/screens/journal.dart';
@@ -17,6 +16,7 @@ import 'package:amsl_app/features/profile/widgets/screens/settings_screens/notif
 import 'package:amsl_app/features/profile/widgets/screens/settings_screens/profile_settings.dart';
 import 'package:amsl_app/features/profile/widgets/settings/debug_settings.dart';
 import 'package:amsl_app/features/planner/widgets/screens/planner_screen.dart';
+import 'package:amsl_app/features/self_management/widgets/screens/self_management_screen.dart';
 import 'package:amsl_app/features/quiz/widgets/screens/module_quiz_screen.dart';
 import 'package:amsl_app/features/quiz/widgets/screens/quiz.dart';
 import 'package:amsl_app/features/quiz/widgets/screens/quiz_session_screen.dart';
@@ -180,6 +180,12 @@ GoRouter createRouterDelegate(LoginState logInState) {
                     builder: (BuildContext context, GoRouterState state) =>
                         const PlannerScreen(),
                   ),
+                  GoRoute(
+                    name: 'self_management',
+                    path: '/self-management',
+                    builder: (BuildContext context, GoRouterState state) =>
+                        const SelfManagementScreen(),
+                  ),
                 ],
               ),
             ],
@@ -232,21 +238,6 @@ GoRouter createRouterDelegate(LoginState logInState) {
                                                     .AssessmentType
                                                     .post,
                                         ),
-                                      );
-                                    },
-                              ),
-                              GoRoute(
-                                name: 'assessment_evaluation',
-                                path: 'assessment_evaluation',
-                                builder:
-                                    (
-                                      BuildContext context,
-                                      GoRouterState state,
-                                    ) {
-                                      final moduleID =
-                                          state.pathParameters['moduleID']!;
-                                      return AssessmentEvaluation(
-                                        moduleID: moduleID,
                                       );
                                     },
                               ),

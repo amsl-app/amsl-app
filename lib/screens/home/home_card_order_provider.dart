@@ -5,19 +5,21 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'home_card_order_provider.g.dart';
 
-enum HomeCardId { journal, module, planner }
+enum HomeCardId { journal, module, planner, selfManagement }
 
 extension HomeCardIdMetadata on HomeCardId {
   IconData get icon => switch (this) {
     HomeCardId.journal => Icons.book_outlined,
     HomeCardId.module => Icons.school_outlined,
     HomeCardId.planner => Icons.calendar_today_outlined,
+    HomeCardId.selfManagement => Icons.insights_outlined,
   };
 
   String get label => switch (this) {
     HomeCardId.journal => 'Lernjournal',
     HomeCardId.module => 'Module',
     HomeCardId.planner => 'Planner',
+    HomeCardId.selfManagement => 'Selbstmanagement',
   };
 }
 
@@ -25,6 +27,7 @@ const _defaultOrder = [
   HomeCardId.journal,
   HomeCardId.module,
   HomeCardId.planner,
+  HomeCardId.selfManagement,
 ];
 
 @Riverpod(keepAlive: true, dependencies: [storages])

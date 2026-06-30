@@ -5,6 +5,7 @@ import 'package:amsl_app/screens/home/home_settings_sheet.dart';
 import 'package:amsl_app/screens/home/journal_home_card.dart';
 import 'package:amsl_app/screens/home/module_home_card.dart';
 import 'package:amsl_app/screens/home/planner_home_card.dart';
+import 'package:amsl_app/screens/home/self_management_home_card.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -49,6 +50,7 @@ class MainScreen extends ConsumerWidget {
     HomeCardId.journal => const JournalHomeCard(),
     HomeCardId.module => const ModuleHomeCard(),
     HomeCardId.planner => const PlannerHomeCard(),
+    HomeCardId.selfManagement => const SelfManagementHomeCard(),
   };
 }
 
