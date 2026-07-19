@@ -8,14 +8,12 @@ Future<String?> imageURL() async {
   final now = DateTime.now();
   final dateString =
       "${now.year.toString().padLeft(4, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
-  final testUrl =
-      "${F.cdnUrl}/${F.specialImagePath}/$dateString.png";
+  final testUrl = "${F.cdnUrl}/${F.specialImagePath}/$dateString.png";
   if (await testURL(testUrl)) {
     return testUrl;
   } else {
     // Check if there is an image at default image path
-    final testUrl =
-        "${F.cdnUrl}/${F.specialImagePath}/default.png";
+    final testUrl = "${F.cdnUrl}/${F.specialImagePath}/default.png";
     if (await testURL(testUrl)) {
       return testUrl;
     }
