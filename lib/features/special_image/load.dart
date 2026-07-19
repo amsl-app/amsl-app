@@ -9,13 +9,13 @@ Future<String?> imageURL() async {
   final dateString =
       "${now.year.toString().padLeft(4, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
   final testUrl =
-      "https://amsl-content.${F.cdnUrl}/p/special-images/$dateString.png";
+      "${F.cdnUrl}/p/special-images/$dateString.png";
   if (await testURL(testUrl)) {
     return testUrl;
   } else {
     // Check if there is an image at default image path
     final testUrl =
-        "https://amsl-content.${F.cdnUrl}/p/special-images/default.png";
+        "${F.cdnUrl}/p/special-images/default.png";
     if (await testURL(testUrl)) {
       return testUrl;
     }
