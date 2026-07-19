@@ -12,6 +12,7 @@ import 'package:amsl_app/models/tori/modules/module.dart';
 import 'package:amsl_app/models/tori/modules/session.dart';
 import 'package:amsl_app/models/tori/theme/module_theme.dart';
 import 'package:amsl_app/widgets/async_value_extension.dart';
+import 'package:amsl_app/widgets/buttons/rounded_corner_button.dart';
 import 'package:amsl_app/widgets/dialogs/amsl_dialog.dart';
 import 'package:amsl_app/widgets/loading/loading_text.dart';
 import 'package:backdrop/backdrop.dart';
@@ -177,6 +178,45 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     bool abort = false,
   }) async {
     FocusManager.instance.primaryFocus?.unfocus();
+
+    // Check if forced next session popup should be shown
+    if (isConversationEnd && session.next != null && session.next!.force) {
+      final nextSession = session.resolveNext(
+        ref.read(moduleConfigurationProviderProvider).value,
+      );
+      if (nextSession != null && mounted) {
+        final proceed = await showDialog<bool>(
+          context: context,
+          builder: (context) => AmslDialog(
+            bottomBar: true,
+            content:
+                "Wir empfehlen dir, mit der nächsten Einheit fortzufahren.",
+            buttonBar: [
+              RoundedCornerButton(
+                label: "Später",
+                onTap: () => Navigator.of(context).pop(false),
+              ),
+              RoundedCornerButton(
+                label: "Weiter zu ${nextSession.title}",
+                onTap: () => Navigator.of(context).pop(true),
+              ),
+            ],
+          ),
+        );
+        if (proceed == true && mounted) {
+          context.replaceNamed(
+            "chat",
+            pathParameters: {
+              "moduleId": nextSession.module.target!.id,
+              "sessionId": nextSession.id,
+            },
+          );
+          return;
+        }
+        // User dismissed → fall through to normal close
+      }
+    }
+
     final channel = ChatChannel.fromSession(session);
     if (abort) {
       try {
