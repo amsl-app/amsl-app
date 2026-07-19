@@ -38,7 +38,7 @@ jobs:
           IOS_FIREBASE_API_KEY=${IOS_FIREBASE_API_KEY:-AIzaSyBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB}
           IOS_FIREBASE_GCM_SENDER_ID=${IOS_FIREBASE_GCM_SENDER_ID:-100000000000}
           IOS_FIREBASE_GOOGLE_APP_ID=${IOS_FIREBASE_GOOGLE_APP_ID:-1:100000000000:ios:bbbbbbbbbbbbbbbbbbbbbb}
-          CDN_URL=${CDN_URL:-https://amsl-content.cdn.amsl.app
+          CDN_URL=${CDN_URL:-https://amsl-content.cdn.amsl.app}
           SPECIAL_IMAGE_PATH=${SPECIAL_IMAGE_PATH:-p/special-images}
           EOF
 
