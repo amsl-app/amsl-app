@@ -46,6 +46,12 @@ SANITIZED = {
         "staging": "cdn.amsl.app",
         "prod": "cdn.amsl.app",
     },
+    "specialImagePath": {
+        "dev": "p/special-images",
+        "qa": "p/special-images",
+        "staging": "p/special-images",
+        "prod": "p/special-images",
+    },
 }
 
 
