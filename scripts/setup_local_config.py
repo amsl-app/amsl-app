@@ -23,6 +23,8 @@ FLAVORS_KEYS = [
     "AUTH_CLIENT_ID",
     "REDIRECT_URL",
     "SITE_ID",
+    "CDN_URL",
+    "SPECIAL_IMAGE_PATH",
 ]
 OPTIONAL_KEYS = ["IOS_DEVELOPMENT_TEAM"]
 
@@ -205,6 +207,26 @@ def write_flavors_dart(flavor_envs: dict[str, dict[str, str]]) -> None:
             "qa": qa["MATOMO_URL"],
             "staging": staging["MATOMO_URL"],
             "prod": prod["MATOMO_URL"],
+        },
+    )
+    content = _update_getter_cases(
+        content,
+        "cdnUrl",
+        {
+            "dev": dev["CDN_URL"],
+            "qa": qa["CDN_URL"],
+            "staging": staging["CDN_URL"],
+            "prod": prod["CDN_URL"],
+        },
+    )
+    content = _update_getter_cases(
+        content,
+        "specialImagePath",
+        {
+            "dev": dev["SPECIAL_IMAGE_PATH"],
+            "qa": qa["SPECIAL_IMAGE_PATH"],
+            "staging": staging["SPECIAL_IMAGE_PATH"],
+            "prod": prod["SPECIAL_IMAGE_PATH"],
         },
     )
 
