@@ -154,9 +154,10 @@ class _AppScreenState extends ConsumerState<AppScreen>
           session = onboarding.sessions.valueAt(0);
         }
         while (session.status == hikari_session.SessionStatus.finished &&
-            session.next != null &&
-            session.next!.status != hikari_session.SessionStatus.notStarted) {
-          session = session.next!;
+            session.next != null) {
+          final nextSession = session.resolveNext(moduleConfigurationData?.value);
+          if (nextSession == null) break; // No valid next → exit
+          session = nextSession; // Always advance to avoid infinite loop
         }
         dismissOnboarding(); // Dismiss onboarding when user starts it
         startSession(session);

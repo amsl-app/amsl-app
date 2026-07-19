@@ -7,6 +7,7 @@ import 'package:amsl_app/features/chat/widgets/elements/date_input.dart';
 import 'package:amsl_app/features/chat/widgets/elements/duration_input.dart';
 import 'package:amsl_app/features/chat/widgets/elements/message_input.dart';
 import 'package:amsl_app/features/journal/providers/journal.dart';
+import 'package:amsl_app/features/modules/providers/module_configuration.dart';
 import 'package:amsl_app/features/preferences/preferences.dart';
 import 'package:amsl_app/widgets/async_value_extension.dart';
 import 'package:flutter/material.dart';
@@ -454,16 +455,19 @@ class ChatInputOverlay extends HookConsumerWidget {
     bool isOnboarding =
         session.module.target!.category == ModuleCategory.onboarding;
     bool is_journal = session.module.target!.category == ModuleCategory.journal;
-    bool hasNextSession = session.next != null;
+    Session? nextSession = session.resolveNext(
+      ref.read(moduleConfigurationProviderProvider).value,
+    );
+
     bool show_restart_button_in_journal =
         ref.read(preferencesProvider).showRestartInCourse ?? false;
 
     //bool nextSessionLocked = hasNextSession && !session.next!.unlocked;
 
     if (isOnboarding) {
-      if (hasNextSession) {
+      if (nextSession != null) {
         return [
-          _nextSessionButton(context),
+          _nextSessionButton(context, nextSession),
           _repeatSessionButton(context, ref),
         ];
       }
@@ -478,15 +482,14 @@ class ChatInputOverlay extends HookConsumerWidget {
     } else {
       buttons.add(_repeatSessionButton(context, ref));
     }
-    if (hasNextSession && session.next!.unlocked) {
-      buttons.add(_nextSessionButton(context));
+    if (nextSession != null && nextSession.unlocked) {
+      buttons.add(_nextSessionButton(context, nextSession));
     }
     return buttons;
   }
 
-  Widget _nextSessionButton(BuildContext context) {
+  Widget _nextSessionButton(BuildContext context, Session nextSession) {
     final colorScheme = Theme.of(context).colorScheme;
-    Session nextSession = session.next!;
     bool unlocked = nextSession.unlocked;
     return RoundedCornerButton(
       buttonColor: colorScheme.primary,
@@ -496,13 +499,13 @@ class ChatInputOverlay extends HookConsumerWidget {
           context.replaceNamed(
             "chat",
             pathParameters: {
-              "moduleId": session.next!.module.target!.id,
-              "sessionId": session.next!.id,
+              "moduleId": nextSession.module.target!.id,
+              "sessionId": nextSession.id,
             },
           );
         }
       },
-      label: "Weiter zu ${session.next!.title}",
+      label: "Weiter zu ${nextSession.title}",
     );
   }
 

@@ -34,6 +34,19 @@ const _$LockTypeEnumMap = {
   LockType.timed: 'timed',
 };
 
+SessionsNext _$SessionsNextFromJson(Map<String, dynamic> json) => SessionsNext(
+  moduleId: json['module_id'] as String,
+  sessionId: json['session_id'] as String,
+  force: json['force'] as bool,
+);
+
+Map<String, dynamic> _$SessionsNextToJson(SessionsNext instance) =>
+    <String, dynamic>{
+      'module_id': instance.moduleId,
+      'session_id': instance.sessionId,
+      'force': instance.force,
+    };
+
 Session _$SessionFromJson(Map<String, dynamic> json) => Session(
   id: json['id'] as String,
   title: json['title'] as String,
@@ -58,7 +71,9 @@ Session _$SessionFromJson(Map<String, dynamic> json) => Session(
   description: json['description'] as String?,
   icon: json['icon'] as String?,
   banner: json['banner'] as String?,
-  nextSession: json['next-session'] as String?,
+  next: json['next'] == null
+      ? null
+      : SessionsNext.fromJson(json['next'] as Map<String, dynamic>),
   metadata: json['metadata'] as Map<String, dynamic>?,
 );
 
@@ -76,7 +91,7 @@ Map<String, dynamic> _$SessionToJson(Session instance) => <String, dynamic>{
   'banner': instance.banner,
   'locked-until': Session._lockedUntilToJson(instance.lockedUntil),
   'sources': instance.sources,
-  'next-session': instance.nextSession,
+  'next': instance.next,
   'llm': instance.llm,
   'hidden': instance.hidden,
   'quizzable': instance.quizzable,
