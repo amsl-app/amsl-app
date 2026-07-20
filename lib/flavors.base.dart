@@ -119,6 +119,32 @@ class F {
     }
   }
 
+  static String get cdnUrl {
+    switch (appFlavor) {
+      case Flavor.dev:
+        return 'cdn.amsl.app';
+      case Flavor.qa:
+        return 'cdn.amsl.app';
+      case Flavor.staging:
+        return 'cdn.amsl.app';
+      case Flavor.prod:
+        return 'cdn.amsl.app';
+    }
+  }
+
+  static String get specialImagePath {
+    switch (appFlavor) {
+      case Flavor.dev:
+        return 'p/special-images';
+      case Flavor.qa:
+        return 'p/special-images';
+      case Flavor.staging:
+        return 'p/special-images';
+      case Flavor.prod:
+        return 'p/special-images';
+    }
+  }
+
   static bool get debugEnabled {
     switch (appFlavor) {
       case Flavor.dev:

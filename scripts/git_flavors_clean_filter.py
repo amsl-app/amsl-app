@@ -40,6 +40,18 @@ SANITIZED = {
         "staging": "https://placeholderPublicKey@sentry.amsl.app/1",
         "prod": "https://placeholderPublicKey@sentry.amsl.app/1",
     },
+    "cdnUrl": {
+        "dev": "cdn.amsl.app",
+        "qa": "cdn.amsl.app",
+        "staging": "cdn.amsl.app",
+        "prod": "cdn.amsl.app",
+    },
+    "specialImagePath": {
+        "dev": "p/special-images",
+        "qa": "p/special-images",
+        "staging": "p/special-images",
+        "prod": "p/special-images",
+    },
 }
 
 

@@ -34,6 +34,7 @@ class User {
       journalEnabled: !groups.contains("no-journal"),
       keyCompetenceEnabled: !groups.contains("no-key-competence"),
       onboardingEnabled: !groups.contains("no-onboarding"),
+      assessmentEnabled: !groups.contains("no-assessment"),
     );
   }
 }

@@ -22,6 +22,7 @@ import '../../../../widgets/buttons/rounded_corner_button.dart';
 import '../../../../widgets/dialogs/amsl_dialog.dart';
 import '../../../../widgets/error/error_bar.dart';
 
+import '../../../../../features/profile/providers/variant_provider.dart';
 import '../session_list.dart';
 
 class SessionSelectionScreen extends StatefulHookConsumerWidget {
@@ -87,11 +88,17 @@ class _SessionSelectionScreenState
       extensions: extensions.values,
     );
 
+    final assessmentEnabled =
+        ref.watch(variantPodProvider).value?.assessmentEnabled ?? true;
+
     showEvaluationHint =
-        sharedPreferences.getBool(StorageKey.showEvaluationHint.key) ?? false;
+        assessmentEnabled &&
+        (sharedPreferences.getBool(StorageKey.showEvaluationHint.key) ?? false);
+
     hasAssessment =
-        moduleAssessmentSet.preAssessment.isDefined ||
-        moduleAssessmentSet.postAssessment.isDefined;
+        assessmentEnabled &&
+        (moduleAssessmentSet.preAssessment.isDefined ||
+            moduleAssessmentSet.postAssessment.isDefined);
 
     return Theme(
       data: theme,
@@ -105,7 +112,7 @@ class _SessionSelectionScreenState
             ),
             backgroundColor: moduleTheme.color,
             actions: [
-              if (hasAssessment)
+              if (hasAssessment && assessmentEnabled)
                 IconButton(
                   icon: const Icon(Icons.analytics_outlined),
                   onPressed: () => context.goNamed(
@@ -118,9 +125,12 @@ class _SessionSelectionScreenState
           body: Stack(
             children: [
               _selectionList(context, moduleAssessmentSet.module),
-              _preAssessment(context, moduleAssessmentSet.preAssessment),
-              ..._postAssessment(context, moduleAssessmentSet),
-              _evaluation(context, moduleAssessmentSet.module),
+              if (assessmentEnabled)
+                _preAssessment(context, moduleAssessmentSet.preAssessment),
+              if (assessmentEnabled)
+                ..._postAssessment(context, moduleAssessmentSet),
+              if (assessmentEnabled)
+                _evaluation(context, moduleAssessmentSet.module),
             ],
           ),
         ),
