@@ -97,6 +97,7 @@ class Module {
             banner: s.banner,
             completion: s.completion,
             metadata: s.metadata,
+            next: s.next,
             isLlm: s.llm,
             llmProvider: s.llmProvider,
             hide: s.hidden,
