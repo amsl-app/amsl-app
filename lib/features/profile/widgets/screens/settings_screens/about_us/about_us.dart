@@ -2,7 +2,6 @@ import 'package:amsl_app/widgets/error/error_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:gap/gap.dart';
-import 'package:ionicons/ionicons.dart';
 import 'package:logging/logging.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'dart:io';
@@ -79,7 +78,7 @@ class _AboutUsState extends State<AboutUs> {
                 },
               ),
               ListTile(
-                leading: const Icon(Ionicons.globe_outline),
+                leading: const Icon(Icons.explore),
                 title: Text("amsl.app", style: theme.textTheme.bodyLarge),
                 onTap: () async {
                   await launchUrl(Uri.parse("https://amsl.app"));
