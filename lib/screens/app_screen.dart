@@ -246,25 +246,6 @@ class _AppScreenState extends ConsumerState<AppScreen>
                   ],
                 ),
               ),
-              // if (showChat)
-              //   MovableFloatingActionButton(
-              //     onPressed: () {
-              //       context.pushNamed("chat");
-              //     },
-              //     onRemove: () =>
-              //         ref.read(currentSessionProvider.notifier).clear(),
-              //     initialOffset: Offset(
-              //       MediaQuery.of(context).size.width - 60 - 16,
-              //       MediaQuery.of(context).size.height -
-              //           60 -
-              //           (showBottomNavigationBar ? 80 : 0) -
-              //           16,
-              //     ),
-              //     child: SvgPicture.asset(
-              //       "assets/images/avatar_images/avatar_centered.svg",
-              //     ),
-              //   ),
-              //Loading animation
             ],
           ),
           extendBody: true,
