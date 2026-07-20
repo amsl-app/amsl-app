@@ -1,3 +1,4 @@
+import 'package:amsl_app/flavors.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:http/http.dart' as http;
@@ -7,14 +8,12 @@ Future<String?> imageURL() async {
   final now = DateTime.now();
   final dateString =
       "${now.year.toString().padLeft(4, '0')}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
-  final testUrl =
-      "https://cdn.amsl.app/amsl-content/p/special-images/$dateString.png";
+  final testUrl = "${F.cdnUrl}/${F.specialImagePath}/$dateString.png";
   if (await testURL(testUrl)) {
     return testUrl;
   } else {
     // Check if there is an image at default image path
-    final testUrl =
-        "https://cdn.amsl.app/amsl-content/p/special-images/default.png";
+    final testUrl = "${F.cdnUrl}/${F.specialImagePath}/default.png";
     if (await testURL(testUrl)) {
       return testUrl;
     }
