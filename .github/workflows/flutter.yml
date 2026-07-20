@@ -17,7 +17,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.38.7
+          flutter-version: 3.44.6 
 
       - name: Create CI env file
         run: |
@@ -63,7 +63,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: 3.38.7
+          flutter-version: 3.44.6 
 
       - name: Create CI env file
         run: |
