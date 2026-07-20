@@ -104,12 +104,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     } else {
       _channel = ChatChannel.fromSession(session);
       if (session.isLlm) {
-        checkApproval(
-          context,
-          ref.read(storagesProvider).shared,
-          key: StorageKey.acceptOpenAIChat.key,
-          bottomBar: true,
-        );
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (context.mounted) {
+            checkApproval(
+              context,
+              ref.read(storagesProvider).shared,
+              key: StorageKey.acceptOpenAIChat.key,
+              bottomBar: true,
+            );
+          }
+        });
       }
       ref
           .read(moduleProvider.notifier)
@@ -179,47 +183,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
   }) async {
     FocusManager.instance.primaryFocus?.unfocus();
 
-    // Check if forced next session popup should be shown
-    if (isConversationEnd && session.next != null && session.next!.force) {
-      final nextSession = session.resolveNext(
-        ref.read(moduleConfigurationProviderProvider).value,
-      );
-      if (nextSession != null && mounted) {
-        final proceed = await showDialog<bool>(
-          context: context,
-          builder: (context) => AmslDialog(
-            bottomBar: true,
-            content:
-                "Wir empfehlen dir, mit der nächsten Einheit fortzufahren.",
-            buttonBar: [
-              RoundedCornerButton(
-                label: "Später",
-                onTap: () => Navigator.of(context).pop(false),
-              ),
-              RoundedCornerButton(
-                label: "Weiter zu ${nextSession.title}",
-                onTap: () => Navigator.of(context).pop(true),
-              ),
-            ],
-          ),
-        );
-        if (proceed == true && mounted) {
-          context.replaceNamed(
-            "chat",
-            pathParameters: {
-              "moduleId": nextSession.module.target!.id,
-              "sessionId": nextSession.id,
-            },
-          );
-          return;
-        }
-        // User dismissed → fall through to normal close
-      }
-    }
-
-    final channel = ChatChannel.fromSession(session);
     if (abort) {
       try {
+        final channel = ChatChannel.fromSession(session);
         await ref.read(chatControllerProvider.notifier).abort(channel);
       } on Exception catch (e) {
         if (mounted) {
@@ -228,7 +194,39 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         }
       }
     }
-    if (mounted) {
+
+    // Check if forced next session popup should be shown
+    if (isConversationEnd && session.next != null && session.next!.force) {
+      final nextSession = session.resolveNext(
+        ref.read(moduleConfigurationProviderProvider).value,
+      );
+      if (nextSession != null && mounted) {
+        showAmslBottomSheet(
+          context: context,
+          content: "Wir empfehlen dir, mit der nächsten Einheit fortzufahren.",
+          onClose: () {
+            Navigator.of(context).pop();
+            context.pop();
+          },
+          buttonBar: [
+            RoundedCornerButton(
+              label: "Weiter zu ${nextSession.title}",
+              onTap: () {
+                Navigator.of(context).pop();
+                context.pop();
+                context.pushReplacementNamed(
+                  "chat",
+                  pathParameters: {
+                    "moduleID": nextSession.module.target!.id,
+                    "sessionID": nextSession.id,
+                  },
+                );
+              },
+            ),
+          ],
+        );
+      }
+    } else if (mounted) {
       context.pop();
     }
   }

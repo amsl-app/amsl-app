@@ -496,11 +496,11 @@ class ChatInputOverlay extends HookConsumerWidget {
       labelColor: colorScheme.onPrimary,
       onTap: () {
         if (unlocked) {
-          context.replaceNamed(
+          context.pushReplacementNamed(
             "chat",
             pathParameters: {
-              "moduleId": nextSession.module.target!.id,
-              "sessionId": nextSession.id,
+              "moduleID": nextSession.module.target!.id,
+              "sessionID": nextSession.id,
             },
           );
         }

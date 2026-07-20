@@ -159,7 +159,10 @@ class _AppScreenState extends ConsumerState<AppScreen>
           final nextSession = session.resolveNext(
             moduleConfigurationData?.value,
           );
-          if (nextSession == null) break;
+          if (nextSession == null ||
+              nextSession.status == hikari_session.SessionStatus.notStarted) {
+            break;
+          }
           if (!visitedSessionIds.add(nextSession.id)) break;
           session = nextSession;
         }
