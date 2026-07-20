@@ -73,3 +73,6 @@ makefile
 !Makefile
 
 /tools/
+
+# Agents
+.claude/agent-memory
