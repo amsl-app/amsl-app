@@ -2,7 +2,7 @@ import 'package:amsl_app/features/modules/providers/module_configuration.dart';
 import 'package:amsl_app/features/planner/providers/planner.dart';
 import 'package:amsl_app/features/planner/widgets/create_entry_sheet.dart';
 import 'package:amsl_app/features/planner/widgets/planner_priority_badge.dart';
-import 'package:amsl_app/models/hikari/planner/planner_entry.dart';
+import 'package:amsl_app/models/tori/planner/planner_entry.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';

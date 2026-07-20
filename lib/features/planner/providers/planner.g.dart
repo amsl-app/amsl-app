@@ -46,7 +46,7 @@ final class PlannerProviderProvider
   PlannerProvider create() => PlannerProvider();
 }
 
-String _$plannerProviderHash() => r'3e015e59c1fd9f6fb43a47d7a03571a9cb6715b9';
+String _$plannerProviderHash() => r'b9ce215db8d53668c302b244380cdcf3bfb31ffc';
 
 abstract class _$PlannerProvider extends $AsyncNotifier<List<PlannerEntry>> {
   FutureOr<List<PlannerEntry>> build();
@@ -104,7 +104,7 @@ final class IcalTokenProviderProvider
   IcalTokenProvider create() => IcalTokenProvider();
 }
 
-String _$icalTokenProviderHash() => r'c51c9938f30ef9bb73427a2661920daeaa66b394';
+String _$icalTokenProviderHash() => r'2e2661451c56526cb441f7efb645b6fbb4d25d06';
 
 abstract class _$IcalTokenProvider extends $AsyncNotifier<String?> {
   FutureOr<String?> build();

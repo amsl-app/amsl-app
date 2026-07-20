@@ -1,6 +1,7 @@
 import 'package:amsl_app/hikari/exception.dart';
+import 'package:amsl_app/hikari/hikari.dart';
 import 'package:amsl_app/models/hikari/planner/new_planner_entry.dart';
-import 'package:amsl_app/models/hikari/planner/planner_entry.dart';
+import 'package:amsl_app/models/tori/planner/planner_entry.dart';
 import 'package:amsl_app/providers/hikari_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -23,17 +24,21 @@ class PlannerProvider extends _$PlannerProvider {
   @override
   Future<List<PlannerEntry>> build() async {
     final hikari = ref.watch(hikariPodProvider);
+    return _loadEntriesFromApi(hikari);
+  }
+
+  Future<List<PlannerEntry>> _loadEntriesFromApi(Hikari hikari) async {
     try {
       final entries = await hikari.plannerApi.getEntries();
-      return _sortedByDate(entries);
+      return _sortedByDate(entries.map(PlannerEntry.fromHikari).toList());
     } on HikariException catch (e) {
-      throw e.copyWith(
-        resolve: () {
-          ref.invalidateSelf();
-          return future;
-        },
-      );
+      throw e.copyWith(resolve: reloadEntries);
     }
+  }
+
+  Future<List<PlannerEntry>> reloadEntries() async {
+    ref.invalidateSelf();
+    return future;
   }
 
   Future<PlannerEntry> createEntry({
@@ -45,14 +50,16 @@ class PlannerProvider extends _$PlannerProvider {
   }) async {
     final hikari = ref.read(hikariPodProvider);
     try {
-      final entry = await hikari.plannerApi.createEntry(
-        date: date,
-        title: title,
-        priority: priority,
-        moduleId: moduleId,
-        sessionId: sessionId,
+      final entry = PlannerEntry.fromHikari(
+        await hikari.plannerApi.createEntry(
+          date: date,
+          title: title,
+          priority: priority,
+          moduleId: moduleId,
+          sessionId: sessionId,
+        ),
       );
-      state = AsyncData(_sortedByDate([...?state.value, entry]));
+      update((entries) async => _sortedByDate([...entries, entry]));
       return entry;
     } on HikariException catch (e) {
       throw e.copyWith(
@@ -80,21 +87,22 @@ class PlannerProvider extends _$PlannerProvider {
   }) async {
     final hikari = ref.read(hikariPodProvider);
     try {
-      final updated = await hikari.plannerApi.updateEntry(
-        id,
-        completed: completed,
-        date: date,
-        title: title,
-        priority: priority,
-        moduleId: moduleId,
-        sessionId: sessionId,
-        clearModule: clearModule,
-        clearSession: clearSession,
+      final updated = PlannerEntry.fromHikari(
+        await hikari.plannerApi.updateEntry(
+          id,
+          completed: completed,
+          date: date,
+          title: title,
+          priority: priority,
+          moduleId: moduleId,
+          sessionId: sessionId,
+          clearModule: clearModule,
+          clearSession: clearSession,
+        ),
       );
-      state = AsyncData(
-        _sortedByDate([
-          for (final e in state.value ?? []) e.id == id ? updated : e,
-        ]),
+      update(
+        (entries) async =>
+            _sortedByDate([for (final e in entries) e.id == id ? updated : e]),
       );
       return updated;
     } on HikariException catch (e) {
@@ -118,7 +126,7 @@ class PlannerProvider extends _$PlannerProvider {
     final hikari = ref.read(hikariPodProvider);
     try {
       await hikari.plannerApi.deleteEntry(id);
-      state = AsyncData((state.value ?? []).where((e) => e.id != id).toList());
+      update((entries) async => entries.where((e) => e.id != id).toList());
     } on HikariException catch (e) {
       throw e.copyWith(resolve: () => deleteEntry(id));
     }
@@ -129,11 +137,27 @@ class PlannerProvider extends _$PlannerProvider {
   ) async {
     final hikari = ref.read(hikariPodProvider);
     try {
-      final created = await hikari.plannerApi.bulkCreateEntries(entries);
-      state = AsyncData(_sortedByDate([...?state.value, ...created]));
+      final created = (await hikari.plannerApi.bulkCreateEntries(entries))
+          .map(PlannerEntry.fromHikari)
+          .toList();
+      update((current) async => _sortedByDate([...current, ...created]));
       return created;
     } on HikariException catch (e) {
       throw e.copyWith(resolve: () => bulkCreateEntries(entries));
+    }
+  }
+
+  /// Asks the assistant to turn free text into draft entries. The result is a
+  /// list of transient drafts (not persisted state), fed into [bulkCreateEntries].
+  Future<List<NewPlannerEntry>> askAssistant({
+    required String text,
+    String? today,
+  }) async {
+    final hikari = ref.read(hikariPodProvider);
+    try {
+      return await hikari.plannerApi.askAssistant(text: text, today: today);
+    } on HikariException catch (e) {
+      throw e.copyWith(resolve: () => askAssistant(text: text, today: today));
     }
   }
 
@@ -146,16 +170,20 @@ class IcalTokenProvider extends _$IcalTokenProvider {
   @override
   Future<String?> build() async {
     final hikari = ref.watch(hikariPodProvider);
+    return _loadTokenFromApi(hikari);
+  }
+
+  Future<String?> _loadTokenFromApi(Hikari hikari) async {
     try {
       return await hikari.plannerApi.getIcalToken();
     } on HikariException catch (e) {
-      throw e.copyWith(
-        resolve: () {
-          ref.invalidateSelf();
-          return future;
-        },
-      );
+      throw e.copyWith(resolve: reloadIcalToken);
     }
+  }
+
+  Future<String?> reloadIcalToken() async {
+    ref.invalidateSelf();
+    return future;
   }
 
   Future<void> revoke() async {

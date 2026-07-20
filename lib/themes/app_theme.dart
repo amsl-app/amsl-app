@@ -1,6 +1,7 @@
 import 'package:amsl_app/models/tori/modules/module_themes.dart';
 import 'package:amsl_app/models/tori/modules/session_themes.dart';
 import 'package:amsl_app/themes/chat_theme.dart';
+import 'package:amsl_app/themes/planner_theme.dart';
 import 'package:amsl_app/themes/section_header_theme.dart';
 import 'package:amsl_app/themes/tool_card_theme.dart';
 import 'package:flutter/material.dart';
@@ -78,6 +79,15 @@ class AppTheme {
       color: sectionThemeColor,
       fontVariations: <FontVariation>[FontVariation('wght', 800.0)],
     ),
+  );
+
+  static const plannerTheme = PlannerTheme(
+    lowPriorityBackground: Color(0xFFE8F5E9),
+    lowPriorityForeground: Color(0xFF2E7D32),
+    mediumPriorityBackground: Color(0xFFFFF3E0),
+    mediumPriorityForeground: Color(0xFFE65100),
+    highPriorityBackground: Color(0xFFFFEBEE),
+    highPriorityForeground: Color(0xFFC62828),
   );
 
   static var lightToolCardTheme = ToolCardTheme(
@@ -222,6 +232,7 @@ class AppTheme {
         sectionTheme,
         lightToolCardTheme,
         lightChatTheme,
+        plannerTheme,
         ModuleThemes.blue,
         SessionThemes.main,
       ],
@@ -266,6 +277,7 @@ class AppTheme {
         sectionTheme,
         darkToolCardTheme,
         darkChatTheme,
+        plannerTheme,
         ModuleThemes.blue,
         SessionThemes.main,
       ],

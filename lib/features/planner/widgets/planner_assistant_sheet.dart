@@ -5,7 +5,6 @@ import 'package:amsl_app/features/planner/widgets/create_entry_sheet.dart';
 import 'package:amsl_app/features/planner/widgets/planner_page_dots.dart';
 import 'package:amsl_app/hikari/exception.dart';
 import 'package:amsl_app/models/hikari/planner/new_planner_entry.dart';
-import 'package:amsl_app/providers/hikari_provider.dart';
 import 'package:amsl_app/widgets/buttons/rounded_corner_button.dart';
 import 'package:amsl_app/widgets/dialogs/amsl_dialog.dart';
 import 'package:amsl_app/widgets/error/error_bar.dart';
@@ -33,12 +32,13 @@ class PlannerAssistantSheet extends HookConsumerWidget {
       final text = textController.text.trim();
       if (text.isEmpty) return;
 
-      final hikari = ref.read(hikariPodProvider);
       try {
-        final result = await hikari.plannerApi.askAssistant(
-          text: text,
-          today: kOldDateFormat.format(DateTime.now()),
-        );
+        final result = await ref
+            .read(plannerProviderProvider.notifier)
+            .askAssistant(
+              text: text,
+              today: kOldDateFormat.format(DateTime.now()),
+            );
         if (result.isEmpty) {
           if (context.mounted) {
             showMessage(context, label: 'Keine Einträge erkannt', error: true);
@@ -56,8 +56,8 @@ class PlannerAssistantSheet extends HookConsumerWidget {
               ),
             )
             .toList();
-      } on HikariException catch (_) {
-        if (context.mounted) showMessage(context, error: true);
+      } catch (e) {
+        if (context.mounted) showException(context, e);
       }
     }
 

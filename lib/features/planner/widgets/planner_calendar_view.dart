@@ -1,7 +1,7 @@
 import 'package:amsl_app/constants.dart';
 import 'package:amsl_app/features/planner/providers/planner.dart';
 import 'package:amsl_app/features/planner/widgets/planner_entry_tile.dart';
-import 'package:amsl_app/models/hikari/planner/planner_entry.dart';
+import 'package:amsl_app/models/tori/planner/planner_entry.dart';
 import 'package:amsl_app/widgets/async_value_extension.dart';
 import 'package:amsl_app/widgets/loading/skeleton_loading_widget.dart';
 import 'package:flutter/material.dart';
