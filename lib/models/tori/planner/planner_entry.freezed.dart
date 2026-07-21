@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PlannerEntry {
 
- String get id; DateTime get date; String get title; bool get completed; int get priority; DateTime get createdAt; String? get moduleId; String? get sessionId;
+ String get id; DateTime get date; String get title; bool get completed; int get priority; PlannerMilestone? get milestone; DateTime get createdAt; DateTime get updatedAt;
 /// Create a copy of PlannerEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $PlannerEntryCopyWith<PlannerEntry> get copyWith => _$PlannerEntryCopyWithImpl<P
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlannerEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.date, date) || other.date == date)&&(identical(other.title, title) || other.title == title)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.moduleId, moduleId) || other.moduleId == moduleId)&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlannerEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.date, date) || other.date == date)&&(identical(other.title, title) || other.title == title)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.milestone, milestone) || other.milestone == milestone)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,date,title,completed,priority,createdAt,moduleId,sessionId);
+int get hashCode => Object.hash(runtimeType,id,date,title,completed,priority,milestone,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'PlannerEntry(id: $id, date: $date, title: $title, completed: $completed, priority: $priority, createdAt: $createdAt, moduleId: $moduleId, sessionId: $sessionId)';
+  return 'PlannerEntry(id: $id, date: $date, title: $title, completed: $completed, priority: $priority, milestone: $milestone, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -45,11 +45,11 @@ abstract mixin class $PlannerEntryCopyWith<$Res>  {
   factory $PlannerEntryCopyWith(PlannerEntry value, $Res Function(PlannerEntry) _then) = _$PlannerEntryCopyWithImpl;
 @useResult
 $Res call({
- String id, DateTime date, String title, bool completed, int priority, DateTime createdAt, String? moduleId, String? sessionId
+ String id, DateTime date, String title, bool completed, int priority, PlannerMilestone? milestone, DateTime createdAt, DateTime updatedAt
 });
 
 
-
+$PlannerMilestoneCopyWith<$Res>? get milestone;
 
 }
 /// @nodoc
@@ -62,20 +62,32 @@ class _$PlannerEntryCopyWithImpl<$Res>
 
 /// Create a copy of PlannerEntry
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? date = null,Object? title = null,Object? completed = null,Object? priority = null,Object? createdAt = null,Object? moduleId = freezed,Object? sessionId = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? date = null,Object? title = null,Object? completed = null,Object? priority = null,Object? milestone = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,completed: null == completed ? _self.completed : completed // ignore: cast_nullable_to_non_nullable
 as bool,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
-as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,moduleId: freezed == moduleId ? _self.moduleId : moduleId // ignore: cast_nullable_to_non_nullable
-as String?,sessionId: freezed == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
-as String?,
+as int,milestone: freezed == milestone ? _self.milestone : milestone // ignore: cast_nullable_to_non_nullable
+as PlannerMilestone?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
+/// Create a copy of PlannerEntry
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$PlannerMilestoneCopyWith<$Res>? get milestone {
+    if (_self.milestone == null) {
+    return null;
+  }
 
+  return $PlannerMilestoneCopyWith<$Res>(_self.milestone!, (value) {
+    return _then(_self.copyWith(milestone: value));
+  });
+}
 }
 
 
@@ -157,10 +169,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  DateTime date,  String title,  bool completed,  int priority,  DateTime createdAt,  String? moduleId,  String? sessionId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  DateTime date,  String title,  bool completed,  int priority,  PlannerMilestone? milestone,  DateTime createdAt,  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PlannerEntry() when $default != null:
-return $default(_that.id,_that.date,_that.title,_that.completed,_that.priority,_that.createdAt,_that.moduleId,_that.sessionId);case _:
+return $default(_that.id,_that.date,_that.title,_that.completed,_that.priority,_that.milestone,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -178,10 +190,10 @@ return $default(_that.id,_that.date,_that.title,_that.completed,_that.priority,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  DateTime date,  String title,  bool completed,  int priority,  DateTime createdAt,  String? moduleId,  String? sessionId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  DateTime date,  String title,  bool completed,  int priority,  PlannerMilestone? milestone,  DateTime createdAt,  DateTime updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _PlannerEntry():
-return $default(_that.id,_that.date,_that.title,_that.completed,_that.priority,_that.createdAt,_that.moduleId,_that.sessionId);case _:
+return $default(_that.id,_that.date,_that.title,_that.completed,_that.priority,_that.milestone,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +210,10 @@ return $default(_that.id,_that.date,_that.title,_that.completed,_that.priority,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  DateTime date,  String title,  bool completed,  int priority,  DateTime createdAt,  String? moduleId,  String? sessionId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  DateTime date,  String title,  bool completed,  int priority,  PlannerMilestone? milestone,  DateTime createdAt,  DateTime updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _PlannerEntry() when $default != null:
-return $default(_that.id,_that.date,_that.title,_that.completed,_that.priority,_that.createdAt,_that.moduleId,_that.sessionId);case _:
+return $default(_that.id,_that.date,_that.title,_that.completed,_that.priority,_that.milestone,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -213,7 +225,7 @@ return $default(_that.id,_that.date,_that.title,_that.completed,_that.priority,_
 
 
 class _PlannerEntry extends PlannerEntry {
-  const _PlannerEntry({required this.id, required this.date, required this.title, required this.completed, required this.priority, required this.createdAt, this.moduleId, this.sessionId}): super._();
+  const _PlannerEntry({required this.id, required this.date, required this.title, required this.completed, required this.priority, this.milestone, required this.createdAt, required this.updatedAt}): super._();
   
 
 @override final  String id;
@@ -221,9 +233,9 @@ class _PlannerEntry extends PlannerEntry {
 @override final  String title;
 @override final  bool completed;
 @override final  int priority;
+@override final  PlannerMilestone? milestone;
 @override final  DateTime createdAt;
-@override final  String? moduleId;
-@override final  String? sessionId;
+@override final  DateTime updatedAt;
 
 /// Create a copy of PlannerEntry
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +247,16 @@ _$PlannerEntryCopyWith<_PlannerEntry> get copyWith => __$PlannerEntryCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlannerEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.date, date) || other.date == date)&&(identical(other.title, title) || other.title == title)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.moduleId, moduleId) || other.moduleId == moduleId)&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlannerEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.date, date) || other.date == date)&&(identical(other.title, title) || other.title == title)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.milestone, milestone) || other.milestone == milestone)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,date,title,completed,priority,createdAt,moduleId,sessionId);
+int get hashCode => Object.hash(runtimeType,id,date,title,completed,priority,milestone,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'PlannerEntry(id: $id, date: $date, title: $title, completed: $completed, priority: $priority, createdAt: $createdAt, moduleId: $moduleId, sessionId: $sessionId)';
+  return 'PlannerEntry(id: $id, date: $date, title: $title, completed: $completed, priority: $priority, milestone: $milestone, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -255,11 +267,11 @@ abstract mixin class _$PlannerEntryCopyWith<$Res> implements $PlannerEntryCopyWi
   factory _$PlannerEntryCopyWith(_PlannerEntry value, $Res Function(_PlannerEntry) _then) = __$PlannerEntryCopyWithImpl;
 @override @useResult
 $Res call({
- String id, DateTime date, String title, bool completed, int priority, DateTime createdAt, String? moduleId, String? sessionId
+ String id, DateTime date, String title, bool completed, int priority, PlannerMilestone? milestone, DateTime createdAt, DateTime updatedAt
 });
 
 
-
+@override $PlannerMilestoneCopyWith<$Res>? get milestone;
 
 }
 /// @nodoc
@@ -272,21 +284,33 @@ class __$PlannerEntryCopyWithImpl<$Res>
 
 /// Create a copy of PlannerEntry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? date = null,Object? title = null,Object? completed = null,Object? priority = null,Object? createdAt = null,Object? moduleId = freezed,Object? sessionId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? date = null,Object? title = null,Object? completed = null,Object? priority = null,Object? milestone = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_PlannerEntry(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as DateTime,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,completed: null == completed ? _self.completed : completed // ignore: cast_nullable_to_non_nullable
 as bool,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
-as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
-as DateTime,moduleId: freezed == moduleId ? _self.moduleId : moduleId // ignore: cast_nullable_to_non_nullable
-as String?,sessionId: freezed == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
-as String?,
+as int,milestone: freezed == milestone ? _self.milestone : milestone // ignore: cast_nullable_to_non_nullable
+as PlannerMilestone?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 
+/// Create a copy of PlannerEntry
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$PlannerMilestoneCopyWith<$Res>? get milestone {
+    if (_self.milestone == null) {
+    return null;
+  }
 
+  return $PlannerMilestoneCopyWith<$Res>(_self.milestone!, (value) {
+    return _then(_self.copyWith(milestone: value));
+  });
+}
 }
 
 // dart format on

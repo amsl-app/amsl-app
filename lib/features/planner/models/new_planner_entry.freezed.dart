@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$NewPlannerEntry {
 
- String get date; String get title; int get priority;@JsonKey(name: 'module_id') String? get moduleId;@JsonKey(name: 'session_id') String? get sessionId;
+ String get date; String get title; int get priority;@JsonKey(name: 'milestone_id') String? get milestoneId;
 /// Create a copy of NewPlannerEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $NewPlannerEntryCopyWith<NewPlannerEntry> get copyWith => _$NewPlannerEntryCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is NewPlannerEntry&&(identical(other.date, date) || other.date == date)&&(identical(other.title, title) || other.title == title)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.moduleId, moduleId) || other.moduleId == moduleId)&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is NewPlannerEntry&&(identical(other.date, date) || other.date == date)&&(identical(other.title, title) || other.title == title)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.milestoneId, milestoneId) || other.milestoneId == milestoneId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,date,title,priority,moduleId,sessionId);
+int get hashCode => Object.hash(runtimeType,date,title,priority,milestoneId);
 
 @override
 String toString() {
-  return 'NewPlannerEntry(date: $date, title: $title, priority: $priority, moduleId: $moduleId, sessionId: $sessionId)';
+  return 'NewPlannerEntry(date: $date, title: $title, priority: $priority, milestoneId: $milestoneId)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $NewPlannerEntryCopyWith<$Res>  {
   factory $NewPlannerEntryCopyWith(NewPlannerEntry value, $Res Function(NewPlannerEntry) _then) = _$NewPlannerEntryCopyWithImpl;
 @useResult
 $Res call({
- String date, String title, int priority,@JsonKey(name: 'module_id') String? moduleId,@JsonKey(name: 'session_id') String? sessionId
+ String date, String title, int priority,@JsonKey(name: 'milestone_id') String? milestoneId
 });
 
 
@@ -65,13 +65,12 @@ class _$NewPlannerEntryCopyWithImpl<$Res>
 
 /// Create a copy of NewPlannerEntry
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? title = null,Object? priority = null,Object? moduleId = freezed,Object? sessionId = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? date = null,Object? title = null,Object? priority = null,Object? milestoneId = freezed,}) {
   return _then(_self.copyWith(
 date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
-as int,moduleId: freezed == moduleId ? _self.moduleId : moduleId // ignore: cast_nullable_to_non_nullable
-as String?,sessionId: freezed == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
+as int,milestoneId: freezed == milestoneId ? _self.milestoneId : milestoneId // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -157,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String date,  String title,  int priority, @JsonKey(name: 'module_id')  String? moduleId, @JsonKey(name: 'session_id')  String? sessionId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String date,  String title,  int priority, @JsonKey(name: 'milestone_id')  String? milestoneId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _NewPlannerEntry() when $default != null:
-return $default(_that.date,_that.title,_that.priority,_that.moduleId,_that.sessionId);case _:
+return $default(_that.date,_that.title,_that.priority,_that.milestoneId);case _:
   return orElse();
 
 }
@@ -178,10 +177,10 @@ return $default(_that.date,_that.title,_that.priority,_that.moduleId,_that.sessi
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String date,  String title,  int priority, @JsonKey(name: 'module_id')  String? moduleId, @JsonKey(name: 'session_id')  String? sessionId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String date,  String title,  int priority, @JsonKey(name: 'milestone_id')  String? milestoneId)  $default,) {final _that = this;
 switch (_that) {
 case _NewPlannerEntry():
-return $default(_that.date,_that.title,_that.priority,_that.moduleId,_that.sessionId);case _:
+return $default(_that.date,_that.title,_that.priority,_that.milestoneId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -198,10 +197,10 @@ return $default(_that.date,_that.title,_that.priority,_that.moduleId,_that.sessi
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String date,  String title,  int priority, @JsonKey(name: 'module_id')  String? moduleId, @JsonKey(name: 'session_id')  String? sessionId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String date,  String title,  int priority, @JsonKey(name: 'milestone_id')  String? milestoneId)?  $default,) {final _that = this;
 switch (_that) {
 case _NewPlannerEntry() when $default != null:
-return $default(_that.date,_that.title,_that.priority,_that.moduleId,_that.sessionId);case _:
+return $default(_that.date,_that.title,_that.priority,_that.milestoneId);case _:
   return null;
 
 }
@@ -213,14 +212,13 @@ return $default(_that.date,_that.title,_that.priority,_that.moduleId,_that.sessi
 @JsonSerializable()
 
 class _NewPlannerEntry implements NewPlannerEntry {
-   _NewPlannerEntry({required this.date, required this.title, required this.priority, @JsonKey(name: 'module_id') this.moduleId, @JsonKey(name: 'session_id') this.sessionId});
+   _NewPlannerEntry({required this.date, required this.title, required this.priority, @JsonKey(name: 'milestone_id') this.milestoneId});
   factory _NewPlannerEntry.fromJson(Map<String, dynamic> json) => _$NewPlannerEntryFromJson(json);
 
 @override final  String date;
 @override final  String title;
 @override final  int priority;
-@override@JsonKey(name: 'module_id') final  String? moduleId;
-@override@JsonKey(name: 'session_id') final  String? sessionId;
+@override@JsonKey(name: 'milestone_id') final  String? milestoneId;
 
 /// Create a copy of NewPlannerEntry
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +233,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NewPlannerEntry&&(identical(other.date, date) || other.date == date)&&(identical(other.title, title) || other.title == title)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.moduleId, moduleId) || other.moduleId == moduleId)&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _NewPlannerEntry&&(identical(other.date, date) || other.date == date)&&(identical(other.title, title) || other.title == title)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.milestoneId, milestoneId) || other.milestoneId == milestoneId));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,date,title,priority,moduleId,sessionId);
+int get hashCode => Object.hash(runtimeType,date,title,priority,milestoneId);
 
 @override
 String toString() {
-  return 'NewPlannerEntry(date: $date, title: $title, priority: $priority, moduleId: $moduleId, sessionId: $sessionId)';
+  return 'NewPlannerEntry(date: $date, title: $title, priority: $priority, milestoneId: $milestoneId)';
 }
 
 
@@ -255,7 +253,7 @@ abstract mixin class _$NewPlannerEntryCopyWith<$Res> implements $NewPlannerEntry
   factory _$NewPlannerEntryCopyWith(_NewPlannerEntry value, $Res Function(_NewPlannerEntry) _then) = __$NewPlannerEntryCopyWithImpl;
 @override @useResult
 $Res call({
- String date, String title, int priority,@JsonKey(name: 'module_id') String? moduleId,@JsonKey(name: 'session_id') String? sessionId
+ String date, String title, int priority,@JsonKey(name: 'milestone_id') String? milestoneId
 });
 
 
@@ -272,13 +270,12 @@ class __$NewPlannerEntryCopyWithImpl<$Res>
 
 /// Create a copy of NewPlannerEntry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? date = null,Object? title = null,Object? priority = null,Object? moduleId = freezed,Object? sessionId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? date = null,Object? title = null,Object? priority = null,Object? milestoneId = freezed,}) {
   return _then(_NewPlannerEntry(
 date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
-as int,moduleId: freezed == moduleId ? _self.moduleId : moduleId // ignore: cast_nullable_to_non_nullable
-as String?,sessionId: freezed == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
+as int,milestoneId: freezed == milestoneId ? _self.milestoneId : milestoneId // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

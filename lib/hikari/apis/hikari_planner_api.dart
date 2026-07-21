@@ -1,8 +1,10 @@
 import 'dart:convert';
 
 import 'package:amsl_app/hikari/hikari_api.dart';
-import 'package:amsl_app/models/hikari/planner/new_planner_entry.dart';
+import 'package:amsl_app/features/planner/models/new_planner_entry.dart';
+import 'package:amsl_app/features/planner/models/new_planner_milestone.dart';
 import 'package:amsl_app/models/hikari/planner/planner_entry.dart';
+import 'package:amsl_app/models/hikari/planner/planner_milestone.dart';
 import 'package:logging/logging.dart';
 
 class HikariPlannerApi {
@@ -22,7 +24,7 @@ class HikariPlannerApi {
 
   Future<List<PlannerEntry>> createEntries(List<NewPlannerEntry> entries) =>
       hikari.post(
-        '/planner/entries/bulk',
+        '/planner/entries',
         body: jsonEncode([for (final e in entries) e.toJson()]),
         transform: (json) => [
           for (final e in json as List) PlannerEntry.fromJson(e),
@@ -35,10 +37,8 @@ class HikariPlannerApi {
     String? date,
     String? title,
     int? priority,
-    String? moduleId,
-    String? sessionId,
-    bool clearModule = false,
-    bool clearSession = false,
+    String? milestoneId,
+    bool clearMilestone = false,
   }) => hikari.patch(
     '/planner/entries/$id',
     body: jsonEncode({
@@ -47,9 +47,7 @@ class HikariPlannerApi {
       'title': ?title,
       'priority': ?priority,
       // ignore: use_null_aware_elements
-      if (moduleId != null || clearModule) 'module_id': moduleId,
-      // ignore: use_null_aware_elements
-      if (sessionId != null || clearSession) 'session_id': sessionId,
+      if (milestoneId != null || clearMilestone) 'milestone_id': milestoneId,
     }),
     transform: (json) => PlannerEntry.fromJson(json),
   );
@@ -73,4 +71,38 @@ class HikariPlannerApi {
   );
 
   Future<void> deleteIcalToken() => hikari.delete('/planner/ical-token');
+
+  Future<List<PlannerMilestone>> getMilestones() => hikari.get(
+    '/planner/milestones',
+    transform: (json) => [
+      for (final m in json as List) PlannerMilestone.fromJson(m),
+    ],
+  );
+
+  Future<PlannerMilestone> createMilestone(NewPlannerMilestone milestone) =>
+      hikari.post(
+        '/planner/milestones',
+        body: jsonEncode(milestone.toJson()),
+        transform: (json) => PlannerMilestone.fromJson(json),
+      );
+
+  Future<PlannerMilestone> updateMilestone(
+    String id, {
+    String? title,
+    String? date,
+    String? description,
+    bool clearDescription = false,
+  }) => hikari.patch(
+    '/planner/milestones/$id',
+    body: jsonEncode({
+      'title': ?title,
+      'date': ?date,
+      // ignore: use_null_aware_elements
+      if (description != null || clearDescription) 'description': description,
+    }),
+    transform: (json) => PlannerMilestone.fromJson(json),
+  );
+
+  Future<void> deleteMilestone(String id) =>
+      hikari.delete('/planner/milestones/$id');
 }

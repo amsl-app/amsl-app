@@ -11,8 +11,7 @@ _NewPlannerEntry _$NewPlannerEntryFromJson(Map<String, dynamic> json) =>
       date: json['date'] as String,
       title: json['title'] as String,
       priority: (json['priority'] as num).toInt(),
-      moduleId: json['module_id'] as String?,
-      sessionId: json['session_id'] as String?,
+      milestoneId: json['milestone_id'] as String?,
     );
 
 Map<String, dynamic> _$NewPlannerEntryToJson(_NewPlannerEntry instance) =>
@@ -20,6 +19,5 @@ Map<String, dynamic> _$NewPlannerEntryToJson(_NewPlannerEntry instance) =>
       'date': instance.date,
       'title': instance.title,
       'priority': instance.priority,
-      'module_id': instance.moduleId,
-      'session_id': instance.sessionId,
+      'milestone_id': instance.milestoneId,
     };

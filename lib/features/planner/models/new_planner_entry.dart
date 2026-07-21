@@ -9,8 +9,7 @@ abstract class NewPlannerEntry with _$NewPlannerEntry {
     required String date,
     required String title,
     required int priority,
-    @JsonKey(name: 'module_id') String? moduleId,
-    @JsonKey(name: 'session_id') String? sessionId,
+    @JsonKey(name: 'milestone_id') String? milestoneId,
   }) = _NewPlannerEntry;
 
   factory NewPlannerEntry.fromJson(Map<String, dynamic> json) =>

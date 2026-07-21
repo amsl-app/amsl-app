@@ -1,4 +1,3 @@
-import 'package:amsl_app/features/modules/providers/module_configuration.dart';
 import 'package:amsl_app/features/planner/providers/planner.dart';
 import 'package:amsl_app/features/planner/widgets/create_entry_sheet.dart';
 import 'package:amsl_app/features/planner/widgets/planner_priority_badge.dart';
@@ -15,20 +14,8 @@ class PlannerEntryTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final moduleConfig = ref.watch(moduleConfigurationProviderProvider);
 
-    final moduleMatch = entry.moduleId == null
-        ? null
-        : moduleConfig.value?.shownModules
-              .where((m) => m.module.id == entry.moduleId)
-              .firstOrNull;
-    final moduleName = moduleMatch?.module.title;
-    final sessionName = entry.sessionId == null
-        ? null
-        : moduleMatch?.module.sessions.values
-              .where((s) => s.id == entry.sessionId)
-              .firstOrNull
-              ?.title;
+    final milestoneName = entry.milestone?.title;
 
     return Dismissible(
       key: ValueKey(entry.id),
@@ -45,10 +32,7 @@ class PlannerEntryTile extends ConsumerWidget {
       confirmDismiss: (_) async {
         // Fire-and-forget: the animation completes immediately. If the delete
         // fails, the provider state is unchanged and the entry reappears.
-        ref
-            .read(plannerProviderProvider.notifier)
-            .deleteEntry(entry.id)
-            .ignore();
+        ref.read(plannerPodProvider.notifier).deleteEntry(entry.id).ignore();
         return true;
       },
       child: Card(
@@ -75,7 +59,7 @@ class PlannerEntryTile extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(4),
                   ),
                   onChanged: (_) => ref
-                      .read(plannerProviderProvider.notifier)
+                      .read(plannerPodProvider.notifier)
                       .updateEntry(entry.id, completed: !entry.completed),
                 ),
                 const Gap(4),
@@ -97,11 +81,9 @@ class PlannerEntryTile extends ConsumerWidget {
                               : null,
                         ),
                       ),
-                      if (moduleName != null)
+                      if (milestoneName != null)
                         Text(
-                          sessionName != null
-                              ? '$moduleName · $sessionName'
-                              : moduleName,
+                          milestoneName,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurface.withValues(
                               alpha: 0.5,

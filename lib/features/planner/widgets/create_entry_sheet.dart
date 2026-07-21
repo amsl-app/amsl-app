@@ -1,11 +1,10 @@
 import 'package:amsl_app/constants.dart';
-import 'package:amsl_app/features/modules/providers/module_configuration.dart';
 import 'package:amsl_app/features/planner/providers/planner.dart';
+import 'package:amsl_app/features/planner/providers/planner_configuration.dart';
 import 'package:amsl_app/features/planner/widgets/planner_page_dots.dart';
-import 'package:amsl_app/models/hikari/planner/new_planner_entry.dart';
-import 'package:amsl_app/models/tori/modules/module.dart';
-import 'package:amsl_app/models/tori/modules/session.dart';
+import 'package:amsl_app/features/planner/models/new_planner_entry.dart';
 import 'package:amsl_app/models/tori/planner/planner_entry.dart';
+import 'package:amsl_app/models/tori/planner/planner_milestone.dart';
 import 'package:amsl_app/widgets/buttons/rounded_corner_button.dart';
 import 'package:amsl_app/widgets/dialogs/amsl_dialog.dart';
 import 'package:amsl_app/widgets/error/error_bar.dart';
@@ -19,16 +18,14 @@ class NewEntryData {
   String? title;
   DateTime date;
   int priority;
-  String? module;
-  String? session;
+  String? milestoneId;
 
   NewEntryData({
     this.id,
     this.title,
     required this.date,
     this.priority = 2,
-    this.module,
-    this.session,
+    this.milestoneId,
   });
 }
 
@@ -36,35 +33,26 @@ class CreateEntryCard extends HookWidget {
   const CreateEntryCard({
     super.key,
     required this.entry,
-    required this.modules,
+    required this.milestones,
   });
-  final List modules;
+  final List<PlannerMilestone> milestones;
   final NewEntryData entry;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    // Pre-resolve module/session for edit mode so useState gets the right initial value.
-    final initModule = entry.module == null
+    // Pre-resolve milestone for edit mode so useState gets the right initial value.
+    final initMilestone = entry.milestoneId == null
         ? null
-        : modules.where((m) => m.module.id == entry.module).firstOrNull?.module;
-
-    final initSession = (initModule == null || entry.session == null)
-        ? null
-        : initModule.sessions.values
-              .where((s) => s.id == entry.session)
-              .firstOrNull;
+        : milestones.where((m) => m.id == entry.milestoneId).firstOrNull;
 
     final titleController = useTextEditingController(text: entry.title ?? '');
     final titleError = useState(false);
     final selectedDate = useState(entry.date);
     final priority = useState(entry.priority);
 
-    final selectedModule = useState<Module?>(initModule);
-    final selectedSession = useState<Session?>(initSession);
-
-    final sessions = selectedModule.value?.sessions.values.toList() ?? [];
+    final selectedMilestone = useState<PlannerMilestone?>(initMilestone);
 
     final inputBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
@@ -175,13 +163,13 @@ class CreateEntryCard extends HookWidget {
             },
             showSelectedIcon: false,
           ),
-          if (modules.isNotEmpty) ...[
+          if (milestones.isNotEmpty) ...[
             const Gap(12),
-            DropdownButtonFormField<Module?>(
+            DropdownButtonFormField<PlannerMilestone?>(
               isExpanded: true,
-              initialValue: selectedModule.value,
+              initialValue: selectedMilestone.value,
               decoration: InputDecoration(
-                labelText: 'Modul (optional)',
+                labelText: 'Meilenstein (optional)',
                 border: inputBorder,
                 enabledBorder: inputBorder,
                 focusedBorder: focusedBorder,
@@ -193,13 +181,13 @@ class CreateEntryCard extends HookWidget {
               items: [
                 DropdownMenuItem(
                   value: null,
-                  child: Text('Keins', style: theme.textTheme.bodySmall),
+                  child: Text('Keiner', style: theme.textTheme.bodySmall),
                 ),
-                ...modules.map(
+                ...milestones.map(
                   (m) => DropdownMenuItem(
-                    value: m.module,
+                    value: m,
                     child: Text(
-                      m.module.title,
+                      m.title,
                       style: theme.textTheme.bodySmall,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -207,52 +195,10 @@ class CreateEntryCard extends HookWidget {
                 ),
               ],
               onChanged: (m) {
-                selectedModule.value = m;
-                selectedSession.value = null;
-                entry.module = m?.id;
-                entry.session = null;
+                selectedMilestone.value = m;
+                entry.milestoneId = m?.id;
               },
             ),
-            if (selectedModule.value != null && sessions.isNotEmpty) ...[
-              const Gap(12),
-              DropdownButtonFormField<Session?>(
-                isExpanded: true,
-                initialValue: selectedSession.value,
-                decoration: InputDecoration(
-                  labelText: 'Einheit (optional)',
-                  border: inputBorder,
-                  enabledBorder: inputBorder,
-                  focusedBorder: focusedBorder,
-                  contentPadding: const EdgeInsets.symmetric(
-                    horizontal: 12,
-                    vertical: 10,
-                  ),
-                ),
-                items: [
-                  DropdownMenuItem(
-                    value: null,
-                    child: Text(
-                      'Keine Einheit',
-                      style: theme.textTheme.bodySmall,
-                    ),
-                  ),
-                  ...sessions.map(
-                    (s) => DropdownMenuItem(
-                      value: s,
-                      child: Text(
-                        s.title,
-                        style: theme.textTheme.bodySmall,
-                        overflow: TextOverflow.ellipsis,
-                      ),
-                    ),
-                  ),
-                ],
-                onChanged: (s) {
-                  selectedSession.value = s;
-                  entry.session = s?.id;
-                },
-              ),
-            ],
           ],
         ],
       ),
@@ -284,8 +230,7 @@ class CreateEntrySheet extends HookConsumerWidget {
             title: entry!.title,
             date: entry!.date,
             priority: entry!.priority,
-            module: entry!.moduleId,
-            session: entry!.sessionId,
+            milestoneId: entry!.milestone?.id,
           ),
         );
       } else {
@@ -293,8 +238,8 @@ class CreateEntrySheet extends HookConsumerWidget {
       }
     });
 
-    final moduleConfig = ref.watch(moduleConfigurationProviderProvider);
-    final modules = moduleConfig.value?.shownModules.toList() ?? [];
+    final plannerConfig = ref.watch(plannerConfigPodProvider);
+    final milestones = plannerConfig.value?.sortedMilestones ?? [];
 
     // Edit mode: single card, no carousel.
     if (entry != null) {
@@ -310,7 +255,7 @@ class CreateEntrySheet extends HookConsumerWidget {
               ),
             ),
             const Gap(16),
-            CreateEntryCard(entry: newEntries.first, modules: modules),
+            CreateEntryCard(entry: newEntries.first, milestones: milestones),
           ],
         ),
       );
@@ -347,7 +292,7 @@ class CreateEntrySheet extends HookConsumerWidget {
                     ),
                   ),
                   const Gap(8),
-                  CreateEntryCard(entry: newEntries[i], modules: modules),
+                  CreateEntryCard(entry: newEntries[i], milestones: milestones),
                 ],
               ),
             ),
@@ -399,7 +344,7 @@ void showCreateEntrySheet(
       return;
     }
 
-    final notifier = ref.read(plannerProviderProvider.notifier);
+    final notifier = ref.read(plannerPodProvider.notifier);
 
     if (newEntries.length == 1 && entry != null) {
       // Single entry in edit mode, just update it.
@@ -409,10 +354,8 @@ void showCreateEntrySheet(
         date: kOldDateFormat.format(e.date),
         title: e.title,
         priority: e.priority,
-        moduleId: e.module,
-        sessionId: e.session,
-        clearModule: e.module == null,
-        clearSession: e.session == null,
+        milestoneId: e.milestoneId,
+        clearMilestone: e.milestoneId == null,
       );
       if (context.mounted) Navigator.of(context).pop();
       return;
@@ -426,8 +369,7 @@ void showCreateEntrySheet(
               date: kOldDateFormat.format(e.date),
               title: e.title!,
               priority: e.priority,
-              moduleId: e.module,
-              sessionId: e.session,
+              milestoneId: e.milestoneId,
             ),
           )
           .toList(),

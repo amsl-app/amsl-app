@@ -9,24 +9,24 @@ part of 'planner.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(PlannerProvider)
-final plannerProviderProvider = PlannerProviderProvider._();
+@ProviderFor(PlannerPod)
+final plannerPodProvider = PlannerPodProvider._();
 
-final class PlannerProviderProvider
-    extends $AsyncNotifierProvider<PlannerProvider, List<PlannerEntry>> {
-  PlannerProviderProvider._()
+final class PlannerPodProvider
+    extends $AsyncNotifierProvider<PlannerPod, List<PlannerEntry>> {
+  PlannerPodProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'plannerProviderProvider',
+        name: r'plannerPodProvider',
         isAutoDispose: false,
         dependencies: <ProviderOrFamily>[hikariPodProvider],
         $allTransitiveDependencies: <ProviderOrFamily>{
-          PlannerProviderProvider.$allTransitiveDependencies0,
-          PlannerProviderProvider.$allTransitiveDependencies1,
-          PlannerProviderProvider.$allTransitiveDependencies2,
-          PlannerProviderProvider.$allTransitiveDependencies3,
+          PlannerPodProvider.$allTransitiveDependencies0,
+          PlannerPodProvider.$allTransitiveDependencies1,
+          PlannerPodProvider.$allTransitiveDependencies2,
+          PlannerPodProvider.$allTransitiveDependencies3,
         },
       );
 
@@ -39,16 +39,16 @@ final class PlannerProviderProvider
       HikariPodProvider.$allTransitiveDependencies2;
 
   @override
-  String debugGetCreateSourceHash() => _$plannerProviderHash();
+  String debugGetCreateSourceHash() => _$plannerPodHash();
 
   @$internal
   @override
-  PlannerProvider create() => PlannerProvider();
+  PlannerPod create() => PlannerPod();
 }
 
-String _$plannerProviderHash() => r'b9ce215db8d53668c302b244380cdcf3bfb31ffc';
+String _$plannerPodHash() => r'145d2ffd99f07f25869349c1b762710845eb58fb';
 
-abstract class _$PlannerProvider extends $AsyncNotifier<List<PlannerEntry>> {
+abstract class _$PlannerPod extends $AsyncNotifier<List<PlannerEntry>> {
   FutureOr<List<PlannerEntry>> build();
   @$mustCallSuper
   @override

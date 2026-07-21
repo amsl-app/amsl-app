@@ -19,7 +19,7 @@ class PlannerCalendarView extends HookConsumerWidget {
     final theme = Theme.of(context);
     final focusedDay = useState(DateTime.now());
     final selectedDay = useState(DateTime.now());
-    final entriesAsync = ref.watch(plannerProviderProvider);
+    final entriesAsync = ref.watch(plannerPodProvider);
 
     final skeleton = Padding(
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),

@@ -1,10 +1,10 @@
 import 'package:amsl_app/constants.dart';
-import 'package:amsl_app/features/modules/providers/module_configuration.dart';
 import 'package:amsl_app/features/planner/providers/planner.dart';
+import 'package:amsl_app/features/planner/providers/planner_configuration.dart';
 import 'package:amsl_app/features/planner/widgets/create_entry_sheet.dart';
 import 'package:amsl_app/features/planner/widgets/planner_page_dots.dart';
 import 'package:amsl_app/hikari/exception.dart';
-import 'package:amsl_app/models/hikari/planner/new_planner_entry.dart';
+import 'package:amsl_app/features/planner/models/new_planner_entry.dart';
 import 'package:amsl_app/widgets/buttons/rounded_corner_button.dart';
 import 'package:amsl_app/widgets/dialogs/amsl_dialog.dart';
 import 'package:amsl_app/widgets/error/error_bar.dart';
@@ -25,8 +25,8 @@ class PlannerAssistantSheet extends HookConsumerWidget {
     final pageController = usePageController();
     final currentPage = useState(0);
 
-    final moduleConfig = ref.watch(moduleConfigurationProviderProvider);
-    final modules = moduleConfig.value?.shownModules.toList() ?? [];
+    final plannerConfig = ref.watch(plannerConfigPodProvider);
+    final milestones = plannerConfig.value?.sortedMilestones ?? [];
 
     Future<void> submit() async {
       final text = textController.text.trim();
@@ -34,7 +34,7 @@ class PlannerAssistantSheet extends HookConsumerWidget {
 
       try {
         final result = await ref
-            .read(plannerProviderProvider.notifier)
+            .read(plannerPodProvider.notifier)
             .askAssistant(
               text: text,
               today: kOldDateFormat.format(DateTime.now()),
@@ -51,8 +51,7 @@ class PlannerAssistantSheet extends HookConsumerWidget {
                 title: e.title,
                 date: DateTime.parse(e.date),
                 priority: e.priority,
-                module: e.moduleId,
-                session: e.sessionId,
+                milestoneId: e.milestoneId,
               ),
             )
             .toList();
@@ -76,7 +75,7 @@ class PlannerAssistantSheet extends HookConsumerWidget {
       isConfirming.value = true;
       try {
         await ref
-            .read(plannerProviderProvider.notifier)
+            .read(plannerPodProvider.notifier)
             .createEntries(
               entries
                   .map(
@@ -84,8 +83,7 @@ class PlannerAssistantSheet extends HookConsumerWidget {
                       date: kOldDateFormat.format(e.date),
                       title: e.title!,
                       priority: e.priority,
-                      moduleId: e.module,
-                      sessionId: e.session,
+                      milestoneId: e.milestoneId,
                     ),
                   )
                   .toList(),
@@ -132,7 +130,7 @@ class PlannerAssistantSheet extends HookConsumerWidget {
                       ),
                     ),
                     const Gap(8),
-                    CreateEntryCard(entry: entries[i], modules: modules),
+                    CreateEntryCard(entry: entries[i], milestones: milestones),
                   ],
                 ),
               ),

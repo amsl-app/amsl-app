@@ -1,6 +1,6 @@
 import 'package:amsl_app/hikari/exception.dart';
 import 'package:amsl_app/hikari/hikari.dart';
-import 'package:amsl_app/models/hikari/planner/new_planner_entry.dart';
+import 'package:amsl_app/features/planner/models/new_planner_entry.dart';
 import 'package:amsl_app/models/tori/planner/planner_entry.dart';
 import 'package:amsl_app/providers/hikari_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -20,7 +20,7 @@ Map<DateTime, List<PlannerEntry>> groupEntriesByDay(
 }
 
 @Riverpod(keepAlive: true, dependencies: [HikariPod])
-class PlannerProvider extends _$PlannerProvider {
+class PlannerPod extends _$PlannerPod {
   @override
   Future<List<PlannerEntry>> build() async {
     final hikari = ref.watch(hikariPodProvider);
@@ -47,10 +47,8 @@ class PlannerProvider extends _$PlannerProvider {
     String? date,
     String? title,
     int? priority,
-    String? moduleId,
-    String? sessionId,
-    bool clearModule = false,
-    bool clearSession = false,
+    String? milestoneId,
+    bool clearMilestone = false,
   }) async {
     final hikari = ref.read(hikariPodProvider);
     try {
@@ -61,10 +59,8 @@ class PlannerProvider extends _$PlannerProvider {
           date: date,
           title: title,
           priority: priority,
-          moduleId: moduleId,
-          sessionId: sessionId,
-          clearModule: clearModule,
-          clearSession: clearSession,
+          milestoneId: milestoneId,
+          clearMilestone: clearMilestone,
         ),
       );
       update(
@@ -80,10 +76,8 @@ class PlannerProvider extends _$PlannerProvider {
           date: date,
           title: title,
           priority: priority,
-          moduleId: moduleId,
-          sessionId: sessionId,
-          clearModule: clearModule,
-          clearSession: clearSession,
+          milestoneId: milestoneId,
+          clearMilestone: clearMilestone,
         ),
       );
     }

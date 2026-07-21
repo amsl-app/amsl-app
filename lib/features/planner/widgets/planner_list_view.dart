@@ -13,7 +13,7 @@ class PlannerListView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final entriesAsync = ref.watch(plannerProviderProvider);
+    final entriesAsync = ref.watch(plannerPodProvider);
 
     final skeleton = Padding(
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),

@@ -1,5 +1,6 @@
 import 'package:amsl_app/models/hikari/planner/planner_entry.dart'
     as hikari_planner;
+import 'package:amsl_app/models/tori/planner/planner_milestone.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'planner_entry.freezed.dart';
@@ -14,9 +15,9 @@ abstract class PlannerEntry with _$PlannerEntry {
     required String title,
     required bool completed,
     required int priority,
+    PlannerMilestone? milestone,
     required DateTime createdAt,
-    String? moduleId,
-    String? sessionId,
+    required DateTime updatedAt,
   }) = _PlannerEntry;
 
   factory PlannerEntry.fromHikari(hikari_planner.PlannerEntry entry) =>
@@ -26,8 +27,10 @@ abstract class PlannerEntry with _$PlannerEntry {
         title: entry.title,
         completed: entry.completed,
         priority: entry.priority,
+        milestone: entry.milestone == null
+            ? null
+            : PlannerMilestone.fromHikari(entry.milestone!),
         createdAt: entry.createdAt,
-        moduleId: entry.moduleId,
-        sessionId: entry.sessionId,
+        updatedAt: entry.updatedAt,
       );
 }
