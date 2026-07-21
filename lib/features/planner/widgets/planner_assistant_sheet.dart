@@ -77,7 +77,7 @@ class PlannerAssistantSheet extends HookConsumerWidget {
       try {
         await ref
             .read(plannerProviderProvider.notifier)
-            .bulkCreateEntries(
+            .createEntries(
               entries
                   .map(
                     (e) => NewPlannerEntry(

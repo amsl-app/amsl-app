@@ -418,7 +418,7 @@ void showCreateEntrySheet(
       return;
     }
 
-    await notifier.bulkCreateEntries(
+    await notifier.createEntries(
       newEntries
           .where((e) => e.id == null)
           .map(

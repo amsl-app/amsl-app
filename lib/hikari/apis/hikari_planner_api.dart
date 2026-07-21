@@ -20,23 +20,14 @@ class HikariPlannerApi {
         ],
       );
 
-  Future<PlannerEntry> createEntry({
-    required String date,
-    required String title,
-    required int priority,
-    String? moduleId,
-    String? sessionId,
-  }) => hikari.post(
-    '/planner/entries',
-    body: jsonEncode({
-      'date': date,
-      'title': title,
-      'priority': priority,
-      'module_id': ?moduleId,
-      'session_id': ?sessionId,
-    }),
-    transform: (json) => PlannerEntry.fromJson(json),
-  );
+  Future<List<PlannerEntry>> createEntries(List<NewPlannerEntry> entries) =>
+      hikari.post(
+        '/planner/entries/bulk',
+        body: jsonEncode([for (final e in entries) e.toJson()]),
+        transform: (json) => [
+          for (final e in json as List) PlannerEntry.fromJson(e),
+        ],
+      );
 
   Future<PlannerEntry> updateEntry(
     String id, {
@@ -64,15 +55,6 @@ class HikariPlannerApi {
   );
 
   Future<void> deleteEntry(String id) => hikari.delete('/planner/entries/$id');
-
-  Future<List<PlannerEntry>> bulkCreateEntries(List<NewPlannerEntry> entries) =>
-      hikari.post(
-        '/planner/entries/bulk',
-        body: jsonEncode([for (final e in entries) e.toJson()]),
-        transform: (json) => [
-          for (final e in json as List) PlannerEntry.fromJson(e),
-        ],
-      );
 
   Future<List<NewPlannerEntry>> askAssistant({
     required String text,

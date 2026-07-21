@@ -41,39 +41,6 @@ class PlannerProvider extends _$PlannerProvider {
     return future;
   }
 
-  Future<PlannerEntry> createEntry({
-    required String date,
-    required String title,
-    required int priority,
-    String? moduleId,
-    String? sessionId,
-  }) async {
-    final hikari = ref.read(hikariPodProvider);
-    try {
-      final entry = PlannerEntry.fromHikari(
-        await hikari.plannerApi.createEntry(
-          date: date,
-          title: title,
-          priority: priority,
-          moduleId: moduleId,
-          sessionId: sessionId,
-        ),
-      );
-      update((entries) async => _sortedByDate([...entries, entry]));
-      return entry;
-    } on HikariException catch (e) {
-      throw e.copyWith(
-        resolve: () => createEntry(
-          date: date,
-          title: title,
-          priority: priority,
-          moduleId: moduleId,
-          sessionId: sessionId,
-        ),
-      );
-    }
-  }
-
   Future<PlannerEntry> updateEntry(
     String id, {
     bool? completed,
@@ -132,23 +99,23 @@ class PlannerProvider extends _$PlannerProvider {
     }
   }
 
-  Future<List<PlannerEntry>> bulkCreateEntries(
+  Future<List<PlannerEntry>> createEntries(
     List<NewPlannerEntry> entries,
   ) async {
     final hikari = ref.read(hikariPodProvider);
     try {
-      final created = (await hikari.plannerApi.bulkCreateEntries(entries))
-          .map(PlannerEntry.fromHikari)
-          .toList();
+      final created = (await hikari.plannerApi.createEntries(
+        entries,
+      )).map(PlannerEntry.fromHikari).toList();
       update((current) async => _sortedByDate([...current, ...created]));
       return created;
     } on HikariException catch (e) {
-      throw e.copyWith(resolve: () => bulkCreateEntries(entries));
+      throw e.copyWith(resolve: () => createEntries(entries));
     }
   }
 
   /// Asks the assistant to turn free text into draft entries. The result is a
-  /// list of transient drafts (not persisted state), fed into [bulkCreateEntries].
+  /// list of transient drafts (not persisted state), fed into [createEntries].
   Future<List<NewPlannerEntry>> askAssistant({
     required String text,
     String? today,
@@ -157,7 +124,9 @@ class PlannerProvider extends _$PlannerProvider {
     try {
       return await hikari.plannerApi.askAssistant(text: text, today: today);
     } on HikariException catch (e) {
-      throw e.copyWith(resolve: () => askAssistant(text: text, today: today));
+      throw e.copyWith(
+        resolve: () => askAssistant(text: text, today: today),
+      );
     }
   }
 
