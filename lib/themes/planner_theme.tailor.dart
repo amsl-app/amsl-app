@@ -16,6 +16,8 @@ mixin _$PlannerThemeTailorMixin on ThemeExtension<PlannerTheme> {
   Color get mediumPriorityForeground;
   Color get highPriorityBackground;
   Color get highPriorityForeground;
+  Color get milestoneAccent;
+  Color get milestoneAccentBackground;
 
   @override
   PlannerTheme copyWith({
@@ -25,6 +27,8 @@ mixin _$PlannerThemeTailorMixin on ThemeExtension<PlannerTheme> {
     Color? mediumPriorityForeground,
     Color? highPriorityBackground,
     Color? highPriorityForeground,
+    Color? milestoneAccent,
+    Color? milestoneAccentBackground,
   }) {
     return PlannerTheme(
       lowPriorityBackground:
@@ -39,6 +43,9 @@ mixin _$PlannerThemeTailorMixin on ThemeExtension<PlannerTheme> {
           highPriorityBackground ?? this.highPriorityBackground,
       highPriorityForeground:
           highPriorityForeground ?? this.highPriorityForeground,
+      milestoneAccent: milestoneAccent ?? this.milestoneAccent,
+      milestoneAccentBackground:
+          milestoneAccentBackground ?? this.milestoneAccentBackground,
     );
   }
 
@@ -76,6 +83,12 @@ mixin _$PlannerThemeTailorMixin on ThemeExtension<PlannerTheme> {
         other.highPriorityForeground,
         t,
       )!,
+      milestoneAccent: Color.lerp(milestoneAccent, other.milestoneAccent, t)!,
+      milestoneAccentBackground: Color.lerp(
+        milestoneAccentBackground,
+        other.milestoneAccentBackground,
+        t,
+      )!,
     );
   }
 
@@ -107,6 +120,14 @@ mixin _$PlannerThemeTailorMixin on ThemeExtension<PlannerTheme> {
             const DeepCollectionEquality().equals(
               highPriorityForeground,
               other.highPriorityForeground,
+            ) &&
+            const DeepCollectionEquality().equals(
+              milestoneAccent,
+              other.milestoneAccent,
+            ) &&
+            const DeepCollectionEquality().equals(
+              milestoneAccentBackground,
+              other.milestoneAccentBackground,
             ));
   }
 
@@ -120,6 +141,8 @@ mixin _$PlannerThemeTailorMixin on ThemeExtension<PlannerTheme> {
       const DeepCollectionEquality().hash(mediumPriorityForeground),
       const DeepCollectionEquality().hash(highPriorityBackground),
       const DeepCollectionEquality().hash(highPriorityForeground),
+      const DeepCollectionEquality().hash(milestoneAccent),
+      const DeepCollectionEquality().hash(milestoneAccentBackground),
     );
   }
 }

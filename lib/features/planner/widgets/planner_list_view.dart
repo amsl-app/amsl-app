@@ -1,6 +1,9 @@
 import 'package:amsl_app/constants.dart';
+import 'package:amsl_app/features/planner/providers/milestone.dart';
 import 'package:amsl_app/features/planner/providers/planner.dart';
+import 'package:amsl_app/features/planner/providers/planner_configuration.dart';
 import 'package:amsl_app/features/planner/widgets/planner_entry_tile.dart';
+import 'package:amsl_app/features/planner/widgets/planner_milestone_tile.dart';
 import 'package:amsl_app/widgets/async_value_extension.dart';
 import 'package:amsl_app/widgets/loading/skeleton_loading_widget.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +16,7 @@ class PlannerListView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final entriesAsync = ref.watch(plannerPodProvider);
+    final configAsync = ref.watch(plannerConfigPodProvider);
 
     final skeleton = Padding(
       padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
@@ -23,13 +26,14 @@ class PlannerListView extends ConsumerWidget {
       ),
     );
 
-    return entriesAsync.build(
+    return configAsync.build(
       context,
       loadingBuilder: (_) => skeleton,
       errorBuilder: (_, e, st) => skeleton,
       builder: (context, data) {
-        final entries = data ?? [];
-        if (entries.isEmpty) {
+        final entries = data?.entries ?? [];
+        final milestones = data?.sortedMilestones ?? [];
+        if (entries.isEmpty && milestones.isEmpty) {
           return Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -59,8 +63,9 @@ class PlannerListView extends ConsumerWidget {
           );
         }
 
-        final grouped = groupEntriesByDay(entries);
-        final keys = grouped.keys.toList();
+        final entriesByDay = groupEntriesByDay(entries);
+        final milestonesByDay = groupMilestonesByDay(milestones);
+        final keys = mergedDayKeys(entriesByDay.keys, milestonesByDay.keys);
 
         return ListView.builder(
           padding: EdgeInsets.only(
@@ -72,7 +77,8 @@ class PlannerListView extends ConsumerWidget {
           itemCount: keys.length,
           itemBuilder: (context, i) {
             final date = keys[i];
-            final dayEntries = grouped[date]!;
+            final dayEntries = entriesByDay[date] ?? [];
+            final dayMilestones = milestonesByDay[date] ?? [];
             return Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -85,6 +91,7 @@ class PlannerListView extends ConsumerWidget {
                     ),
                   ),
                 ),
+                ...dayMilestones.map((m) => PlannerMilestoneTile(milestone: m)),
                 ...dayEntries.map((entry) => PlannerEntryTile(entry: entry)),
               ],
             );

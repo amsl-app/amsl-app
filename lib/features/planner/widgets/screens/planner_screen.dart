@@ -1,11 +1,13 @@
 import 'package:amsl_app/constants.dart';
 import 'package:amsl_app/features/planner/widgets/create_entry_sheet.dart';
+import 'package:amsl_app/features/planner/widgets/create_milestone_sheet.dart';
 import 'package:amsl_app/features/planner/widgets/planner_assistant_sheet.dart';
 import 'package:amsl_app/features/planner/widgets/planner_calendar_view.dart';
 import 'package:amsl_app/features/planner/widgets/planner_ical_sheet.dart';
 import 'package:amsl_app/features/planner/widgets/planner_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class PlannerScreen extends HookConsumerWidget {
@@ -39,14 +41,52 @@ class PlannerScreen extends HookConsumerWidget {
             ),
             tooltip: 'Kalender abonnieren',
           ),
-          IconButton(
-            onPressed: () => showCreateEntrySheet(
-              context,
-              ref,
-              initialDate: tabController.index == 1 ? selectedDate.value : null,
-            ),
+          PopupMenuButton<void>(
+            tooltip: 'Hinzufügen',
             icon: Icon(Icons.add, color: theme.colorScheme.onTertiaryContainer),
-            tooltip: 'Neuer Eintrag',
+            itemBuilder: (context) => [
+              PopupMenuItem(
+                onTap: () => showCreateEntrySheet(
+                  context,
+                  ref,
+                  initialDate: tabController.index == 1
+                      ? selectedDate.value
+                      : null,
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.checklist_rtl,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                    const Gap(8.0),
+                    Text('Neuer Eintrag', style: theme.textTheme.bodyMedium),
+                  ],
+                ),
+              ),
+              PopupMenuItem(
+                onTap: () => showCreateMilestoneSheet(
+                  context,
+                  ref,
+                  initialDate: tabController.index == 1
+                      ? selectedDate.value
+                      : null,
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.flag_rounded,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                    const Gap(8.0),
+                    Text(
+                      'Neuer Meilenstein',
+                      style: theme.textTheme.bodyMedium,
+                    ),
+                  ],
+                ),
+              ),
+            ],
           ),
         ],
         bottom: TabBar(

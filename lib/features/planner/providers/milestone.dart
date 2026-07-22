@@ -8,6 +8,18 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'milestone.g.dart';
 
+/// Groups milestones by their day (time component stripped), preserving order.
+Map<DateTime, List<PlannerMilestone>> groupMilestonesByDay(
+  Iterable<PlannerMilestone> milestones,
+) {
+  final map = <DateTime, List<PlannerMilestone>>{};
+  for (final m in milestones) {
+    final day = DateTime(m.date.year, m.date.month, m.date.day);
+    map.putIfAbsent(day, () => []).add(m);
+  }
+  return map;
+}
+
 @Riverpod(keepAlive: true, dependencies: [HikariPod, PlannerPod])
 class MilestonePod extends _$MilestonePod {
   @override

@@ -54,7 +54,7 @@ final class PlannerConfigPodProvider
   PlannerConfigPod create() => PlannerConfigPod();
 }
 
-String _$plannerConfigPodHash() => r'887456a53bd9dfd5b549bfc05bb49f25f8bf0882';
+String _$plannerConfigPodHash() => r'd9d8126576523e93c875a619bbc08c878d173f09';
 
 abstract class _$PlannerConfigPod extends $AsyncNotifier<PlannerConfig> {
   FutureOr<PlannerConfig> build();

@@ -88,6 +88,8 @@ class AppTheme {
     mediumPriorityForeground: Color(0xFFE65100),
     highPriorityBackground: Color(0xFFFFEBEE),
     highPriorityForeground: Color(0xFFC62828),
+    milestoneAccent: Color(0xFFFFFFFF),
+    milestoneAccentBackground: Color(0xFF0C132A),
   );
 
   static var lightToolCardTheme = ToolCardTheme(
