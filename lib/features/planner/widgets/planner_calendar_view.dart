@@ -19,11 +19,19 @@ class PlannerCalendarView extends HookConsumerWidget {
 
   final ValueChanged<DateTime>? onDaySelected;
 
+  static DateTime _weekStart(DateTime day) {
+    final normalized = DateTime(day.year, day.month, day.day);
+    return normalized.subtract(
+      Duration(days: (normalized.weekday - DateTime.monday) % 7),
+    );
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final focusedDay = useState(DateTime.now());
     final selectedDay = useState(DateTime.now());
+    final calendarFormat = useState(CalendarFormat.month);
     final configAsync = ref.watch(plannerConfigPodProvider);
 
     final skeleton = Padding(
@@ -49,6 +57,16 @@ class PlannerCalendarView extends HookConsumerWidget {
             milestonesByDay[DateTime(day.year, day.month, day.day)] ?? [];
         final selectedEntries = entriesForDay(selectedDay.value);
         final selectedMilestones = milestonesForDay(selectedDay.value);
+        final isWeekView = calendarFormat.value == CalendarFormat.week;
+        final panelDays = isWeekView
+            ? List.generate(
+                7,
+                (i) => _weekStart(selectedDay.value).add(Duration(days: i)),
+              )
+            : [selectedDay.value];
+        final hasAnyItems = panelDays.any(
+          (d) => entriesForDay(d).isNotEmpty || milestonesForDay(d).isNotEmpty,
+        );
 
         return Column(
           children: [
@@ -56,7 +74,29 @@ class PlannerCalendarView extends HookConsumerWidget {
               firstDay: DateTime(2020),
               lastDay: DateTime(2100),
               focusedDay: focusedDay.value,
-              selectedDayPredicate: (day) => isSameDay(day, selectedDay.value),
+              calendarFormat: calendarFormat.value,
+              availableCalendarFormats: const {
+                CalendarFormat.month: 'Tag',
+                CalendarFormat.week: 'Woche',
+              },
+              onFormatChanged: (format) {
+                calendarFormat.value = format;
+                if (format == CalendarFormat.week) {
+                  selectedDay.value = focusedDay.value;
+                  onDaySelected?.call(focusedDay.value);
+                } else {
+                  final firstOfMonth = DateTime(
+                    focusedDay.value.year,
+                    focusedDay.value.month,
+                  );
+                  selectedDay.value = firstOfMonth;
+                  onDaySelected?.call(firstOfMonth);
+                }
+              },
+              startingDayOfWeek: StartingDayOfWeek.monday,
+              selectedDayPredicate: (day) => isWeekView
+                  ? isSameDay(_weekStart(day), _weekStart(selectedDay.value))
+                  : isSameDay(day, selectedDay.value),
               eventLoader: entriesForDay,
               calendarStyle: CalendarStyle(
                 selectedDecoration: BoxDecoration(
@@ -106,23 +146,38 @@ class PlannerCalendarView extends HookConsumerWidget {
                 },
               ),
               headerStyle: HeaderStyle(
-                formatButtonVisible: false,
                 titleCentered: true,
                 titleTextStyle: theme.textTheme.titleMedium!,
+                formatButtonDecoration: BoxDecoration(
+                  color: theme.colorScheme.tertiaryContainer,
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                formatButtonTextStyle: TextStyle(
+                  color: theme.colorScheme.onTertiaryContainer,
+                ),
               ),
               onDaySelected: (selected, focused) {
                 selectedDay.value = selected;
                 focusedDay.value = focused;
                 onDaySelected?.call(selected);
               },
-              onPageChanged: (day) => focusedDay.value = day,
+              onPageChanged: (day) {
+                focusedDay.value = day;
+                final newSelection = isWeekView
+                    ? day
+                    : DateTime(day.year, day.month);
+                selectedDay.value = newSelection;
+                onDaySelected?.call(newSelection);
+              },
             ),
-            const Divider(height: 1),
+            // const Divider(height: 1),
             Expanded(
-              child: selectedEntries.isEmpty && selectedMilestones.isEmpty
+              child: !hasAnyItems
                   ? Center(
                       child: Text(
-                        'Keine Einträge für ${kNewDateFormat.format(selectedDay.value)}',
+                        isWeekView
+                            ? 'Keine Einträge für ${kNewDateFormat.format(panelDays.first)} - ${kNewDateFormat.format(panelDays.last)}'
+                            : 'Keine Einträge für ${kNewDateFormat.format(selectedDay.value)}',
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.onSurface.withValues(
                             alpha: 0.6,
@@ -137,14 +192,42 @@ class PlannerCalendarView extends HookConsumerWidget {
                         20,
                         getBottomBarHeight(context),
                       ),
-                      children: [
-                        ...selectedMilestones.map(
-                          (m) => PlannerMilestoneTile(milestone: m),
-                        ),
-                        ...selectedEntries.map(
-                          (entry) => PlannerEntryTile(entry: entry),
-                        ),
-                      ],
+                      children: isWeekView
+                          ? [
+                              for (final day in panelDays)
+                                if (entriesForDay(day).isNotEmpty ||
+                                    milestonesForDay(day).isNotEmpty) ...[
+                                  Padding(
+                                    padding: const EdgeInsets.only(
+                                      top: 12,
+                                      bottom: 4,
+                                    ),
+                                    child: Text(
+                                      kNewDateFormat.format(day),
+                                      style: theme.textTheme.labelLarge
+                                          ?.copyWith(
+                                            color: theme
+                                                .colorScheme
+                                                .onTertiaryContainer,
+                                          ),
+                                    ),
+                                  ),
+                                  ...milestonesForDay(day).map(
+                                    (m) => PlannerMilestoneTile(milestone: m),
+                                  ),
+                                  ...entriesForDay(day).map(
+                                    (entry) => PlannerEntryTile(entry: entry),
+                                  ),
+                                ],
+                            ]
+                          : [
+                              ...selectedMilestones.map(
+                                (m) => PlannerMilestoneTile(milestone: m),
+                              ),
+                              ...selectedEntries.map(
+                                (entry) => PlannerEntryTile(entry: entry),
+                              ),
+                            ],
                     ),
             ),
           ],
