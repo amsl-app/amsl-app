@@ -213,7 +213,6 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               label: "Weiter zu ${nextSession.title}",
               onTap: () {
                 Navigator.of(context).pop();
-                context.pop();
                 context.pushReplacementNamed(
                   "chat",
                   pathParameters: {
