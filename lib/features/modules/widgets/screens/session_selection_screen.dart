@@ -1,9 +1,13 @@
 import 'package:amsl_app/features/modules/providers/module_assessment_set.dart';
+import 'package:amsl_app/features/planner/providers/milestone.dart';
 import 'package:amsl_app/features/preferences/storage_keys.dart';
 import 'package:amsl_app/features/preferences/storages.dart';
 import 'package:amsl_app/models/hikari/assessments/assessment_session.dart'
     as hikari_assessment;
 import 'package:amsl_app/models/tori/theme/module_theme.dart';
+import 'package:amsl_app/providers/hikari_provider.dart';
+import 'package:amsl_app/widgets/async_value_extension.dart';
+import 'package:amsl_app/widgets/loading/skeleton_loading_widget.dart';
 import 'package:blur/blur.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -13,6 +17,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../../../../../models/hikari/modules/session.dart' as hikari_session;
+import '../../../../../models/hikari/planner/module_milestone.dart'
+    as hikari_planner;
 import '../../../../../models/tori/modules/session.dart';
 import '../../../../../widgets/cached_image.dart';
 import '../../../../constants.dart';
@@ -120,6 +126,90 @@ class _SessionSelectionScreenState
                     pathParameters: {"moduleID": moduleAssessmentSet.module.id},
                   ),
                 ),
+              IconButton(
+                icon: const Icon(Icons.flag),
+                onPressed: () {
+                  final hikari = ref.read(hikariPodProvider);
+
+                  showAmslBottomSheet(
+                    context: context,
+                    bottomBar: true,
+                    onClose: () => context.pop(),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Text(
+                              "Meilensteine dieses Moduls",
+                              style: theme.textTheme.titleMedium!.copyWith(
+                                color: theme.colorScheme.primary,
+                              ),
+                            ),
+                          ],
+                        ),
+                        const Gap(12),
+                        hikari.moduleApi
+                            .getMilestones(moduleAssessmentSet.module.id)
+                            .build(
+                              context,
+                              builder: (context, data) {
+                                if (data == null || data.isEmpty) {
+                                  return Text(
+                                    "Keine Meilensteine vorhanden",
+                                    style: theme.textTheme.bodyMedium!.copyWith(
+                                      color: theme.colorScheme.primary,
+                                    ),
+                                  );
+                                }
+                                return Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Gap(12),
+                                    ...data.map(
+                                      (milestone) =>
+                                          _milestoneCard(context, milestone),
+                                    ),
+                                    const Gap(12),
+                                    RoundedCornerButton(
+                                      label: "Zum Planner hinzufügen",
+                                      onTap: () async {
+                                        try {
+                                          final resp = await ref
+                                              .read(
+                                                milestonePodProvider.notifier,
+                                              )
+                                              .importMilestoneFromModule(
+                                                moduleAssessmentSet.module.id,
+                                              );
+                                          final label = (resp.length == 1)
+                                              ? "Meilenstein erfolgreich importiert"
+                                              : "${resp.length} Meilensteine erfolgreich importiert";
+                                          if (context.mounted) {
+                                            context.pop();
+                                            showMessage(context, label: label);
+                                          }
+                                        } catch (e) {
+                                          if (context.mounted) {
+                                            showException(context, e);
+                                          }
+                                        }
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                              loadingBuilder: (context) =>
+                                  SkeletonLoadingWidget(rows: 1),
+                              errorBuilder: (context, error, stackTrace) =>
+                                  SkeletonLoadingWidget(rows: 1),
+                            ),
+                      ],
+                    ),
+                  );
+                },
+              ),
             ],
           ),
           body: Stack(
@@ -131,6 +221,68 @@ class _SessionSelectionScreenState
                 ..._postAssessment(context, moduleAssessmentSet),
               if (assessmentEnabled)
                 _evaluation(context, moduleAssessmentSet.module),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _milestoneCard(
+    BuildContext context,
+    hikari_planner.ModuleMilestone milestone,
+  ) {
+    final theme = Theme.of(context);
+    final imported = milestone.alreadyImported;
+
+    return Opacity(
+      opacity: imported ? 0.5 : 1.0,
+      child: Container(
+        decoration: BoxDecoration(
+          // color: theme.colorScheme.surfaceContainer,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: theme.colorScheme.primary, width: 2),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+          child: Row(
+            children: [
+              Icon(
+                imported ? Icons.check_circle : Icons.flag_outlined,
+                color: theme.colorScheme.primary,
+              ),
+              const Gap(8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      milestone.title,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.primary,
+                      ),
+                    ),
+                    if (milestone.description != null)
+                      Text(
+                        milestone.description!,
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.primary.withValues(
+                            alpha: 0.5,
+                          ),
+                        ),
+                      ),
+                    Text(
+                      kNewDateFormat.format(milestone.date),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.primary.withValues(alpha: 0.5),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             ],
           ),
         ),

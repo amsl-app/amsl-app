@@ -13,7 +13,11 @@ Map<DateTime, List<PlannerEntry>> groupEntriesByDay(
 ) {
   final map = <DateTime, List<PlannerEntry>>{};
   for (final entry in entries) {
-    final day = DateTime(entry.date.year, entry.date.month, entry.date.day);
+    final day = DateTime(
+      entry.effectiveDate.year,
+      entry.effectiveDate.month,
+      entry.effectiveDate.day,
+    );
     map.putIfAbsent(day, () => []).add(entry);
   }
   return map;
@@ -132,7 +136,7 @@ class PlannerPod extends _$PlannerPod {
   }
 
   List<PlannerEntry> _sortedByDate(List<PlannerEntry> entries) =>
-      entries..sort((a, b) => a.date.compareTo(b.date));
+      entries..sort((a, b) => a.effectiveDate.compareTo(b.effectiveDate));
 }
 
 @Riverpod(keepAlive: true, dependencies: [HikariPod])

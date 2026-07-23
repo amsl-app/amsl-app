@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PlannerEntry {
 
- String get id; DateTime get date; String get title; bool get completed; int get priority; PlannerMilestone? get milestone; DateTime get createdAt; DateTime get updatedAt;
+ String get id; DateTime get scheduledDate; DateTime get effectiveDate; String get title; bool get completed; int get priority; PlannerMilestone? get milestone; DateTime get createdAt; DateTime get updatedAt;
 /// Create a copy of PlannerEntry
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $PlannerEntryCopyWith<PlannerEntry> get copyWith => _$PlannerEntryCopyWithImpl<P
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlannerEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.date, date) || other.date == date)&&(identical(other.title, title) || other.title == title)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.milestone, milestone) || other.milestone == milestone)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlannerEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.scheduledDate, scheduledDate) || other.scheduledDate == scheduledDate)&&(identical(other.effectiveDate, effectiveDate) || other.effectiveDate == effectiveDate)&&(identical(other.title, title) || other.title == title)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.milestone, milestone) || other.milestone == milestone)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,date,title,completed,priority,milestone,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,scheduledDate,effectiveDate,title,completed,priority,milestone,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'PlannerEntry(id: $id, date: $date, title: $title, completed: $completed, priority: $priority, milestone: $milestone, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'PlannerEntry(id: $id, scheduledDate: $scheduledDate, effectiveDate: $effectiveDate, title: $title, completed: $completed, priority: $priority, milestone: $milestone, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $PlannerEntryCopyWith<$Res>  {
   factory $PlannerEntryCopyWith(PlannerEntry value, $Res Function(PlannerEntry) _then) = _$PlannerEntryCopyWithImpl;
 @useResult
 $Res call({
- String id, DateTime date, String title, bool completed, int priority, PlannerMilestone? milestone, DateTime createdAt, DateTime updatedAt
+ String id, DateTime scheduledDate, DateTime effectiveDate, String title, bool completed, int priority, PlannerMilestone? milestone, DateTime createdAt, DateTime updatedAt
 });
 
 
@@ -62,10 +62,11 @@ class _$PlannerEntryCopyWithImpl<$Res>
 
 /// Create a copy of PlannerEntry
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? date = null,Object? title = null,Object? completed = null,Object? priority = null,Object? milestone = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? scheduledDate = null,Object? effectiveDate = null,Object? title = null,Object? completed = null,Object? priority = null,Object? milestone = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
+as String,scheduledDate: null == scheduledDate ? _self.scheduledDate : scheduledDate // ignore: cast_nullable_to_non_nullable
+as DateTime,effectiveDate: null == effectiveDate ? _self.effectiveDate : effectiveDate // ignore: cast_nullable_to_non_nullable
 as DateTime,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,completed: null == completed ? _self.completed : completed // ignore: cast_nullable_to_non_nullable
 as bool,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable
@@ -169,10 +170,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  DateTime date,  String title,  bool completed,  int priority,  PlannerMilestone? milestone,  DateTime createdAt,  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  DateTime scheduledDate,  DateTime effectiveDate,  String title,  bool completed,  int priority,  PlannerMilestone? milestone,  DateTime createdAt,  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PlannerEntry() when $default != null:
-return $default(_that.id,_that.date,_that.title,_that.completed,_that.priority,_that.milestone,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.scheduledDate,_that.effectiveDate,_that.title,_that.completed,_that.priority,_that.milestone,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -190,10 +191,10 @@ return $default(_that.id,_that.date,_that.title,_that.completed,_that.priority,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  DateTime date,  String title,  bool completed,  int priority,  PlannerMilestone? milestone,  DateTime createdAt,  DateTime updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  DateTime scheduledDate,  DateTime effectiveDate,  String title,  bool completed,  int priority,  PlannerMilestone? milestone,  DateTime createdAt,  DateTime updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _PlannerEntry():
-return $default(_that.id,_that.date,_that.title,_that.completed,_that.priority,_that.milestone,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.scheduledDate,_that.effectiveDate,_that.title,_that.completed,_that.priority,_that.milestone,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -210,10 +211,10 @@ return $default(_that.id,_that.date,_that.title,_that.completed,_that.priority,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  DateTime date,  String title,  bool completed,  int priority,  PlannerMilestone? milestone,  DateTime createdAt,  DateTime updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  DateTime scheduledDate,  DateTime effectiveDate,  String title,  bool completed,  int priority,  PlannerMilestone? milestone,  DateTime createdAt,  DateTime updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _PlannerEntry() when $default != null:
-return $default(_that.id,_that.date,_that.title,_that.completed,_that.priority,_that.milestone,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.scheduledDate,_that.effectiveDate,_that.title,_that.completed,_that.priority,_that.milestone,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -225,11 +226,12 @@ return $default(_that.id,_that.date,_that.title,_that.completed,_that.priority,_
 
 
 class _PlannerEntry extends PlannerEntry {
-  const _PlannerEntry({required this.id, required this.date, required this.title, required this.completed, required this.priority, this.milestone, required this.createdAt, required this.updatedAt}): super._();
+  const _PlannerEntry({required this.id, required this.scheduledDate, required this.effectiveDate, required this.title, required this.completed, required this.priority, this.milestone, required this.createdAt, required this.updatedAt}): super._();
   
 
 @override final  String id;
-@override final  DateTime date;
+@override final  DateTime scheduledDate;
+@override final  DateTime effectiveDate;
 @override final  String title;
 @override final  bool completed;
 @override final  int priority;
@@ -247,16 +249,16 @@ _$PlannerEntryCopyWith<_PlannerEntry> get copyWith => __$PlannerEntryCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlannerEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.date, date) || other.date == date)&&(identical(other.title, title) || other.title == title)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.milestone, milestone) || other.milestone == milestone)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlannerEntry&&(identical(other.id, id) || other.id == id)&&(identical(other.scheduledDate, scheduledDate) || other.scheduledDate == scheduledDate)&&(identical(other.effectiveDate, effectiveDate) || other.effectiveDate == effectiveDate)&&(identical(other.title, title) || other.title == title)&&(identical(other.completed, completed) || other.completed == completed)&&(identical(other.priority, priority) || other.priority == priority)&&(identical(other.milestone, milestone) || other.milestone == milestone)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,date,title,completed,priority,milestone,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,scheduledDate,effectiveDate,title,completed,priority,milestone,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'PlannerEntry(id: $id, date: $date, title: $title, completed: $completed, priority: $priority, milestone: $milestone, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'PlannerEntry(id: $id, scheduledDate: $scheduledDate, effectiveDate: $effectiveDate, title: $title, completed: $completed, priority: $priority, milestone: $milestone, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -267,7 +269,7 @@ abstract mixin class _$PlannerEntryCopyWith<$Res> implements $PlannerEntryCopyWi
   factory _$PlannerEntryCopyWith(_PlannerEntry value, $Res Function(_PlannerEntry) _then) = __$PlannerEntryCopyWithImpl;
 @override @useResult
 $Res call({
- String id, DateTime date, String title, bool completed, int priority, PlannerMilestone? milestone, DateTime createdAt, DateTime updatedAt
+ String id, DateTime scheduledDate, DateTime effectiveDate, String title, bool completed, int priority, PlannerMilestone? milestone, DateTime createdAt, DateTime updatedAt
 });
 
 
@@ -284,10 +286,11 @@ class __$PlannerEntryCopyWithImpl<$Res>
 
 /// Create a copy of PlannerEntry
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? date = null,Object? title = null,Object? completed = null,Object? priority = null,Object? milestone = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? scheduledDate = null,Object? effectiveDate = null,Object? title = null,Object? completed = null,Object? priority = null,Object? milestone = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_PlannerEntry(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
-as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
+as String,scheduledDate: null == scheduledDate ? _self.scheduledDate : scheduledDate // ignore: cast_nullable_to_non_nullable
+as DateTime,effectiveDate: null == effectiveDate ? _self.effectiveDate : effectiveDate // ignore: cast_nullable_to_non_nullable
 as DateTime,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,completed: null == completed ? _self.completed : completed // ignore: cast_nullable_to_non_nullable
 as bool,priority: null == priority ? _self.priority : priority // ignore: cast_nullable_to_non_nullable

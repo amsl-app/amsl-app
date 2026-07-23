@@ -46,6 +46,25 @@ class MilestonePod extends _$MilestonePod {
     return future;
   }
 
+  Future<List<PlannerMilestone>> importMilestoneFromModule(
+    String moduleId,
+  ) async {
+    final hikari = ref.read(hikariPodProvider);
+    try {
+      final hikari_milestones = await hikari.moduleApi.importMilestones(
+        moduleId,
+      );
+      final created = {
+        for (final m in hikari_milestones) m.id: PlannerMilestone.fromHikari(m),
+      };
+
+      update((milestones) async => {...milestones, ...created});
+      return created.values.toList();
+    } on HikariException catch (e) {
+      throw e.copyWith(resolve: () => importMilestoneFromModule(moduleId));
+    }
+  }
+
   Future<PlannerMilestone> createMilestone(
     NewPlannerMilestone milestone,
   ) async {

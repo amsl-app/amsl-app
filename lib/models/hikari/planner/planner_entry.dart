@@ -10,6 +10,7 @@ abstract class PlannerEntry with _$PlannerEntry {
   factory PlannerEntry({
     required String id,
     required DateTime date,
+    @JsonKey(name: 'effective_date') required DateTime effectiveDate,
     required String title,
     required bool completed,
     required int priority,

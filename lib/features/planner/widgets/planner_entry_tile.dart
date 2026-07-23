@@ -1,3 +1,4 @@
+import 'package:amsl_app/constants.dart';
 import 'package:amsl_app/features/planner/providers/planner.dart';
 import 'package:amsl_app/features/planner/widgets/create_entry_sheet.dart';
 import 'package:amsl_app/features/planner/widgets/planner_priority_badge.dart';
@@ -16,6 +17,10 @@ class PlannerEntryTile extends ConsumerWidget {
     final theme = Theme.of(context);
 
     final milestoneName = entry.milestone?.title;
+    final isOverdue = !DateUtils.isSameDay(
+      entry.scheduledDate,
+      entry.effectiveDate,
+    );
 
     return Dismissible(
       key: ValueKey(entry.id),
@@ -42,7 +47,9 @@ class PlannerEntryTile extends ConsumerWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
           side: BorderSide(
-            color: theme.colorScheme.outline.withValues(alpha: 0.2),
+            color: isOverdue
+                ? theme.colorScheme.error.withValues(alpha: 0.5)
+                : theme.colorScheme.outline.withValues(alpha: 0.2),
           ),
         ),
         child: InkWell(
@@ -81,6 +88,31 @@ class PlannerEntryTile extends ConsumerWidget {
                               : null,
                         ),
                       ),
+                      if (isOverdue)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.error_outline,
+                                size: 14,
+                                color: theme.colorScheme.onError,
+                              ),
+                              const Gap(4),
+                              Flexible(
+                                child: Text(
+                                  'Überfällig · ursprünglich '
+                                  '${kNewDateFormat.format(entry.scheduledDate)}',
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.onError,
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       if (milestoneName != null)
                         Text(
                           milestoneName,

@@ -10,6 +10,7 @@ _PlannerEntry _$PlannerEntryFromJson(Map<String, dynamic> json) =>
     _PlannerEntry(
       id: json['id'] as String,
       date: DateTime.parse(json['date'] as String),
+      effectiveDate: DateTime.parse(json['effective_date'] as String),
       title: json['title'] as String,
       completed: json['completed'] as bool,
       priority: (json['priority'] as num).toInt(),
@@ -26,6 +27,7 @@ Map<String, dynamic> _$PlannerEntryToJson(_PlannerEntry instance) =>
     <String, dynamic>{
       'id': instance.id,
       'date': instance.date.toIso8601String(),
+      'effective_date': instance.effectiveDate.toIso8601String(),
       'title': instance.title,
       'completed': instance.completed,
       'priority': instance.priority,

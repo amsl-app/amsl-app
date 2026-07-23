@@ -49,7 +49,7 @@ final class MilestonePodProvider
   MilestonePod create() => MilestonePod();
 }
 
-String _$milestonePodHash() => r'e30d3f262db6775192e118082ace5c1d6390ae94';
+String _$milestonePodHash() => r'518cb166a81fc922fc48996b5ca65566aa1a0dfd';
 
 abstract class _$MilestonePod
     extends $AsyncNotifier<Map<String, PlannerMilestone>> {

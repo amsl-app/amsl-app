@@ -11,7 +11,8 @@ abstract class PlannerEntry with _$PlannerEntry {
 
   const factory PlannerEntry({
     required String id,
-    required DateTime date,
+    required DateTime scheduledDate,
+    required DateTime effectiveDate,
     required String title,
     required bool completed,
     required int priority,
@@ -23,7 +24,8 @@ abstract class PlannerEntry with _$PlannerEntry {
   factory PlannerEntry.fromHikari(hikari_planner.PlannerEntry entry) =>
       PlannerEntry(
         id: entry.id,
-        date: entry.date,
+        scheduledDate: entry.date,
+        effectiveDate: entry.effectiveDate,
         title: entry.title,
         completed: entry.completed,
         priority: entry.priority,

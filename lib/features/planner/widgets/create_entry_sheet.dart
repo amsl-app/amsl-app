@@ -228,7 +228,7 @@ class CreateEntrySheet extends HookConsumerWidget {
           NewEntryData(
             id: entry!.id,
             title: entry!.title,
-            date: entry!.date,
+            date: entry!.scheduledDate,
             priority: entry!.priority,
             milestoneId: entry!.milestone?.id,
           ),
