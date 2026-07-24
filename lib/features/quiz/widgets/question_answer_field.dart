@@ -143,7 +143,6 @@ class QuizQuestionAnswerField extends HookWidget {
                             VoiceButton(
                               textEditingController: controller,
                               onEnd: (text) {
-                                // TODO if state gets changed
                                 onChanged(text);
                               },
                             ),

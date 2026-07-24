@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
@@ -20,10 +19,10 @@ class SpeechToTextService {
 
   late stt.SpeechToText speech;
   String _currentText = "";
-  bool initalized = false;
+  bool initialized = false;
 
-  Future initialize(BuildContext context) async {
-    if (initalized) return true;
+  Future initialize() async {
+    if (initialized) return true;
     final res = await speech.initialize(
       onStatus: (status) {
         if (status == "done" && !speech.hasError) {
@@ -42,20 +41,22 @@ class SpeechToTextService {
       },
     );
     log.info("Speech recognition initialized: $res");
-    initalized = res;
-    return initalized;
+    initialized = res;
+    return initialized;
   }
 
   Future startRecording() async {
     HapticFeedback.heavyImpact();
     log.info("Activate microphone");
+    final locales = await speech.locales();
+    log.info("Available debug: ${locales.map((e) => e.localeId).join(", ")}");
     await speech.listen(
       listenOptions: stt.SpeechListenOptions(
         listenMode: stt.ListenMode.dictation,
+        localeId: "de-DE",
+        pauseFor: Duration(seconds: 2),
         onDevice: true,
       ),
-      localeId: "de",
-      pauseFor: Duration(seconds: 2),
       onResult: (result) {
         _currentText = result.recognizedWords.trim();
         if (onChange != null) onChange!(_currentText);

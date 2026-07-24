@@ -70,7 +70,11 @@ class _VoiceButtonState extends State<VoiceButton> {
               ended = false;
             });
             if (widget.onStart != null) widget.onStart!();
-            await speech.initialize(context);
+            final initialized = await speech.initialize();
+            if (!initialized) {
+              onEnd();
+              return;
+            }
             await speech.startRecording();
           }
         },
