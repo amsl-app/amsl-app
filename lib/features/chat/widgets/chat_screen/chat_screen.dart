@@ -205,21 +205,25 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           context: context,
           content: "Wir empfehlen dir, mit der nächsten Einheit fortzufahren.",
           onClose: () {
-            Navigator.of(context).pop();
-            context.pop();
+            // We have to pop twice
+            context
+              ..pop()
+              ..pop();
           },
           buttonBar: [
             RoundedCornerButton(
               label: "Weiter zu ${nextSession.title}",
               onTap: () {
-                Navigator.of(context).pop();
-                context.pushReplacementNamed(
-                  "chat",
-                  pathParameters: {
-                    "moduleID": nextSession.module.target!.id,
-                    "sessionID": nextSession.id,
-                  },
-                );
+                // There is no popAndPushReplacementNamed, so we have to pop first and then pushReplacementNamed
+                context
+                  ..pop()
+                  ..pushReplacementNamed(
+                    "chat",
+                    pathParameters: {
+                      "moduleID": nextSession.module.target!.id,
+                      "sessionID": nextSession.id,
+                    },
+                  );
               },
             ),
           ],
