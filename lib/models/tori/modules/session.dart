@@ -1,7 +1,7 @@
 import 'package:amsl_app/models/botflow.dart';
+import 'package:amsl_app/models/tori/modules/module_configuration.dart';
 import 'package:collection/collection.dart';
 import 'package:logging/logging.dart';
-
 import '../../hikari/modules/session.dart';
 import 'module.dart';
 
@@ -29,6 +29,7 @@ class Session {
     this.icon,
     this.banner,
     this.metadata,
+    this.next,
   }) {
     this.module = WeakReference(module);
     if (metadata == null) {
@@ -84,7 +85,7 @@ class Session {
   final bool isLlm;
   final LlmProvider? llmProvider;
   final Map<String, dynamic>? metadata;
-  late final Session? next;
+  final SessionsNext? next;
 
   Session copyWith({
     Module? module,
@@ -100,7 +101,7 @@ class Session {
     String? description,
     String? icon,
     String? banner,
-    Session? next,
+    SessionsNext? next,
     DateTime? completion,
     List<SessionSource>? sources,
     bool? isLlm,
@@ -132,9 +133,8 @@ class Session {
       llmProvider: llmProvider ?? this.llmProvider,
       hide: hide ?? this.hide,
       quizzable: quizzable ?? this.quizzable,
+      next: next ?? this.next,
     );
-
-    session.next = next ?? this.next;
     return session;
   }
 
@@ -145,6 +145,18 @@ class Session {
 
   @override
   String toString() {
-    return 'Session{module: $module, index: $index, id: $id, title: $title, status: $status, completion: $completion, lockedUntil: $lockedUntil, subtitle: $subtitle, description: $description, icon: $icon, banner: $banner, botflow: $botflow, text: $text, journalingType: $journalingType, next: ${next?.id}, metadata: $metadata, isLLm: $isLlm}';
+    return 'Session{module: $module, index: $index, id: $id, title: $title, status: $status, completion: $completion, lockedUntil: $lockedUntil, subtitle: $subtitle, description: $description, icon: $icon, banner: $banner, botflow: $botflow, text: $text, journalingType: $journalingType, next: ${next?.moduleId} - ${next?.sessionId} - force: ${next?.force}, metadata: $metadata, isLLm: $isLlm}';
+  }
+}
+
+/// Extension for resolving session references across module boundaries.
+extension SessionResolution on Session {
+  /// Resolves the [next] session reference to an actual [Session] object.
+  ///
+  /// Returns null if [next] is null, [config] is null, or the referenced
+  /// session cannot be found.
+  Session? resolveNext(ModuleConfiguration? config) {
+    if (next == null || config == null) return null;
+    return config.findSessionById(next!.moduleId, next!.sessionId);
   }
 }
