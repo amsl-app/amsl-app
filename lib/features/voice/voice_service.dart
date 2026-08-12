@@ -1,82 +1,120 @@
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logging/logging.dart';
 import 'package:speech_to_text/speech_to_text.dart' as stt;
 
-class SpeechToTextService {
-  static final log = Logger("SpeechToTextService");
+// Ein einfaches Rückgabe-Objekt (oder Dart 3 Record),
+// um die Werte im UI leicht zugänglich zu machen.
+class SpeechState {
+  final String text;
+  final bool isListening;
+  final bool isInitialized;
+  final Future<void> Function({String? presetText}) startRecording;
+  final Future<void> Function() stopRecording;
 
-  SpeechToTextService({
-    this.onChange,
-    this.onComplete,
-    this.onStart,
-    this.onError,
-  }) : speech = stt.SpeechToText();
+  SpeechState({
+    required this.text,
+    required this.isListening,
+    required this.isInitialized,
+    required this.startRecording,
+    required this.stopRecording,
+  });
+}
 
-  final Function(String text)? onChange;
-  final Function(String text)? onComplete;
-  final Function(dynamic error)? onError;
-  final Function()? onStart;
+SpeechState useSpeechToText({
+  Function(String text)? onComplete,
+  Function(String text)? onChange,
+  Function(dynamic error)? onError,
+}) {
+  final log = Logger("SpeechToTextHook");
 
-  late stt.SpeechToText speech;
-  String _currentText = "";
-  bool initialized = false;
+  final speech = useMemoized(() => stt.SpeechToText());
 
-  Future initialize() async {
-    if (initialized) return true;
-    final res = await speech.initialize(
-      onStatus: (status) {
-        if (status == "done" && !speech.hasError) {
-          log.info("Speech recognition done: $_currentText");
+  final text = useState("");
+  final isListening = useState(false);
+  final isInitialized = useState(false);
 
-          if (onComplete != null) onComplete!(_currentText);
-          _currentText = "";
-        }
-        if (status == "listening") {
-          if (onStart != null) onStart!();
-        }
-      },
-      onError: (error) {
-        log.severe("Speech recognition error: ${error.errorMsg}");
-        if (onError != null) onError!(error);
-      },
-    );
-    log.info("Speech recognition initialized: $res");
-    initialized = res;
-    return initialized;
-  }
+  useEffect(() {
+    Future<void> initSpeech() async {
+      final res = await speech.initialize(
+        onStatus: (status) {
+          if (status == "done" && !speech.hasError) {
+            log.info("Speech recognition done: ${text.value}");
+            if (onComplete != null) onComplete(text.value);
+            isListening.value = false;
+          }
+          if (status == "listening") {
+            isListening.value = true;
+          }
+        },
+        onError: (error) {
+          log.severe("Speech recognition error: ${error.errorMsg}");
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            isListening.value = false;
+          });
+          if (onError != null) onError(error);
+        },
+      );
 
-  Future startRecording() async {
+      log.info("Speech recognition initialized: $res");
+      isInitialized.value = res;
+    }
+
+    initSpeech();
+
+    return () {
+      if (speech.isListening) {
+        log.info("Hook disposed: Canceling speech recognition");
+        speech
+            .cancel(); // Besser als stop() beim Beenden, um Fehler zu vermeiden
+      }
+    };
+  }, [speech]);
+
+  Future<void> startRecording({String? presetText}) async {
+    if (!isInitialized.value) return;
+
     HapticFeedback.heavyImpact();
     log.info("Activate microphone");
-    final locales = await speech.locales();
-    log.info("Available debug: ${locales.map((e) => e.localeId).join(", ")}");
+    text.value = presetText ?? "";
+
     await speech.listen(
       listenOptions: stt.SpeechListenOptions(
         listenMode: stt.ListenMode.dictation,
         localeId: "de-DE",
-        pauseFor: Duration(seconds: 2),
+        pauseFor: const Duration(seconds: 2),
         onDevice: true,
       ),
       onResult: (result) {
-        _currentText = result.recognizedWords.trim();
-        if (onChange != null) onChange!(_currentText);
+        text.value = result.recognizedWords.trim();
+        if (onChange != null) onChange(text.value);
       },
     );
   }
 
-  Future stopRecording({int iteration = 0}) async {
+  Future<void> stopRecording({int iteration = 0}) async {
     HapticFeedback.mediumImpact();
     log.info("Deactivate microphone");
     try {
-      await speech.stop().timeout(Duration(seconds: 1));
+      await speech.stop().timeout(const Duration(seconds: 1));
+      isListening.value = false;
     } catch (e) {
       log.warning("Speech stop timeout, retrying: $e");
       if (iteration < 3) {
         await stopRecording(iteration: iteration + 1);
       } else {
         log.severe("Failed to stop speech recognition after 3 attempts");
-        if (onError != null) onError!(e);
+        if (onError != null) onError(e);
       }
     }
   }
+
+  return SpeechState(
+    text: text.value,
+    isListening: isListening.value,
+    isInitialized: isInitialized.value,
+    startRecording: startRecording,
+    stopRecording: stopRecording,
+  );
 }
