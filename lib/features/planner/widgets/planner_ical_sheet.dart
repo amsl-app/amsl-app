@@ -84,7 +84,7 @@ class PlannerIcalSheet extends ConsumerWidget {
             ),
             const Gap(8),
             Text(
-              'Kopiere den Link und füge ihn in deiner Kalender-App ein, um deinen Planer zu abonnieren.',
+              'Kopiere den Link und füge ihn in deiner Kalender-App ein, um deinen Planner zu abonnieren.',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.7),
               ),

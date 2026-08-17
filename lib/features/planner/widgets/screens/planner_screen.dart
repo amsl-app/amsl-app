@@ -111,11 +111,31 @@ class PlannerScreen extends HookConsumerWidget {
           child: const Icon(Icons.auto_fix_high),
         ),
       ),
-      body: TabBarView(
-        controller: tabController,
+      body: Column(
         children: [
-          const PlannerListView(),
-          PlannerCalendarView(onDaySelected: (day) => selectedDate.value = day),
+          Padding(
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
+            child: Text(
+              'Der Planner unterstützt dich bei der Lernplanung und beim '
+              'Erreichen deiner Ziele. Das Planner-Tool ermöglicht es, '
+              'Meilensteine festzulegen, konkrete Lernaktivitäten zu planen '
+              'und diese mit deinem Kalender zu synchronisieren.',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onTertiaryContainer,
+              ),
+            ),
+          ),
+          Expanded(
+            child: TabBarView(
+              controller: tabController,
+              children: [
+                const PlannerListView(),
+                PlannerCalendarView(
+                  onDaySelected: (day) => selectedDate.value = day,
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
