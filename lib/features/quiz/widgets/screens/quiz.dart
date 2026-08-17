@@ -45,7 +45,7 @@ class QuizScreen extends HookConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Hier kannst du für deine Module den Exam Coach starten, um dich auf die Klausur vorzubereiten. Das Module muss die Funktion "Exam Coach" unterstützen.',
+                  'Hier werden zu deinen in der AMSL registrierten Vorlesungen auf Basis den Vorlesungsinhalten und alten Klausuren Prüfungsfragen mit unterschiedlichen Schwierigkeitsgraden mit KI generiert und dir gestellt. Du erhälst Rückmeldung zu deinen Antworten sowie die erreichte Punktzahl und kannst dich damit schrittweise perfekt für die Klausur vorbereiten.',
                   style: textTheme.bodyMedium,
                 ),
                 Gap(8),
