@@ -29,7 +29,7 @@ class QuizScreen extends HookConsumerWidget {
         title: Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            "Quiz",
+            "Exam Coach",
             style: TextStyle(color: theme.colorScheme.onTertiaryContainer),
           ),
         ),
@@ -45,7 +45,7 @@ class QuizScreen extends HookConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Hier kannst du zu den Modulen, Quizze erstellen um dich auf die Klausur vorzubereiten. Das Module muss die Funktion "Quiz erstellen" unterstützen.',
+                  'Hier kannst du für deine Module den Exam Coach starten, um dich auf die Klausur vorzubereiten. Das Module muss die Funktion "Exam Coach" unterstützen.',
                   style: textTheme.bodyMedium,
                 ),
                 Gap(8),
@@ -64,7 +64,7 @@ class QuizScreen extends HookConsumerWidget {
                       return Center(
                         child: Text(
                           textAlign: TextAlign.center,
-                          'Es sind keine Module verfügbar. Füge Module hinzu, die Quizze unterstützen, um diese Funktion zu nutzen.',
+                          'Es sind keine Module verfügbar. Füge Module hinzu, die den Exam Coach unterstützen, um diese Funktion zu nutzen.',
                           style: textTheme.bodyMedium,
                         ),
                       );
@@ -100,7 +100,7 @@ class QuizScreen extends HookConsumerWidget {
                                   Center(
                                     child: Text(
                                       textAlign: TextAlign.center,
-                                      'Du hast noch keine Quizze gemacht. Starte ein Quiz, um deine Kenntnisse zu testen!',
+                                      'Du hast den Exam Coach noch nicht genutzt. Starte den Exam Coach, um deine Kenntnisse zu testen!',
                                       style: textTheme.bodyMedium,
                                     ),
                                   )

@@ -85,7 +85,7 @@ Future<Map<String, Tool>> tools(Ref ref) async {
     if (quizEnabled)
       "quiz": Tool(
         id: "quiz",
-        name: "Quiz",
+        name: "Exam Coach",
         widget: const QuizScreen(),
         decoration: Builder(
           builder: (BuildContext context) {
