@@ -86,6 +86,16 @@ class _FocusTimerState extends State<FocusTimer> {
         padding: const EdgeInsets.all(20.0),
         child: Column(
           children: <Widget>[
+            Text(
+              "Der 25-Minuten-Fokus-Timer basiert auf der Pomodoro-Technik. "
+              "Dabei wechseln sich vier Runden aus jeweils 25 Minuten "
+              "konzentrierter Arbeit und 5 Minuten Pause ab. Die Dauer kann "
+              "individuell angepasst werden. Probiere verschiedene "
+              "Einstellungen aus und finde heraus, welche am besten zu dir "
+              "passt.",
+              style: TextStyle(color: theme.colorScheme.onTertiaryContainer),
+            ),
+            const Gap(20),
             Center(child: clock),
             const Gap(10),
             Padding(

@@ -2,6 +2,7 @@ import 'package:amsl_app/authentication/async_login_provider.dart';
 import 'package:amsl_app/features/assessment/widgets/screens/assessment_evaluation_screen.dart';
 import 'package:amsl_app/features/assessment/widgets/screens/assessment_screen.dart';
 import 'package:amsl_app/features/chat/widgets/chat_screen/chat_screen.dart';
+import 'package:amsl_app/features/focus_timer/widgets/focus_timer.dart';
 import 'package:amsl_app/features/journal/widgets/screens/journal.dart';
 import 'package:amsl_app/features/journal/widgets/screens/reflection_screen.dart';
 import 'package:amsl_app/features/journal/widgets/screens/single_journal_screen.dart';
@@ -104,12 +105,12 @@ GoRouter createRouterDelegate(LoginState logInState) {
                       ),
                     ],
                   ),
-                  // GoRoute(
-                  //   name: "focus_timer",
-                  //   path: '/focus_timer',
-                  //   builder: (BuildContext context, GoRouterState state) =>
-                  //       const FocusTimer(),
-                  // ),
+                  GoRoute(
+                    name: "focus_timer",
+                    path: '/focus_timer',
+                    builder: (BuildContext context, GoRouterState state) =>
+                        const FocusTimer(),
+                  ),
                   GoRoute(
                     name: 'reflection',
                     path: '/reflection',
