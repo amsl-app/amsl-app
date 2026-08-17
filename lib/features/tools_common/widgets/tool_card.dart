@@ -48,18 +48,14 @@ class ToolCard extends StatelessWidget {
               child: Stack(
                 children: [
                   if (tool.decoration != null) tool.decoration!,
-                  Row(
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.only(left: 16),
-                            child: Text(tool.name, style: theme.labelStyle),
-                          ),
-                        ],
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      padding: const EdgeInsets.only(left: 16),
+                      child: Expanded(
+                        child: Text(tool.name, style: theme.labelStyle, maxLines: 2, overflow: TextOverflow.ellipsis),
                       ),
-                    ],
+                    ),
                   ),
                 ],
               ),

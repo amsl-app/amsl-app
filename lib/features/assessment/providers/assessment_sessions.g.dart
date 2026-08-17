@@ -51,7 +51,7 @@ final class AssessmentSessionsProvider
 }
 
 String _$assessmentSessionsHash() =>
-    r'f9b41574303eb13022c8812e83afbad81d1b44ea';
+    r'1c339796c36d9297ae2b5ee2753662188e410753';
 
 abstract class _$AssessmentSessions
     extends $AsyncNotifier<Map<String, ToriAssessmentSession>> {

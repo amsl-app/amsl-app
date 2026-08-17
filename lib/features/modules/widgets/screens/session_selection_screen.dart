@@ -111,16 +111,6 @@ class _SessionSelectionScreenState
               child: Text(moduleAssessmentSet.module.title),
             ),
             backgroundColor: moduleTheme.color,
-            actions: [
-              if (hasAssessment && assessmentEnabled)
-                IconButton(
-                  icon: const Icon(Icons.analytics_outlined),
-                  onPressed: () => context.goNamed(
-                    "assessment_evaluation",
-                    pathParameters: {"moduleID": moduleAssessmentSet.module.id},
-                  ),
-                ),
-            ],
           ),
           body: Stack(
             children: [
@@ -129,8 +119,6 @@ class _SessionSelectionScreenState
                 _preAssessment(context, moduleAssessmentSet.preAssessment),
               if (assessmentEnabled)
                 ..._postAssessment(context, moduleAssessmentSet),
-              if (assessmentEnabled)
-                _evaluation(context, moduleAssessmentSet.module),
             ],
           ),
         ),
@@ -361,47 +349,6 @@ class _SessionSelectionScreenState
         ),
       ),
     ];
-  }
-
-  Widget _evaluation(BuildContext context, Module module) {
-    final theme = Theme.of(context);
-
-    return Visibility(
-      visible: showEvaluationHint,
-      child: Stack(
-        children: [
-          Blur(blurColor: theme.moduleTheme.color, child: Container()),
-          AmslDialog(
-            onClose: () => setState(() {
-              sharedPreferences.setBool(
-                StorageKey.showEvaluationHint.key,
-                false,
-              );
-            }),
-            bottomBar: true,
-            buttonBar: [
-              RoundedCornerButton(
-                label: "Zur Evaluation",
-                onTap: () {
-                  setState(() {
-                    sharedPreferences.setBool(
-                      StorageKey.showEvaluationHint.key,
-                      false,
-                    );
-                  });
-                  context.goNamed(
-                    "assessment_evaluation",
-                    pathParameters: {"moduleID": module.id},
-                  );
-                },
-              ),
-            ],
-            content:
-                "Du hast deinen ersten Selbsttest abgeschlossen. Du kannst über das Icon oben rechts auf die Auswertung zugreifen.",
-          ),
-        ],
-      ),
-    );
   }
 
   List<Widget> _header(BuildContext context, double maxWidth, Module module) {
