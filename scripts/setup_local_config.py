@@ -339,7 +339,7 @@ def set_ios_development_team(env: dict[str, str]) -> None:
 
     content = pbxproj_path.read_text()
     content = re.sub(
-        r'("?)DEVELOPMENT_TEAM(\[sdk=\w+\*])?("?) = "[^"]*";',
+        r'("?)DEVELOPMENT_TEAM(\[sdk=\w+\*])?("?)\s+=\s+"?[^";]*"?;',
         f'\\g<1>DEVELOPMENT_TEAM\\g<2>\\g<3> = "{team_id}";',
         content,
     )

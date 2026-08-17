@@ -1,3 +1,4 @@
+import 'package:amsl_app/features/voice/voice_button.dart';
 import 'package:flutter/material.dart';
 
 class MessageInput extends StatefulWidget {
@@ -26,15 +27,14 @@ class MessageInput extends StatefulWidget {
 }
 
 class _MessageInputState extends State<MessageInput> {
-  var input = '';
+  bool voiceActive = false;
 
   bool get isNotEmpty {
-    return input.trim().isNotEmpty;
+    return widget.textEditingController.text.trim().isNotEmpty;
   }
 
   @override
   Widget build(BuildContext context) {
-    input = widget.textEditingController.value.text;
     return Container(
       padding: const EdgeInsets.only(
         left: 24.0,
@@ -53,10 +53,17 @@ class _MessageInputState extends State<MessageInput> {
         border: Border.all(width: 2),
         color: Colors.white,
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [textInput(), sendButton()],
+      child: Padding(
+        padding: const EdgeInsets.all(6.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            textInput(),
+            voiceInputButton(),
+            if (isNotEmpty) sendButton(),
+          ],
+        ),
       ),
     );
   }
@@ -81,34 +88,41 @@ class _MessageInputState extends State<MessageInput> {
     );
   }
 
+  Widget voiceInputButton() {
+    return VoiceButton(
+      textEditingController: widget.textEditingController,
+      onStart: () => setState(() {
+        voiceActive = true;
+      }),
+      onEnd: (_) => setState(() {
+        voiceActive = false;
+      }),
+    );
+  }
+
   Widget textInput() {
     final theme = Theme.of(context);
 
     return Flexible(
-      child: Container(
-        padding: const EdgeInsets.only(left: 8),
-        child: TextField(
-          style: theme.textTheme.bodyMedium!.copyWith(
-            color: theme.colorScheme.onSurface,
-          ),
-          enabled: widget.allowInput,
-          maxLines: widget.maxLines,
-          minLines: 1,
-          controller: widget.textEditingController,
-          focusNode: widget.focusNode,
-          textCapitalization: TextCapitalization.sentences,
-          decoration: InputDecoration(
-            hintText: widget.allowInput
-                ? (widget.hint ?? "Schreib etwas...")
-                : '',
-            border: InputBorder.none,
-          ),
-          onChanged: (value) => setState(() {
-            input = value;
-          }),
-          onSubmitted: ((value) =>
-              isNotEmpty ? widget.onMessageSubmitted(value.trim()) : null),
+      child: TextField(
+        style: theme.textTheme.bodyMedium!.copyWith(
+          color: theme.colorScheme.onSurface,
         ),
+        enabled: widget.allowInput,
+        maxLines: widget.maxLines,
+        minLines: 1,
+        controller: widget.textEditingController,
+        focusNode: widget.focusNode,
+        textCapitalization: TextCapitalization.sentences,
+        decoration: InputDecoration(
+          hintText: widget.allowInput
+              ? (widget.hint ?? "Schreib etwas...")
+              : '',
+          border: InputBorder.none,
+        ),
+        onChanged: (_) => setState(() {}),
+        onSubmitted: ((value) =>
+            isNotEmpty ? widget.onMessageSubmitted(value.trim()) : null),
       ),
     );
   }
