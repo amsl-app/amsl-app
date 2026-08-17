@@ -19,7 +19,6 @@ PayloadContent _$PayloadContentFromJson(Map<String, dynamic> json) =>
       duration: (json['duration'] as num?)?.toInt(),
       buttonType: json['button_type'] as String?,
       url: json['url'] as String?,
-      imageUrl: json['image_url'] as String?,
       cards: (json['cards'] as List<dynamic>?)
           ?.map((e) => Card.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -38,7 +37,6 @@ Map<String, dynamic> _$PayloadContentToJson(PayloadContent instance) =>
       'duration': instance.duration,
       'button_type': instance.buttonType,
       'url': instance.url,
-      'image_url': instance.imageUrl,
       'cards': instance.cards,
       'error': instance.error,
       'placeholder_text': instance.placeholder_text,

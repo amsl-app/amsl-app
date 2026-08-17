@@ -69,7 +69,7 @@ final class ChatChannelRepositoryNotifierProvider
 }
 
 String _$chatChannelRepositoryNotifierHash() =>
-    r'e346b6096450dcd2d89b2736f4ccc64653ccba23';
+    r'd7bf1cb25a95bb6c6e5634beeb000222d9713f49';
 
 final class ChatChannelRepositoryNotifierFamily extends $Family
     with

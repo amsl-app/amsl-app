@@ -230,6 +230,11 @@ final class ChannelChatStepStream extends ChatChannelSource {
             .toList();
       case WebsocketResponse(type: "conversation_end"):
         return [const ConversationEnd()];
+      case WebsocketResponse(type: "payload"):
+        return ChatChannelSource.createStepFromPayload(
+          response.value as Payload,
+          Sender.other,
+        );
       case WebsocketResponse(type: "hold"):
         return [const Hold()];
       case WebsocketResponse(type: "typing"):

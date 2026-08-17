@@ -19,10 +19,13 @@ import 'package:amsl_app/features/chat/models/mood_message.dart';
 import 'package:amsl_app/features/chat/models/number_input.dart';
 import 'package:amsl_app/features/chat/models/text_chunk.dart';
 import 'package:amsl_app/features/chat/models/text_message.dart';
+import 'package:amsl_app/features/chat/models/video_message.dart';
 import 'package:amsl_app/hikari/exception.dart';
 import 'package:amsl_app/hikari/hikari.dart';
+import 'package:amsl_app/models/hikari/chat/card/card_content.dart';
 import 'package:amsl_app/models/hikari/chat/date_input/date_input_content.dart';
 import 'package:amsl_app/models/hikari/chat/duration_input/duration_input_content.dart';
+import 'package:amsl_app/models/hikari/chat/image/image_content.dart';
 import 'package:amsl_app/models/hikari/chat/journal/focus_input_content.dart';
 import 'package:amsl_app/models/hikari/chat/journal/journal_content_input_content.dart';
 import 'package:amsl_app/models/hikari/chat/journal/journal_title_input_content.dart';
@@ -30,6 +33,7 @@ import 'package:amsl_app/models/hikari/chat/journal/mood_input_content.dart';
 import 'package:amsl_app/models/hikari/chat/number_input/number_input_content.dart';
 import 'package:amsl_app/models/hikari/chat/payload.dart';
 import 'package:amsl_app/models/hikari/chat/payload_content.dart';
+import 'package:amsl_app/models/hikari/chat/video/video_content.dart';
 import 'package:amsl_app/models/hikari/chat/websocket/chunkpost.dart';
 import 'package:amsl_app/models/hikari/chat/websocket/websocket_history.dart';
 import 'package:amsl_app/models/hikari/chat/websocket/websocket_request.dart';
@@ -228,20 +232,29 @@ sealed class ChatChannelSource {
         content: PayloadContent(:final duration),
       ):
         return [if (!replay) Delay(delay: duration, show: false)];
-      case Payload(contentType: "image", content: PayloadContent(:final url?)):
+      case Payload(
+        contentType: "image",
+        content: ImageContent(:final imageUrl?),
+      ):
         try {
-          return [ImageMessage(uri: Uri.parse(url), sender: sender)];
+          return [ImageMessage(uri: Uri.parse(imageUrl), sender: sender)];
+        } catch (e) {
+          log.severe("Can't parse url: $e");
+          return [];
+        }
+      case Payload(
+        contentType: "video",
+        content: VideoContent(:final videoUrl?),
+      ):
+        try {
+          return [VideoMessage(uri: Uri.parse(videoUrl), sender: sender)];
         } catch (e) {
           log.severe("Can't parse url: $e");
           return [];
         }
       case Payload(
         contentType: "card",
-        content: PayloadContent(
-          :final title?,
-          :final imageUrl?,
-          :final buttons?,
-        ),
+        content: CardContent(:final title, :final imageUrl?, :final buttons?),
       ):
         try {
           // TODO Support url links
@@ -263,6 +276,7 @@ sealed class ChatChannelSource {
         }
       case Payload(contentType: "url", content: PayloadContent(:final url?)):
         return [TextMessage(text: url, sender: sender)];
+
       case Payload(contentType: "error"):
         log.info("Error message $payload");
         return [
@@ -282,7 +296,7 @@ sealed class ChatChannelSource {
     return [
       TextMessage(
         text:
-            'Unknown content type: ${payload.contentType}. Write an arbitrary message to continue the conversation.',
+            'Unknown content type: ${payload.contentType} with content: ${payload.content}. Write an arbitrary message to continue the conversation.',
         sender: Sender.other,
       ),
     ];

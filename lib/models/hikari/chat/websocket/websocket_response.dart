@@ -1,3 +1,4 @@
+import 'package:amsl_app/models/hikari/chat/payload.dart';
 import 'package:amsl_app/models/hikari/chat/websocket/websocket_history.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -23,6 +24,9 @@ class WebsocketResponse {
             .toList();
       case "error":
         return WebsocketError.fromJson(value!);
+      case "payload":
+        return Payload.fromJson(value!);
+
       default:
         return value;
     }
