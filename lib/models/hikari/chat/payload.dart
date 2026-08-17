@@ -8,6 +8,8 @@ import 'package:json_annotation/json_annotation.dart';
 
 import 'card/card_content.dart';
 import 'carousel/carousel_content.dart';
+import 'image/image_content.dart';
+import 'video/video_content.dart';
 import 'number_input/number_input_content.dart';
 import 'payload_content.dart';
 
@@ -41,6 +43,10 @@ class Payload {
         return CarouselContent.fromJson(content!);
       case "card":
         return CardContent.fromJson(content!);
+      case "image":
+        return ImageContent.fromJson(content!);
+      case "video":
+        return VideoContent.fromJson(content!);
       default:
         return PayloadContent.fromJson(content ?? {});
     }

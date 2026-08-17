@@ -9,7 +9,7 @@ class CardContent {
   final String title;
   final List<Button>? buttons;
   @JsonKey(name: "image_url")
-  final Uri? imageUrl;
+  final String? imageUrl;
 
   CardContent({required this.title, this.buttons, this.imageUrl});
 

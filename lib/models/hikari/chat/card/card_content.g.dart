@@ -11,14 +11,12 @@ CardContent _$CardContentFromJson(Map<String, dynamic> json) => CardContent(
   buttons: (json['buttons'] as List<dynamic>?)
       ?.map((e) => Button.fromJson(e as Map<String, dynamic>))
       .toList(),
-  imageUrl: json['image_url'] == null
-      ? null
-      : Uri.parse(json['image_url'] as String),
+  imageUrl: json['image_url'] as String?,
 );
 
 Map<String, dynamic> _$CardContentToJson(CardContent instance) =>
     <String, dynamic>{
       'title': instance.title,
       'buttons': instance.buttons,
-      'image_url': instance.imageUrl?.toString(),
+      'image_url': instance.imageUrl,
     };
