@@ -45,7 +45,7 @@ final class PreferencesProvider
   }
 }
 
-String _$preferencesHash() => r'bcce84e8a1150ba4438f687fec72a0a4350b3aac';
+String _$preferencesHash() => r'622d1be14884ca832482372b044d9d0f8fc48f15';
 
 abstract class _$Preferences extends $Notifier<PreferencesState> {
   PreferencesState build();
