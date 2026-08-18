@@ -106,7 +106,7 @@ GoRouter createRouterDelegate(LoginState logInState) {
                     ],
                   ),
                   GoRoute(
-                    name: "focus_timer",
+                    name: 'focus_timer',
                     path: '/focus_timer',
                     builder: (BuildContext context, GoRouterState state) =>
                         const FocusTimer(),

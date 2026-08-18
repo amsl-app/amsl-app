@@ -53,7 +53,7 @@ class _FocusTimerState extends State<FocusTimer> {
   void reset() {
     setState(() {
       phaseIndex = 0;
-      // CountDownController.reset() triggers onComplete; indicate that it is not a real compelte
+      // CountDownController.reset() triggers onComplete; indicate that it is not a real complete
       _suppressComplete = true;
       _controller.restart(duration: _phaseDurations[0]);
       _controller.reset();
