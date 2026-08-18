@@ -35,8 +35,8 @@ const _$LockTypeEnumMap = {
 };
 
 SessionsNext _$SessionsNextFromJson(Map<String, dynamic> json) => SessionsNext(
-  moduleId: json['module-id'] as String,
-  sessionId: json['session-id'] as String,
+  moduleId: json['module_id'] as String,
+  sessionId: json['session_id'] as String,
   force: json['force'] as bool,
 );
 
