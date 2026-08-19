@@ -101,9 +101,9 @@ class LockedUntil {
 
 @JsonSerializable()
 class SessionsNext {
-  @JsonKey(name: "module_id")
+  @JsonKey(name: "module-id")
   final String moduleId;
-  @JsonKey(name: "session_id")
+  @JsonKey(name: "session-id")
   final String sessionId;
   final bool force;
 

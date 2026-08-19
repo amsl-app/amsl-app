@@ -1,3 +1,4 @@
+import 'package:amsl_app/features/assessment/widgets/screens/self_assessment_overview_screen.dart';
 import 'package:amsl_app/features/journal/widgets/screens/reflection_screen.dart';
 import 'package:amsl_app/features/modules/providers/module_configuration.dart';
 import 'package:amsl_app/features/profile/providers/variant_provider.dart';
@@ -101,6 +102,34 @@ Future<Map<String, Tool>> tools(Ref ref) async {
                     child: Icon(
                       Icons.quiz,
                       size: 58,
+                      color: theme.toolCardTheme.decorationColor,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
+    if (variant.assessmentEnabled)
+      "self_assessment": Tool(
+        id: "self_assessment",
+        name: "Selbst- & Lernmanagement",
+        widget: const SelfAssessmentOverviewScreen(),
+        decoration: Builder(
+          builder: (BuildContext context) {
+            final theme = Theme.of(context);
+            return Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                padding: const EdgeInsets.only(right: 8),
+                child: FractionallySizedBox(
+                  heightFactor: 1,
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: Icon(
+                      Icons.checklist_outlined,
+                      size: 68,
                       color: theme.toolCardTheme.decorationColor,
                     ),
                   ),

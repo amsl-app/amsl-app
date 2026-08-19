@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ToriAssessmentSession {
 
- String get sessionId; String get assessmentId; String get title; Map<String, Question> get questions; List<Scale> get scales; hikari_assessment.AssessmentStatus get status; DateTime? get completed;
+ String get sessionId; String get assessmentId; String get title; Map<String, Question> get questions; hikari_assessment.AssessmentStatus get status; DateTime? get completed;
 /// Create a copy of ToriAssessmentSession
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $ToriAssessmentSessionCopyWith<ToriAssessmentSession> get copyWith => _$ToriAsse
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ToriAssessmentSession&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.assessmentId, assessmentId) || other.assessmentId == assessmentId)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other.questions, questions)&&const DeepCollectionEquality().equals(other.scales, scales)&&(identical(other.status, status) || other.status == status)&&(identical(other.completed, completed) || other.completed == completed));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ToriAssessmentSession&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.assessmentId, assessmentId) || other.assessmentId == assessmentId)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other.questions, questions)&&(identical(other.status, status) || other.status == status)&&(identical(other.completed, completed) || other.completed == completed));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,sessionId,assessmentId,title,const DeepCollectionEquality().hash(questions),const DeepCollectionEquality().hash(scales),status,completed);
+int get hashCode => Object.hash(runtimeType,sessionId,assessmentId,title,const DeepCollectionEquality().hash(questions),status,completed);
 
 @override
 String toString() {
-  return 'ToriAssessmentSession(sessionId: $sessionId, assessmentId: $assessmentId, title: $title, questions: $questions, scales: $scales, status: $status, completed: $completed)';
+  return 'ToriAssessmentSession(sessionId: $sessionId, assessmentId: $assessmentId, title: $title, questions: $questions, status: $status, completed: $completed)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $ToriAssessmentSessionCopyWith<$Res>  {
   factory $ToriAssessmentSessionCopyWith(ToriAssessmentSession value, $Res Function(ToriAssessmentSession) _then) = _$ToriAssessmentSessionCopyWithImpl;
 @useResult
 $Res call({
- String sessionId, String assessmentId, String title, Map<String, Question> questions, List<Scale> scales, hikari_assessment.AssessmentStatus status, DateTime? completed
+ String sessionId, String assessmentId, String title, Map<String, Question> questions, hikari_assessment.AssessmentStatus status, DateTime? completed
 });
 
 
@@ -62,14 +62,13 @@ class _$ToriAssessmentSessionCopyWithImpl<$Res>
 
 /// Create a copy of ToriAssessmentSession
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? sessionId = null,Object? assessmentId = null,Object? title = null,Object? questions = null,Object? scales = null,Object? status = null,Object? completed = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? sessionId = null,Object? assessmentId = null,Object? title = null,Object? questions = null,Object? status = null,Object? completed = freezed,}) {
   return _then(_self.copyWith(
 sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
 as String,assessmentId: null == assessmentId ? _self.assessmentId : assessmentId // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,questions: null == questions ? _self.questions : questions // ignore: cast_nullable_to_non_nullable
-as Map<String, Question>,scales: null == scales ? _self.scales : scales // ignore: cast_nullable_to_non_nullable
-as List<Scale>,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as Map<String, Question>,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as hikari_assessment.AssessmentStatus,completed: freezed == completed ? _self.completed : completed // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));
@@ -156,10 +155,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String sessionId,  String assessmentId,  String title,  Map<String, Question> questions,  List<Scale> scales,  hikari_assessment.AssessmentStatus status,  DateTime? completed)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String sessionId,  String assessmentId,  String title,  Map<String, Question> questions,  hikari_assessment.AssessmentStatus status,  DateTime? completed)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _ToriAssessmentSession() when $default != null:
-return $default(_that.sessionId,_that.assessmentId,_that.title,_that.questions,_that.scales,_that.status,_that.completed);case _:
+return $default(_that.sessionId,_that.assessmentId,_that.title,_that.questions,_that.status,_that.completed);case _:
   return orElse();
 
 }
@@ -177,10 +176,10 @@ return $default(_that.sessionId,_that.assessmentId,_that.title,_that.questions,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String sessionId,  String assessmentId,  String title,  Map<String, Question> questions,  List<Scale> scales,  hikari_assessment.AssessmentStatus status,  DateTime? completed)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String sessionId,  String assessmentId,  String title,  Map<String, Question> questions,  hikari_assessment.AssessmentStatus status,  DateTime? completed)  $default,) {final _that = this;
 switch (_that) {
 case _ToriAssessmentSession():
-return $default(_that.sessionId,_that.assessmentId,_that.title,_that.questions,_that.scales,_that.status,_that.completed);case _:
+return $default(_that.sessionId,_that.assessmentId,_that.title,_that.questions,_that.status,_that.completed);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -197,10 +196,10 @@ return $default(_that.sessionId,_that.assessmentId,_that.title,_that.questions,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String sessionId,  String assessmentId,  String title,  Map<String, Question> questions,  List<Scale> scales,  hikari_assessment.AssessmentStatus status,  DateTime? completed)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String sessionId,  String assessmentId,  String title,  Map<String, Question> questions,  hikari_assessment.AssessmentStatus status,  DateTime? completed)?  $default,) {final _that = this;
 switch (_that) {
 case _ToriAssessmentSession() when $default != null:
-return $default(_that.sessionId,_that.assessmentId,_that.title,_that.questions,_that.scales,_that.status,_that.completed);case _:
+return $default(_that.sessionId,_that.assessmentId,_that.title,_that.questions,_that.status,_that.completed);case _:
   return null;
 
 }
@@ -212,7 +211,7 @@ return $default(_that.sessionId,_that.assessmentId,_that.title,_that.questions,_
 
 
 class _ToriAssessmentSession extends ToriAssessmentSession {
-   _ToriAssessmentSession({required this.sessionId, required this.assessmentId, required this.title, required final  Map<String, Question> questions, required final  List<Scale> scales, required this.status, required this.completed}): _questions = questions,_scales = scales,super._();
+   _ToriAssessmentSession({required this.sessionId, required this.assessmentId, required this.title, required final  Map<String, Question> questions, required this.status, required this.completed}): _questions = questions,super._();
   
 
 @override final  String sessionId;
@@ -223,13 +222,6 @@ class _ToriAssessmentSession extends ToriAssessmentSession {
   if (_questions is EqualUnmodifiableMapView) return _questions;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableMapView(_questions);
-}
-
- final  List<Scale> _scales;
-@override List<Scale> get scales {
-  if (_scales is EqualUnmodifiableListView) return _scales;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_scales);
 }
 
 @override final  hikari_assessment.AssessmentStatus status;
@@ -245,16 +237,16 @@ _$ToriAssessmentSessionCopyWith<_ToriAssessmentSession> get copyWith => __$ToriA
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ToriAssessmentSession&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.assessmentId, assessmentId) || other.assessmentId == assessmentId)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other._questions, _questions)&&const DeepCollectionEquality().equals(other._scales, _scales)&&(identical(other.status, status) || other.status == status)&&(identical(other.completed, completed) || other.completed == completed));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ToriAssessmentSession&&(identical(other.sessionId, sessionId) || other.sessionId == sessionId)&&(identical(other.assessmentId, assessmentId) || other.assessmentId == assessmentId)&&(identical(other.title, title) || other.title == title)&&const DeepCollectionEquality().equals(other._questions, _questions)&&(identical(other.status, status) || other.status == status)&&(identical(other.completed, completed) || other.completed == completed));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,sessionId,assessmentId,title,const DeepCollectionEquality().hash(_questions),const DeepCollectionEquality().hash(_scales),status,completed);
+int get hashCode => Object.hash(runtimeType,sessionId,assessmentId,title,const DeepCollectionEquality().hash(_questions),status,completed);
 
 @override
 String toString() {
-  return 'ToriAssessmentSession(sessionId: $sessionId, assessmentId: $assessmentId, title: $title, questions: $questions, scales: $scales, status: $status, completed: $completed)';
+  return 'ToriAssessmentSession(sessionId: $sessionId, assessmentId: $assessmentId, title: $title, questions: $questions, status: $status, completed: $completed)';
 }
 
 
@@ -265,7 +257,7 @@ abstract mixin class _$ToriAssessmentSessionCopyWith<$Res> implements $ToriAsses
   factory _$ToriAssessmentSessionCopyWith(_ToriAssessmentSession value, $Res Function(_ToriAssessmentSession) _then) = __$ToriAssessmentSessionCopyWithImpl;
 @override @useResult
 $Res call({
- String sessionId, String assessmentId, String title, Map<String, Question> questions, List<Scale> scales, hikari_assessment.AssessmentStatus status, DateTime? completed
+ String sessionId, String assessmentId, String title, Map<String, Question> questions, hikari_assessment.AssessmentStatus status, DateTime? completed
 });
 
 
@@ -282,14 +274,13 @@ class __$ToriAssessmentSessionCopyWithImpl<$Res>
 
 /// Create a copy of ToriAssessmentSession
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? sessionId = null,Object? assessmentId = null,Object? title = null,Object? questions = null,Object? scales = null,Object? status = null,Object? completed = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? sessionId = null,Object? assessmentId = null,Object? title = null,Object? questions = null,Object? status = null,Object? completed = freezed,}) {
   return _then(_ToriAssessmentSession(
 sessionId: null == sessionId ? _self.sessionId : sessionId // ignore: cast_nullable_to_non_nullable
 as String,assessmentId: null == assessmentId ? _self.assessmentId : assessmentId // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,questions: null == questions ? _self._questions : questions // ignore: cast_nullable_to_non_nullable
-as Map<String, Question>,scales: null == scales ? _self._scales : scales // ignore: cast_nullable_to_non_nullable
-as List<Scale>,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as Map<String, Question>,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as hikari_assessment.AssessmentStatus,completed: freezed == completed ? _self.completed : completed // ignore: cast_nullable_to_non_nullable
 as DateTime?,
   ));

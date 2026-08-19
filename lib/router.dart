@@ -1,6 +1,7 @@
 import 'package:amsl_app/authentication/async_login_provider.dart';
-import 'package:amsl_app/features/assessment/widgets/screens/assessment_evaluation_screen.dart';
+import 'package:amsl_app/features/assessment/widgets/screens/assessment_flow.dart';
 import 'package:amsl_app/features/assessment/widgets/screens/assessment_screen.dart';
+import 'package:amsl_app/features/assessment/widgets/screens/self_assessment_overview_screen.dart';
 import 'package:amsl_app/features/chat/widgets/chat_screen/chat_screen.dart';
 import 'package:amsl_app/features/journal/widgets/screens/journal.dart';
 import 'package:amsl_app/features/journal/widgets/screens/reflection_screen.dart';
@@ -173,6 +174,26 @@ GoRouter createRouterDelegate(LoginState logInState) {
                       ),
                     ],
                   ),
+                  GoRoute(
+                    name: 'self_assessment',
+                    path: '/self-assessment',
+                    builder: (BuildContext context, GoRouterState state) {
+                      return const SelfAssessmentOverviewScreen();
+                    },
+                    routes: [
+                      GoRoute(
+                        name: 'self_assessment_run',
+                        path: 'run',
+                        builder: (BuildContext context, GoRouterState state) {
+                          return AssessmentScreen(
+                            flow: SelfAssessmentFlow(
+                              assessmentIds: state.extra! as List<String>,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
                 ],
               ),
             ],
@@ -214,32 +235,19 @@ GoRouter createRouterDelegate(LoginState logInState) {
                                           state.pathParameters['moduleID']!;
                                       return NoTransitionPage(
                                         child: AssessmentScreen(
-                                          moduleID: moduleID,
-                                          prePost:
-                                              state.pathParameters['prePost']! ==
-                                                  "pre"
-                                              ? hikari_assessment
-                                                    .AssessmentType
-                                                    .pre
-                                              : hikari_assessment
-                                                    .AssessmentType
-                                                    .post,
+                                          flow: ModuleAssessmentFlow(
+                                            moduleID: moduleID,
+                                            prePost:
+                                                state.pathParameters['prePost']! ==
+                                                    "pre"
+                                                ? hikari_assessment
+                                                      .AssessmentType
+                                                      .pre
+                                                : hikari_assessment
+                                                      .AssessmentType
+                                                      .post,
+                                          ),
                                         ),
-                                      );
-                                    },
-                              ),
-                              GoRoute(
-                                name: 'assessment_evaluation',
-                                path: 'assessment_evaluation',
-                                builder:
-                                    (
-                                      BuildContext context,
-                                      GoRouterState state,
-                                    ) {
-                                      final moduleID =
-                                          state.pathParameters['moduleID']!;
-                                      return AssessmentEvaluation(
-                                        moduleID: moduleID,
                                       );
                                     },
                               ),

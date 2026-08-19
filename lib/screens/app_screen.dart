@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:amsl_app/features/assessment/providers/assessment_sessions.dart';
+import 'package:amsl_app/features/assessment/providers/assessments.dart';
 import 'package:amsl_app/features/notifications/notification.dart';
 import 'package:amsl_app/features/preferences/preferences.dart';
 import 'package:amsl_app/features/profile/providers/variant_provider.dart';
@@ -68,6 +70,10 @@ class _AppScreenState extends ConsumerState<AppScreen>
           ref.read(preferencesProvider),
           moduleConfig: newModules,
         );
+      }),
+
+      ref.listenManual(assessmentSessionsProvider, (previous, next) {
+        ref.read(assessmentPodProvider.notifier).reloadAssessments();
       }),
 
       // Preference Listeners
