@@ -152,8 +152,7 @@ class _NotificationSettingsState extends ConsumerState<NotificationSettings> {
               Text("Wochenplanung:", style: theme.textTheme.titleMedium!),
               const Gap(12.0),
               DayTimePicker(
-                label:
-                    "Erhalte eine Erinnerung, deine Woche zu planen",
+                label: "Erhalte eine Erinnerung, deine Woche zu planen",
                 dayOptions: _weekdayNames,
                 onDayChange: (int day) {
                   notifier.setWeeklyPlanningNotificationDay(day);
@@ -183,8 +182,7 @@ class _NotificationSettingsState extends ConsumerState<NotificationSettings> {
               Text("Monatsplanung:", style: theme.textTheme.titleMedium!),
               const Gap(12.0),
               DayTimePicker(
-                label:
-                    "Erhalte eine Erinnerung, deinen Monat zu planen",
+                label: "Erhalte eine Erinnerung, deinen Monat zu planen",
                 dayOptions: _dayOfMonthNames,
                 onDayChange: (int day) {
                   notifier.setMonthlyPlanningNotificationDay(day);
@@ -235,7 +233,7 @@ class _NotificationSettingsState extends ConsumerState<NotificationSettings> {
                 initTime: daily_planning_time,
                 initToggle: daily_planning_permission,
               ),
-              Gap(getBottomBarPadding(context))
+              Gap(getBottomBarPadding(context)),
             ],
           ),
         ),

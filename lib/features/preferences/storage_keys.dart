@@ -33,9 +33,7 @@ enum StorageKey {
   ),
   weeklyPlanningNotificationEnabled("allow_weekly_planning_notification"),
   weeklyPlanningNotificationDay("weekly_planning_notification_day"),
-  weeklyPlanningNotificationTimeHour(
-    "weekly_planning_notification_time_hour",
-  ),
+  weeklyPlanningNotificationTimeHour("weekly_planning_notification_time_hour"),
   weeklyPlanningNotificationTimeMinute(
     "weekly_planning_notification_time_minute",
   ),
