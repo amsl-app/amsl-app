@@ -14,12 +14,18 @@ import 'package:timezone/timezone.dart' as tz;
 const title = "Hallo! Hier ist die AMSL";
 const fullReminderwBody =
     "Schau doch mal vorbei es warten spannende Lernmodule & Tools auf dich.";
+const dailyPlanningBody = "Zeit, deinen Tag zu planen.";
+const weeklyPlanningBody = "Zeit, deine Woche zu planen.";
+const monthlyPlanningBody = "Zeit, deinen Monat zu planen.";
 
 const sessionUnlockMaxCount = 5;
 
 enum NotificationType {
   reminder(offset: sessionUnlockMaxCount),
-  session(offset: 0);
+  session(offset: 0),
+  dailyPlanning(offset: sessionUnlockMaxCount + 7),
+  weeklyPlanning(offset: sessionUnlockMaxCount + 8),
+  monthlyPlanning(offset: sessionUnlockMaxCount + 9);
 
   const NotificationType({required this.offset});
 
@@ -119,6 +125,111 @@ class NotificationService {
     if (state.notificationEnabled) {
       createReminderNotifications(notificationTime: state.notificationTime);
     }
+
+    // Planning Notifications
+    if (state.dailyPlanningNotificationEnabled) {
+      await createDailyPlanningNotification(
+        time: state.dailyPlanningNotificationTime,
+      );
+    }
+    if (state.weeklyPlanningNotificationEnabled) {
+      await createWeeklyPlanningNotification(
+        weekday: state.weeklyPlanningNotificationDay,
+        time: state.weeklyPlanningNotificationTime,
+      );
+    }
+    if (state.monthlyPlanningNotificationEnabled) {
+      await createMonthlyPlanningNotification(
+        dayOfMonth: state.monthlyPlanningNotificationDay,
+        time: state.monthlyPlanningNotificationTime,
+      );
+    }
+  }
+
+  Future createDailyPlanningNotification({required TimeOfDay time}) async {
+    var next = DateTime.now().withTime(time);
+    if (next.isBefore(DateTime.now())) {
+      next = next.add(const Duration(days: 1));
+    }
+
+    await _setupRecurringNotification(
+      title: title,
+      content: dailyPlanningBody,
+      payload: jsonEncode({"route": "planner"}),
+      time: next,
+      type: NotificationType.dailyPlanning,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
+  }
+
+  Future createWeeklyPlanningNotification({
+    required int weekday,
+    required TimeOfDay time,
+  }) async {
+    var next = DateTime.now().withTime(time);
+    while (next.weekday != weekday || next.isBefore(DateTime.now())) {
+      next = next.add(const Duration(days: 1));
+    }
+
+    await _setupRecurringNotification(
+      title: title,
+      content: weeklyPlanningBody,
+      payload: jsonEncode({"route": "planner"}),
+      time: next,
+      type: NotificationType.weeklyPlanning,
+      matchDateTimeComponents: DateTimeComponents.dayOfWeekAndTime,
+    );
+  }
+
+  Future createMonthlyPlanningNotification({
+    required int dayOfMonth,
+    required TimeOfDay time,
+  }) async {
+    var next = DateTime(
+      DateTime.now().year,
+      DateTime.now().month,
+      dayOfMonth,
+    ).withTime(time);
+    if (next.isBefore(DateTime.now())) {
+      next = DateTime(next.year, next.month + 1, dayOfMonth).withTime(time);
+    }
+
+    await _setupRecurringNotification(
+      title: title,
+      content: monthlyPlanningBody,
+      payload: jsonEncode({"route": "planner"}),
+      time: next,
+      type: NotificationType.monthlyPlanning,
+      matchDateTimeComponents: DateTimeComponents.dayOfMonthAndTime,
+    );
+  }
+
+  Future _setupRecurringNotification({
+    required String title,
+    required String content,
+    required String payload,
+    required DateTime time,
+    required NotificationType type,
+    required DateTimeComponents matchDateTimeComponents,
+  }) async {
+    final date = tz.TZDateTime(
+      tz.local,
+      time.year,
+      time.month,
+      time.day,
+      time.hour,
+      time.minute,
+    );
+    log.info("Set $type notification for: $date (recurring)");
+    await _flutterLocalNotificationsPlugin.zonedSchedule(
+      id: type.offset,
+      title: title,
+      body: content,
+      scheduledDate: date,
+      notificationDetails: notificationDetails,
+      androidScheduleMode: AndroidScheduleMode.inexact,
+      matchDateTimeComponents: matchDateTimeComponents,
+    );
   }
 
   // 3 times daily; 2 times every 3 days; 2 times every 7 days

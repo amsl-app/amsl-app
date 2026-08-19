@@ -16,6 +16,7 @@ import 'package:amsl_app/features/profile/widgets/screens/settings_screens/focus
 import 'package:amsl_app/features/profile/widgets/screens/settings_screens/notification_settings.dart';
 import 'package:amsl_app/features/profile/widgets/screens/settings_screens/profile_settings.dart';
 import 'package:amsl_app/features/profile/widgets/settings/debug_settings.dart';
+import 'package:amsl_app/features/planner/widgets/screens/planner_screen.dart';
 import 'package:amsl_app/features/quiz/widgets/screens/module_quiz_screen.dart';
 import 'package:amsl_app/features/quiz/widgets/screens/quiz.dart';
 import 'package:amsl_app/features/quiz/widgets/screens/quiz_session_screen.dart';
@@ -172,6 +173,12 @@ GoRouter createRouterDelegate(LoginState logInState) {
                         ],
                       ),
                     ],
+                  ),
+                  GoRoute(
+                    name: 'planner',
+                    path: '/planner',
+                    builder: (BuildContext context, GoRouterState state) =>
+                        const PlannerScreen(),
                   ),
                 ],
               ),

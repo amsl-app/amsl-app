@@ -1,5 +1,6 @@
 import 'package:amsl_app/features/journal/widgets/screens/reflection_screen.dart';
 import 'package:amsl_app/features/modules/providers/module_configuration.dart';
+import 'package:amsl_app/features/planner/widgets/screens/planner_screen.dart';
 import 'package:amsl_app/features/profile/providers/variant_provider.dart';
 import 'package:amsl_app/features/quiz/widgets/screens/quiz.dart';
 import 'package:amsl_app/features/tools_common/widgets/tool_card.dart';
@@ -110,5 +111,32 @@ Future<Map<String, Tool>> tools(Ref ref) async {
           },
         ),
       ),
+    "planner": Tool(
+      id: "planner",
+      name: "Planner",
+      widget: const PlannerScreen(),
+      decoration: Builder(
+        builder: (BuildContext context) {
+          final theme = Theme.of(context);
+          return Align(
+            alignment: Alignment.centerRight,
+            child: Container(
+              padding: const EdgeInsets.only(right: 8),
+              child: FractionallySizedBox(
+                heightFactor: 0.7,
+                child: AspectRatio(
+                  aspectRatio: 1,
+                  child: Icon(
+                    Icons.calendar_month,
+                    size: 58,
+                    color: theme.toolCardTheme.decorationColor,
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
+    ),
   };
 }

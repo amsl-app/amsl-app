@@ -214,6 +214,29 @@ class BaseHikariApiClient {
     );
   }
 
+  Future<T> delete<T>(
+    String path, {
+    Map<String, dynamic>? queryParameters,
+    Map<String, String>? headers,
+    T Function(dynamic)? transform,
+    Set<int>? acceptedStatusCodes,
+  }) async {
+    final uri = ApiConstants.scheme(
+      ApiConstants.baseUrl,
+      "${ApiConstants.apiPath}$path",
+      queryParameters,
+    );
+    log.info("Sending DELETE request to $uri");
+
+    final request = client.delete(uri, headers: headers);
+    return await handleRequest(
+      request,
+      uri: uri,
+      transform: transform,
+      acceptedStatusCodes: acceptedStatusCodes,
+    );
+  }
+
   Future<T> get<T>(
     String path, {
     Map<String, dynamic>? queryParameters,

@@ -18,6 +18,14 @@ abstract class PreferencesState with _$PreferencesState {
     required final TimeOfDay notificationTime,
     required final bool notificationEnabled,
     required final bool sessionLockNotificationEnabled,
+    required final bool dailyPlanningNotificationEnabled,
+    required final TimeOfDay dailyPlanningNotificationTime,
+    required final bool weeklyPlanningNotificationEnabled,
+    required final int weeklyPlanningNotificationDay,
+    required final TimeOfDay weeklyPlanningNotificationTime,
+    required final bool monthlyPlanningNotificationEnabled,
+    required final int monthlyPlanningNotificationDay,
+    required final TimeOfDay monthlyPlanningNotificationTime,
     required bool? activateClickableSession,
     required String? templateCourse,
     required bool? showRestartInCourse,
@@ -52,6 +60,77 @@ abstract class PreferencesState with _$PreferencesState {
                 true)
             as bool;
 
+    final bool dailyPlanningNotificationEnabled =
+        (sharedPreferences.get(
+                  StorageKey.dailyPlanningNotificationEnabled.key,
+                ) ??
+                false)
+            as bool;
+    final TimeOfDay dailyPlanningNotificationTime = TimeOfDay(
+      hour:
+          (sharedPreferences.get(
+                    StorageKey.dailyPlanningNotificationTimeHour.key,
+                  ) ??
+                  9)
+              as int,
+      minute:
+          (sharedPreferences.get(
+                    StorageKey.dailyPlanningNotificationTimeMinute.key,
+                  ) ??
+                  0)
+              as int,
+    );
+
+    final bool weeklyPlanningNotificationEnabled =
+        (sharedPreferences.get(
+                  StorageKey.weeklyPlanningNotificationEnabled.key,
+                ) ??
+                true)
+            as bool;
+    final int weeklyPlanningNotificationDay =
+        (sharedPreferences.get(StorageKey.weeklyPlanningNotificationDay.key) ??
+                DateTime.monday)
+            as int;
+    final TimeOfDay weeklyPlanningNotificationTime = TimeOfDay(
+      hour:
+          (sharedPreferences.get(
+                    StorageKey.weeklyPlanningNotificationTimeHour.key,
+                  ) ??
+                  9)
+              as int,
+      minute:
+          (sharedPreferences.get(
+                    StorageKey.weeklyPlanningNotificationTimeMinute.key,
+                  ) ??
+                  0)
+              as int,
+    );
+
+    final bool monthlyPlanningNotificationEnabled =
+        (sharedPreferences.get(
+                  StorageKey.monthlyPlanningNotificationEnabled.key,
+                ) ??
+                true)
+            as bool;
+    final int monthlyPlanningNotificationDay =
+        (sharedPreferences.get(StorageKey.monthlyPlanningNotificationDay.key) ??
+                1)
+            as int;
+    final TimeOfDay monthlyPlanningNotificationTime = TimeOfDay(
+      hour:
+          (sharedPreferences.get(
+                    StorageKey.monthlyPlanningNotificationTimeHour.key,
+                  ) ??
+                  9)
+              as int,
+      minute:
+          (sharedPreferences.get(
+                    StorageKey.monthlyPlanningNotificationTimeMinute.key,
+                  ) ??
+                  0)
+              as int,
+    );
+
     bool? activateClickableSession;
     bool? showRestartInCourse;
     String? templateCourse;
@@ -78,6 +157,14 @@ abstract class PreferencesState with _$PreferencesState {
       notificationTime: notificationTime,
       notificationEnabled: notificationEnabled,
       sessionLockNotificationEnabled: sessionLockNotificationEnabled,
+      dailyPlanningNotificationEnabled: dailyPlanningNotificationEnabled,
+      dailyPlanningNotificationTime: dailyPlanningNotificationTime,
+      weeklyPlanningNotificationEnabled: weeklyPlanningNotificationEnabled,
+      weeklyPlanningNotificationDay: weeklyPlanningNotificationDay,
+      weeklyPlanningNotificationTime: weeklyPlanningNotificationTime,
+      monthlyPlanningNotificationEnabled: monthlyPlanningNotificationEnabled,
+      monthlyPlanningNotificationDay: monthlyPlanningNotificationDay,
+      monthlyPlanningNotificationTime: monthlyPlanningNotificationTime,
       activateClickableSession: activateClickableSession,
       showRestartInCourse: showRestartInCourse,
       templateCourse: templateCourse,
@@ -131,6 +218,90 @@ class Preferences extends _$Preferences {
       permission,
     );
     state = state.copyWith(sessionLockNotificationEnabled: permission);
+  }
+
+  void setDailyPlanningNotificationPermission(bool permission) {
+    final sharedPreferences = ref.watch(storagesProvider).shared;
+    sharedPreferences.setBool(
+      StorageKey.dailyPlanningNotificationEnabled.key,
+      permission,
+    );
+    state = state.copyWith(dailyPlanningNotificationEnabled: permission);
+  }
+
+  void setDailyPlanningNotificationTime(TimeOfDay time) {
+    final sharedPreferences = ref.watch(storagesProvider).shared;
+    sharedPreferences.setInt(
+      StorageKey.dailyPlanningNotificationTimeHour.key,
+      time.hour,
+    );
+    sharedPreferences.setInt(
+      StorageKey.dailyPlanningNotificationTimeMinute.key,
+      time.minute,
+    );
+    state = state.copyWith(dailyPlanningNotificationTime: time);
+  }
+
+  void setWeeklyPlanningNotificationPermission(bool permission) {
+    final sharedPreferences = ref.watch(storagesProvider).shared;
+    sharedPreferences.setBool(
+      StorageKey.weeklyPlanningNotificationEnabled.key,
+      permission,
+    );
+    state = state.copyWith(weeklyPlanningNotificationEnabled: permission);
+  }
+
+  void setWeeklyPlanningNotificationDay(int weekday) {
+    final sharedPreferences = ref.watch(storagesProvider).shared;
+    sharedPreferences.setInt(
+      StorageKey.weeklyPlanningNotificationDay.key,
+      weekday,
+    );
+    state = state.copyWith(weeklyPlanningNotificationDay: weekday);
+  }
+
+  void setWeeklyPlanningNotificationTime(TimeOfDay time) {
+    final sharedPreferences = ref.watch(storagesProvider).shared;
+    sharedPreferences.setInt(
+      StorageKey.weeklyPlanningNotificationTimeHour.key,
+      time.hour,
+    );
+    sharedPreferences.setInt(
+      StorageKey.weeklyPlanningNotificationTimeMinute.key,
+      time.minute,
+    );
+    state = state.copyWith(weeklyPlanningNotificationTime: time);
+  }
+
+  void setMonthlyPlanningNotificationPermission(bool permission) {
+    final sharedPreferences = ref.watch(storagesProvider).shared;
+    sharedPreferences.setBool(
+      StorageKey.monthlyPlanningNotificationEnabled.key,
+      permission,
+    );
+    state = state.copyWith(monthlyPlanningNotificationEnabled: permission);
+  }
+
+  void setMonthlyPlanningNotificationDay(int dayOfMonth) {
+    final sharedPreferences = ref.watch(storagesProvider).shared;
+    sharedPreferences.setInt(
+      StorageKey.monthlyPlanningNotificationDay.key,
+      dayOfMonth,
+    );
+    state = state.copyWith(monthlyPlanningNotificationDay: dayOfMonth);
+  }
+
+  void setMonthlyPlanningNotificationTime(TimeOfDay time) {
+    final sharedPreferences = ref.watch(storagesProvider).shared;
+    sharedPreferences.setInt(
+      StorageKey.monthlyPlanningNotificationTimeHour.key,
+      time.hour,
+    );
+    sharedPreferences.setInt(
+      StorageKey.monthlyPlanningNotificationTimeMinute.key,
+      time.minute,
+    );
+    state = state.copyWith(monthlyPlanningNotificationTime: time);
   }
 
   void setActivateClickableSession(bool activate) {
