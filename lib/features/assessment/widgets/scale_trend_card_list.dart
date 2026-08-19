@@ -58,11 +58,10 @@ class ScaleTrendCardList extends StatelessWidget {
       ..sort((a, b) => a.latestValue!.compareTo(b.latestValue!));
     final worst = remaining.take(2).toList();
     final worstIds = worst.map((s) => s.scale.id).toSet();
-    final others =
-        [
-          ...remaining.where((s) => !worstIds.contains(s.scale.id)),
-          ...series.where((s) => s.latestValue == null),
-        ]..sort((a, b) => a.scale.title.compareTo(b.scale.title));
+    final others = [
+      ...remaining.where((s) => !worstIds.contains(s.scale.id)),
+      ...series.where((s) => s.latestValue == null),
+    ]..sort((a, b) => a.scale.title.compareTo(b.scale.title));
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,26 +71,17 @@ class ScaleTrendCardList extends StatelessWidget {
         if (best.isNotEmpty) ...[
           _subheader(theme, "Beste"),
           const Gap(8),
-          for (final s in best) ...[
-            ScaleTrendCard(series: s),
-            const Gap(12),
-          ],
+          for (final s in best) ...[ScaleTrendCard(series: s), const Gap(12)],
         ],
         if (worst.isNotEmpty) ...[
           _subheader(theme, "Schlechteste"),
           const Gap(8),
-          for (final s in worst) ...[
-            ScaleTrendCard(series: s),
-            const Gap(12),
-          ],
+          for (final s in worst) ...[ScaleTrendCard(series: s), const Gap(12)],
         ],
         if (others.isNotEmpty) ...[
           _subheader(theme, "Weitere"),
           const Gap(8),
-          for (final s in others) ...[
-            ScaleTrendCard(series: s),
-            const Gap(12),
-          ],
+          for (final s in others) ...[ScaleTrendCard(series: s), const Gap(12)],
         ],
       ],
     );

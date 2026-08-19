@@ -41,7 +41,9 @@ class Assessment {
     return Assessment(
       assessmentId: assessment.assessmentId,
       title: assessment.title,
-      questions: assessment.questions.map((question) => Question.fromHikari(question)).toList(),
+      questions: assessment.questions
+          .map((question) => Question.fromHikari(question))
+          .toList(),
       scales: scales,
     );
   }

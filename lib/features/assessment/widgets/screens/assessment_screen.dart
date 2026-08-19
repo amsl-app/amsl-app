@@ -201,9 +201,7 @@ class _AssessmentScreenState extends ConsumerState<AssessmentScreen> {
   void _onSubmitted(BuildContext context) {
     switch (widget.flow) {
       case ModuleAssessmentFlow():
-        SharedPreferences sharedPreferences = ref
-            .read(storagesProvider)
-            .shared;
+        SharedPreferences sharedPreferences = ref.read(storagesProvider).shared;
         if (!(sharedPreferences.getBool(StorageKey.firstAssessmentDone.key) ??
             false)) {
           sharedPreferences.setBool(StorageKey.showEvaluationHint.key, true);
