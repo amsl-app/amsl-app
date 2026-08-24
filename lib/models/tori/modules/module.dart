@@ -97,6 +97,7 @@ class Module {
             banner: s.banner,
             completion: s.completion,
             metadata: s.metadata,
+            next: s.next,
             isLlm: s.llm,
             llmProvider: s.llmProvider,
             hide: s.hidden,
@@ -105,26 +106,6 @@ class Module {
         ),
       ),
     );
-    for (final session in module.sessions) {
-      final a = sessions.getOrThrow(session.id);
-      log.fine("Setting next of ${session.id}");
-      if (session.nextSession == null) {
-        // We marked this as next file so we have to initialize it
-        a.next = null;
-        continue;
-      }
-      final b = sessions.get(session.nextSession!);
-
-      if (b == null) {
-        log.warning(
-          "Next session specified but session with the given name does note exist",
-        );
-        // We marked this as next file so we have to initialize it
-        a.next = null;
-      } else {
-        a.next = b;
-      }
-    }
 
     switch (module.defaultSession) {
       case var sessionId?:

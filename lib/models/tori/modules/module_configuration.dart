@@ -81,6 +81,23 @@ abstract class ModuleConfiguration with _$ModuleConfiguration {
     return lastModuleDone;
   }
 
+  ModuleAssessmentSet? findModuleById(String moduleId) {
+    for (final module in allModules) {
+      if (module.module.id == moduleId) {
+        return module;
+      }
+    }
+    return null;
+  }
+
+  Session? findSessionById(String moduleId, String sessionId) {
+    final module = findModuleById(moduleId);
+    if (module == null) {
+      return null;
+    }
+    return module.module.sessions[sessionId];
+  }
+
   Iterable<(ModuleGroup, List<ModuleAssessmentSet>)> _buildGroups(
     Iterable<ModuleAssessmentSet> modules,
   ) {

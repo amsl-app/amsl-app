@@ -12,6 +12,7 @@ import 'package:amsl_app/models/tori/modules/module.dart';
 import 'package:amsl_app/models/tori/modules/session.dart';
 import 'package:amsl_app/models/tori/theme/module_theme.dart';
 import 'package:amsl_app/widgets/async_value_extension.dart';
+import 'package:amsl_app/widgets/buttons/rounded_corner_button.dart';
 import 'package:amsl_app/widgets/dialogs/amsl_dialog.dart';
 import 'package:amsl_app/widgets/loading/loading_text.dart';
 import 'package:backdrop/backdrop.dart';
@@ -103,12 +104,16 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     } else {
       _channel = ChatChannel.fromSession(session);
       if (session.isLlm) {
-        checkApproval(
-          context,
-          ref.read(storagesProvider).shared,
-          key: StorageKey.acceptOpenAIChat.key,
-          bottomBar: true,
-        );
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (context.mounted) {
+            checkApproval(
+              context,
+              ref.read(storagesProvider).shared,
+              key: StorageKey.acceptOpenAIChat.key,
+              bottomBar: true,
+            );
+          }
+        });
       }
       ref
           .read(moduleProvider.notifier)
@@ -177,9 +182,10 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     bool abort = false,
   }) async {
     FocusManager.instance.primaryFocus?.unfocus();
-    final channel = ChatChannel.fromSession(session);
+
     if (abort) {
       try {
+        final channel = ChatChannel.fromSession(session);
         await ref.read(chatControllerProvider.notifier).abort(channel);
       } on Exception catch (e) {
         if (mounted) {
@@ -188,7 +194,42 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
         }
       }
     }
-    if (mounted) {
+
+    // Check if forced next session popup should be shown
+    if (isConversationEnd && session.next != null && session.next!.force) {
+      final nextSession = session.resolveNext(
+        ref.read(moduleConfigurationProviderProvider).value,
+      );
+      if (nextSession != null && mounted) {
+        showAmslBottomSheet(
+          context: context,
+          content: "Wir empfehlen dir, mit der nächsten Einheit fortzufahren.",
+          onClose: () {
+            // We have to pop twice
+            context
+              ..pop()
+              ..pop();
+          },
+          buttonBar: [
+            RoundedCornerButton(
+              label: "Weiter zu ${nextSession.title}",
+              onTap: () {
+                // There is no popAndPushReplacementNamed, so we have to pop first and then pushReplacementNamed
+                context
+                  ..pop()
+                  ..pushReplacementNamed(
+                    "chat",
+                    pathParameters: {
+                      "moduleID": nextSession.module.target!.id,
+                      "sessionID": nextSession.id,
+                    },
+                  );
+              },
+            ),
+          ],
+        );
+      }
+    } else if (mounted) {
       context.pop();
     }
   }

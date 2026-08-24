@@ -1,7 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:moment_dart/moment_dart.dart';
 import '../../botflow.dart';
-
 part 'session.g.dart';
 
 @JsonEnum(fieldRename: FieldRename.snake)
@@ -101,6 +100,26 @@ class LockedUntil {
 }
 
 @JsonSerializable()
+class SessionsNext {
+  @JsonKey(name: "module_id")
+  final String moduleId;
+  @JsonKey(name: "session_id")
+  final String sessionId;
+  final bool force;
+
+  const SessionsNext({
+    required this.moduleId,
+    required this.sessionId,
+    required this.force,
+  });
+
+  factory SessionsNext.fromJson(Map<String, dynamic> json) =>
+      _$SessionsNextFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SessionsNextToJson(this);
+}
+
+@JsonSerializable()
 class Session {
   const Session({
     required this.id,
@@ -120,7 +139,7 @@ class Session {
     this.description,
     this.icon,
     this.banner,
-    this.nextSession,
+    this.next,
     this.metadata,
   });
 
@@ -142,8 +161,7 @@ class Session {
   )
   final LockedUntil? lockedUntil;
   final List<SessionSource>? sources;
-  @JsonKey(name: "next-session")
-  final String? nextSession;
+  final SessionsNext? next;
   @JsonKey(defaultValue: false)
   final bool llm;
   @JsonKey(defaultValue: false)
