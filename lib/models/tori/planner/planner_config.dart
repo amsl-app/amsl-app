@@ -1,4 +1,5 @@
 import 'package:amsl_app/models/tori/planner/planner_entry.dart';
+import 'package:amsl_app/models/tori/planner/planner_goal.dart';
 import 'package:amsl_app/models/tori/planner/planner_milestone.dart';
 import 'package:collection/collection.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -12,6 +13,7 @@ abstract class PlannerConfig with _$PlannerConfig {
   const factory PlannerConfig({
     required List<PlannerEntry> entries,
     required Map<String, PlannerMilestone> milestones,
+    required Map<String, PlannerGoal> goals,
   }) = _PlannerConfig;
 
   List<PlannerMilestone> get sortedMilestones =>

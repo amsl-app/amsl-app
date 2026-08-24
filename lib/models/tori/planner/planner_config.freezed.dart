@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PlannerConfig {
 
- List<PlannerEntry> get entries; Map<String, PlannerMilestone> get milestones;
+ List<PlannerEntry> get entries; Map<String, PlannerMilestone> get milestones; Map<String, PlannerGoal> get goals;
 /// Create a copy of PlannerConfig
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $PlannerConfigCopyWith<PlannerConfig> get copyWith => _$PlannerConfigCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlannerConfig&&const DeepCollectionEquality().equals(other.entries, entries)&&const DeepCollectionEquality().equals(other.milestones, milestones));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlannerConfig&&const DeepCollectionEquality().equals(other.entries, entries)&&const DeepCollectionEquality().equals(other.milestones, milestones)&&const DeepCollectionEquality().equals(other.goals, goals));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(entries),const DeepCollectionEquality().hash(milestones));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(entries),const DeepCollectionEquality().hash(milestones),const DeepCollectionEquality().hash(goals));
 
 @override
 String toString() {
-  return 'PlannerConfig(entries: $entries, milestones: $milestones)';
+  return 'PlannerConfig(entries: $entries, milestones: $milestones, goals: $goals)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $PlannerConfigCopyWith<$Res>  {
   factory $PlannerConfigCopyWith(PlannerConfig value, $Res Function(PlannerConfig) _then) = _$PlannerConfigCopyWithImpl;
 @useResult
 $Res call({
- List<PlannerEntry> entries, Map<String, PlannerMilestone> milestones
+ List<PlannerEntry> entries, Map<String, PlannerMilestone> milestones, Map<String, PlannerGoal> goals
 });
 
 
@@ -62,11 +62,12 @@ class _$PlannerConfigCopyWithImpl<$Res>
 
 /// Create a copy of PlannerConfig
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? entries = null,Object? milestones = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? entries = null,Object? milestones = null,Object? goals = null,}) {
   return _then(_self.copyWith(
 entries: null == entries ? _self.entries : entries // ignore: cast_nullable_to_non_nullable
 as List<PlannerEntry>,milestones: null == milestones ? _self.milestones : milestones // ignore: cast_nullable_to_non_nullable
-as Map<String, PlannerMilestone>,
+as Map<String, PlannerMilestone>,goals: null == goals ? _self.goals : goals // ignore: cast_nullable_to_non_nullable
+as Map<String, PlannerGoal>,
   ));
 }
 
@@ -151,10 +152,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<PlannerEntry> entries,  Map<String, PlannerMilestone> milestones)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( List<PlannerEntry> entries,  Map<String, PlannerMilestone> milestones,  Map<String, PlannerGoal> goals)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PlannerConfig() when $default != null:
-return $default(_that.entries,_that.milestones);case _:
+return $default(_that.entries,_that.milestones,_that.goals);case _:
   return orElse();
 
 }
@@ -172,10 +173,10 @@ return $default(_that.entries,_that.milestones);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<PlannerEntry> entries,  Map<String, PlannerMilestone> milestones)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( List<PlannerEntry> entries,  Map<String, PlannerMilestone> milestones,  Map<String, PlannerGoal> goals)  $default,) {final _that = this;
 switch (_that) {
 case _PlannerConfig():
-return $default(_that.entries,_that.milestones);case _:
+return $default(_that.entries,_that.milestones,_that.goals);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -192,10 +193,10 @@ return $default(_that.entries,_that.milestones);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<PlannerEntry> entries,  Map<String, PlannerMilestone> milestones)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( List<PlannerEntry> entries,  Map<String, PlannerMilestone> milestones,  Map<String, PlannerGoal> goals)?  $default,) {final _that = this;
 switch (_that) {
 case _PlannerConfig() when $default != null:
-return $default(_that.entries,_that.milestones);case _:
+return $default(_that.entries,_that.milestones,_that.goals);case _:
   return null;
 
 }
@@ -207,7 +208,7 @@ return $default(_that.entries,_that.milestones);case _:
 
 
 class _PlannerConfig extends PlannerConfig {
-  const _PlannerConfig({required final  List<PlannerEntry> entries, required final  Map<String, PlannerMilestone> milestones}): _entries = entries,_milestones = milestones,super._();
+  const _PlannerConfig({required final  List<PlannerEntry> entries, required final  Map<String, PlannerMilestone> milestones, required final  Map<String, PlannerGoal> goals}): _entries = entries,_milestones = milestones,_goals = goals,super._();
   
 
  final  List<PlannerEntry> _entries;
@@ -224,6 +225,13 @@ class _PlannerConfig extends PlannerConfig {
   return EqualUnmodifiableMapView(_milestones);
 }
 
+ final  Map<String, PlannerGoal> _goals;
+@override Map<String, PlannerGoal> get goals {
+  if (_goals is EqualUnmodifiableMapView) return _goals;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_goals);
+}
+
 
 /// Create a copy of PlannerConfig
 /// with the given fields replaced by the non-null parameter values.
@@ -235,16 +243,16 @@ _$PlannerConfigCopyWith<_PlannerConfig> get copyWith => __$PlannerConfigCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlannerConfig&&const DeepCollectionEquality().equals(other._entries, _entries)&&const DeepCollectionEquality().equals(other._milestones, _milestones));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlannerConfig&&const DeepCollectionEquality().equals(other._entries, _entries)&&const DeepCollectionEquality().equals(other._milestones, _milestones)&&const DeepCollectionEquality().equals(other._goals, _goals));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_entries),const DeepCollectionEquality().hash(_milestones));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_entries),const DeepCollectionEquality().hash(_milestones),const DeepCollectionEquality().hash(_goals));
 
 @override
 String toString() {
-  return 'PlannerConfig(entries: $entries, milestones: $milestones)';
+  return 'PlannerConfig(entries: $entries, milestones: $milestones, goals: $goals)';
 }
 
 
@@ -255,7 +263,7 @@ abstract mixin class _$PlannerConfigCopyWith<$Res> implements $PlannerConfigCopy
   factory _$PlannerConfigCopyWith(_PlannerConfig value, $Res Function(_PlannerConfig) _then) = __$PlannerConfigCopyWithImpl;
 @override @useResult
 $Res call({
- List<PlannerEntry> entries, Map<String, PlannerMilestone> milestones
+ List<PlannerEntry> entries, Map<String, PlannerMilestone> milestones, Map<String, PlannerGoal> goals
 });
 
 
@@ -272,11 +280,12 @@ class __$PlannerConfigCopyWithImpl<$Res>
 
 /// Create a copy of PlannerConfig
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? entries = null,Object? milestones = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? entries = null,Object? milestones = null,Object? goals = null,}) {
   return _then(_PlannerConfig(
 entries: null == entries ? _self._entries : entries // ignore: cast_nullable_to_non_nullable
 as List<PlannerEntry>,milestones: null == milestones ? _self._milestones : milestones // ignore: cast_nullable_to_non_nullable
-as Map<String, PlannerMilestone>,
+as Map<String, PlannerMilestone>,goals: null == goals ? _self._goals : goals // ignore: cast_nullable_to_non_nullable
+as Map<String, PlannerGoal>,
   ));
 }
 

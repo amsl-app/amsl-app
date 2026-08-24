@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:amsl_app/hikari/hikari_api.dart';
 import 'package:amsl_app/features/planner/models/new_planner_entry.dart';
-import 'package:amsl_app/features/planner/models/new_planner_milestone.dart';
 import 'package:amsl_app/models/hikari/planner/planner_entry.dart';
+import 'package:amsl_app/models/hikari/planner/planner_goal.dart';
 import 'package:amsl_app/models/hikari/planner/planner_milestone.dart';
 import 'package:logging/logging.dart';
 
@@ -79,12 +79,19 @@ class HikariPlannerApi {
     ],
   );
 
-  Future<PlannerMilestone> createMilestone(NewPlannerMilestone milestone) =>
-      hikari.post(
-        '/planner/milestones',
-        body: jsonEncode(milestone.toJson()),
-        transform: (json) => PlannerMilestone.fromJson(json),
-      );
+  Future<PlannerMilestone> createMilestone({
+    required String title,
+    required String date,
+    String? description,
+  }) => hikari.post(
+    '/planner/milestones',
+    body: jsonEncode({
+      'title': title,
+      'date': date,
+      'description': description,
+    }),
+    transform: (json) => PlannerMilestone.fromJson(json),
+  );
 
   Future<PlannerMilestone> updateMilestone(
     String id, {
@@ -92,6 +99,7 @@ class HikariPlannerApi {
     String? date,
     String? description,
     bool clearDescription = false,
+    List<PlannerGoal>? goals,
   }) => hikari.patch(
     '/planner/milestones/$id',
     body: jsonEncode({
@@ -99,10 +107,44 @@ class HikariPlannerApi {
       'date': ?date,
       // ignore: use_null_aware_elements
       if (description != null || clearDescription) 'description': description,
+      if (goals != null) 'goals': goals.map((g) => g.toJson()).toList(),
     }),
     transform: (json) => PlannerMilestone.fromJson(json),
   );
 
   Future<void> deleteMilestone(String id) =>
       hikari.delete('/planner/milestones/$id');
+
+  Future<List<PlannerGoal>> getGoals() => hikari.get(
+    '/planner/goals',
+    transform: (json) => [
+      for (final g in json as List) PlannerGoal.fromJson(g),
+    ],
+  );
+
+  Future<PlannerGoal> createGoal({required String name, String? description}) =>
+      hikari.post(
+        '/planner/goals',
+        body: jsonEncode({'name': name, 'description': description}),
+        transform: (json) => PlannerGoal.fromJson(json),
+      );
+
+  Future<PlannerGoal> updateGoal(
+    String id, {
+    String? name,
+    bool? fullfilled,
+    String? description,
+    bool clearDescription = false,
+  }) => hikari.patch(
+    '/planner/goals/$id',
+    body: jsonEncode({
+      'name': ?name,
+      'fullfilled': ?fullfilled,
+      // ignore: use_null_aware_elements
+      if (description != null || clearDescription) 'description': description,
+    }),
+    transform: (json) => PlannerGoal.fromJson(json),
+  );
+
+  Future<void> deleteGoal(String id) => hikari.delete('/planner/goals/$id');
 }

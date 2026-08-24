@@ -1,8 +1,10 @@
 import 'package:amsl_app/constants.dart';
 import 'package:amsl_app/features/planner/widgets/create_entry_sheet.dart';
+import 'package:amsl_app/features/planner/widgets/create_goal_sheet.dart';
 import 'package:amsl_app/features/planner/widgets/create_milestone_sheet.dart';
 import 'package:amsl_app/features/planner/widgets/planner_assistant_sheet.dart';
 import 'package:amsl_app/features/planner/widgets/planner_calendar_view.dart';
+import 'package:amsl_app/features/planner/widgets/planner_goals_view.dart';
 import 'package:amsl_app/features/planner/widgets/planner_ical_sheet.dart';
 import 'package:amsl_app/features/planner/widgets/planner_list_view.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +18,7 @@ class PlannerScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final tabController = useTabController(initialLength: 2);
+    final tabController = useTabController(initialLength: 3);
     final selectedDate = useState(DateTime.now());
 
     return Scaffold(
@@ -86,6 +88,19 @@ class PlannerScreen extends HookConsumerWidget {
                   ],
                 ),
               ),
+              PopupMenuItem(
+                onTap: () => showCreateGoalSheet(context, ref),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.emoji_events_outlined,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                    const Gap(8.0),
+                    Text('Neues Ziel', style: theme.textTheme.bodyMedium),
+                  ],
+                ),
+              ),
             ],
           ),
         ],
@@ -99,6 +114,7 @@ class PlannerScreen extends HookConsumerWidget {
           tabs: const [
             Tab(text: 'Liste'),
             Tab(text: 'Kalender'),
+            Tab(text: 'Ziele'),
           ],
         ),
       ),
@@ -133,6 +149,7 @@ class PlannerScreen extends HookConsumerWidget {
                 PlannerCalendarView(
                   onDaySelected: (day) => selectedDate.value = day,
                 ),
+                const PlannerGoalsView(),
               ],
             ),
           ),

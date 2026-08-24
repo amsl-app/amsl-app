@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PlannerMilestone {
 
- String get id; String get title; DateTime get date; String? get description;@JsonKey(name: 'module_id') String? get moduleId;@JsonKey(name: 'origin_id') String? get originId;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt;
+ String get id; String get title; DateTime get date;@JsonKey(defaultValue: []) List<PlannerGoal> get goals; String? get description;@JsonKey(name: 'module_id') String? get moduleId;@JsonKey(name: 'origin_id') String? get originId;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt;
 /// Create a copy of PlannerMilestone
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $PlannerMilestoneCopyWith<PlannerMilestone> get copyWith => _$PlannerMilestoneCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlannerMilestone&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.date, date) || other.date == date)&&(identical(other.description, description) || other.description == description)&&(identical(other.moduleId, moduleId) || other.moduleId == moduleId)&&(identical(other.originId, originId) || other.originId == originId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlannerMilestone&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.date, date) || other.date == date)&&const DeepCollectionEquality().equals(other.goals, goals)&&(identical(other.description, description) || other.description == description)&&(identical(other.moduleId, moduleId) || other.moduleId == moduleId)&&(identical(other.originId, originId) || other.originId == originId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,date,description,moduleId,originId,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,title,date,const DeepCollectionEquality().hash(goals),description,moduleId,originId,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'PlannerMilestone(id: $id, title: $title, date: $date, description: $description, moduleId: $moduleId, originId: $originId, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'PlannerMilestone(id: $id, title: $title, date: $date, goals: $goals, description: $description, moduleId: $moduleId, originId: $originId, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $PlannerMilestoneCopyWith<$Res>  {
   factory $PlannerMilestoneCopyWith(PlannerMilestone value, $Res Function(PlannerMilestone) _then) = _$PlannerMilestoneCopyWithImpl;
 @useResult
 $Res call({
- String id, String title, DateTime date, String? description,@JsonKey(name: 'module_id') String? moduleId,@JsonKey(name: 'origin_id') String? originId,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
+ String id, String title, DateTime date,@JsonKey(defaultValue: []) List<PlannerGoal> goals, String? description,@JsonKey(name: 'module_id') String? moduleId,@JsonKey(name: 'origin_id') String? originId,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
 });
 
 
@@ -65,12 +65,13 @@ class _$PlannerMilestoneCopyWithImpl<$Res>
 
 /// Create a copy of PlannerMilestone
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? date = null,Object? description = freezed,Object? moduleId = freezed,Object? originId = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? date = null,Object? goals = null,Object? description = freezed,Object? moduleId = freezed,Object? originId = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
-as DateTime,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as DateTime,goals: null == goals ? _self.goals : goals // ignore: cast_nullable_to_non_nullable
+as List<PlannerGoal>,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,moduleId: freezed == moduleId ? _self.moduleId : moduleId // ignore: cast_nullable_to_non_nullable
 as String?,originId: freezed == originId ? _self.originId : originId // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
@@ -160,10 +161,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  DateTime date,  String? description, @JsonKey(name: 'module_id')  String? moduleId, @JsonKey(name: 'origin_id')  String? originId, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String title,  DateTime date, @JsonKey(defaultValue: [])  List<PlannerGoal> goals,  String? description, @JsonKey(name: 'module_id')  String? moduleId, @JsonKey(name: 'origin_id')  String? originId, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PlannerMilestone() when $default != null:
-return $default(_that.id,_that.title,_that.date,_that.description,_that.moduleId,_that.originId,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.title,_that.date,_that.goals,_that.description,_that.moduleId,_that.originId,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -181,10 +182,10 @@ return $default(_that.id,_that.title,_that.date,_that.description,_that.moduleId
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  DateTime date,  String? description, @JsonKey(name: 'module_id')  String? moduleId, @JsonKey(name: 'origin_id')  String? originId, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String title,  DateTime date, @JsonKey(defaultValue: [])  List<PlannerGoal> goals,  String? description, @JsonKey(name: 'module_id')  String? moduleId, @JsonKey(name: 'origin_id')  String? originId, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _PlannerMilestone():
-return $default(_that.id,_that.title,_that.date,_that.description,_that.moduleId,_that.originId,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.title,_that.date,_that.goals,_that.description,_that.moduleId,_that.originId,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -201,10 +202,10 @@ return $default(_that.id,_that.title,_that.date,_that.description,_that.moduleId
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  DateTime date,  String? description, @JsonKey(name: 'module_id')  String? moduleId, @JsonKey(name: 'origin_id')  String? originId, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String title,  DateTime date, @JsonKey(defaultValue: [])  List<PlannerGoal> goals,  String? description, @JsonKey(name: 'module_id')  String? moduleId, @JsonKey(name: 'origin_id')  String? originId, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _PlannerMilestone() when $default != null:
-return $default(_that.id,_that.title,_that.date,_that.description,_that.moduleId,_that.originId,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.title,_that.date,_that.goals,_that.description,_that.moduleId,_that.originId,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -216,12 +217,19 @@ return $default(_that.id,_that.title,_that.date,_that.description,_that.moduleId
 @JsonSerializable()
 
 class _PlannerMilestone implements PlannerMilestone {
-   _PlannerMilestone({required this.id, required this.title, required this.date, this.description, @JsonKey(name: 'module_id') this.moduleId, @JsonKey(name: 'origin_id') this.originId, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt});
+   _PlannerMilestone({required this.id, required this.title, required this.date, @JsonKey(defaultValue: []) required final  List<PlannerGoal> goals, this.description, @JsonKey(name: 'module_id') this.moduleId, @JsonKey(name: 'origin_id') this.originId, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt}): _goals = goals;
   factory _PlannerMilestone.fromJson(Map<String, dynamic> json) => _$PlannerMilestoneFromJson(json);
 
 @override final  String id;
 @override final  String title;
 @override final  DateTime date;
+ final  List<PlannerGoal> _goals;
+@override@JsonKey(defaultValue: []) List<PlannerGoal> get goals {
+  if (_goals is EqualUnmodifiableListView) return _goals;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_goals);
+}
+
 @override final  String? description;
 @override@JsonKey(name: 'module_id') final  String? moduleId;
 @override@JsonKey(name: 'origin_id') final  String? originId;
@@ -241,16 +249,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlannerMilestone&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.date, date) || other.date == date)&&(identical(other.description, description) || other.description == description)&&(identical(other.moduleId, moduleId) || other.moduleId == moduleId)&&(identical(other.originId, originId) || other.originId == originId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlannerMilestone&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.date, date) || other.date == date)&&const DeepCollectionEquality().equals(other._goals, _goals)&&(identical(other.description, description) || other.description == description)&&(identical(other.moduleId, moduleId) || other.moduleId == moduleId)&&(identical(other.originId, originId) || other.originId == originId)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,title,date,description,moduleId,originId,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,title,date,const DeepCollectionEquality().hash(_goals),description,moduleId,originId,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'PlannerMilestone(id: $id, title: $title, date: $date, description: $description, moduleId: $moduleId, originId: $originId, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'PlannerMilestone(id: $id, title: $title, date: $date, goals: $goals, description: $description, moduleId: $moduleId, originId: $originId, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -261,7 +269,7 @@ abstract mixin class _$PlannerMilestoneCopyWith<$Res> implements $PlannerMilesto
   factory _$PlannerMilestoneCopyWith(_PlannerMilestone value, $Res Function(_PlannerMilestone) _then) = __$PlannerMilestoneCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String title, DateTime date, String? description,@JsonKey(name: 'module_id') String? moduleId,@JsonKey(name: 'origin_id') String? originId,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
+ String id, String title, DateTime date,@JsonKey(defaultValue: []) List<PlannerGoal> goals, String? description,@JsonKey(name: 'module_id') String? moduleId,@JsonKey(name: 'origin_id') String? originId,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
 });
 
 
@@ -278,12 +286,13 @@ class __$PlannerMilestoneCopyWithImpl<$Res>
 
 /// Create a copy of PlannerMilestone
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? date = null,Object? description = freezed,Object? moduleId = freezed,Object? originId = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? date = null,Object? goals = null,Object? description = freezed,Object? moduleId = freezed,Object? originId = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_PlannerMilestone(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
 as String,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
-as DateTime,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
+as DateTime,goals: null == goals ? _self._goals : goals // ignore: cast_nullable_to_non_nullable
+as List<PlannerGoal>,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String?,moduleId: freezed == moduleId ? _self.moduleId : moduleId // ignore: cast_nullable_to_non_nullable
 as String?,originId: freezed == originId ? _self.originId : originId // ignore: cast_nullable_to_non_nullable
 as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable

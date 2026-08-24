@@ -1,5 +1,6 @@
 import 'package:amsl_app/models/hikari/planner/planner_milestone.dart'
     as hikari_planner;
+import 'package:amsl_app/models/tori/planner/planner_goal.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'planner_milestone.freezed.dart';
@@ -12,11 +13,12 @@ abstract class PlannerMilestone with _$PlannerMilestone {
     required String id,
     required String title,
     required DateTime date,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    required List<PlannerGoal> goals,
     String? description,
     String? moduleId,
     String? originId,
-    required DateTime createdAt,
-    required DateTime updatedAt,
   }) = _PlannerMilestone;
 
   factory PlannerMilestone.fromHikari(hikari_planner.PlannerMilestone m) =>
@@ -29,5 +31,6 @@ abstract class PlannerMilestone with _$PlannerMilestone {
         originId: m.originId,
         createdAt: m.createdAt,
         updatedAt: m.updatedAt,
+        goals: m.goals.map((g) => PlannerGoal.fromHikari(g)).toList(),
       );
 }

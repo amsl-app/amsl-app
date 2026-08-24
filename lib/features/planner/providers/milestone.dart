@@ -1,7 +1,7 @@
 import 'package:amsl_app/features/planner/providers/planner.dart';
 import 'package:amsl_app/hikari/exception.dart';
 import 'package:amsl_app/hikari/hikari.dart';
-import 'package:amsl_app/features/planner/models/new_planner_milestone.dart';
+import 'package:amsl_app/models/tori/planner/planner_goal.dart';
 import 'package:amsl_app/models/tori/planner/planner_milestone.dart';
 import 'package:amsl_app/providers/hikari_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -65,18 +65,27 @@ class MilestonePod extends _$MilestonePod {
     }
   }
 
-  Future<PlannerMilestone> createMilestone(
-    NewPlannerMilestone milestone,
-  ) async {
+  Future<PlannerMilestone> createMilestone({
+    required String title,
+    required String date,
+    String? description,
+  }) async {
     final hikari = ref.read(hikariPodProvider);
     try {
       final created = PlannerMilestone.fromHikari(
-        await hikari.plannerApi.createMilestone(milestone),
+        await hikari.plannerApi.createMilestone(
+          title: title,
+          date: date,
+          description: description,
+        ),
       );
       update((milestones) async => {...milestones, created.id: created});
       return created;
     } on HikariException catch (e) {
-      throw e.copyWith(resolve: () => createMilestone(milestone));
+      throw e.copyWith(
+        resolve: () =>
+            createMilestone(title: title, date: date, description: description),
+      );
     }
   }
 
@@ -86,6 +95,7 @@ class MilestonePod extends _$MilestonePod {
     String? date,
     String? description,
     bool clearDescription = false,
+    List<PlannerGoal>? goals,
   }) async {
     final hikari = ref.read(hikariPodProvider);
     try {
@@ -96,6 +106,7 @@ class MilestonePod extends _$MilestonePod {
           date: date,
           description: description,
           clearDescription: clearDescription,
+          goals: goals?.map((g) => g.toHikari()).toList(),
         ),
       );
       update((milestones) async => {...milestones, id: updated});
@@ -108,6 +119,7 @@ class MilestonePod extends _$MilestonePod {
           date: date,
           description: description,
           clearDescription: clearDescription,
+          goals: goals,
         ),
       );
     }

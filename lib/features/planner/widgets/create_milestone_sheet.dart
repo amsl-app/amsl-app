@@ -1,6 +1,6 @@
 import 'package:amsl_app/constants.dart';
+import 'package:amsl_app/features/planner/providers/goals.dart';
 import 'package:amsl_app/features/planner/providers/milestone.dart';
-import 'package:amsl_app/features/planner/models/new_planner_milestone.dart';
 import 'package:amsl_app/models/tori/planner/planner_milestone.dart';
 import 'package:amsl_app/widgets/buttons/rounded_corner_button.dart';
 import 'package:amsl_app/widgets/dialogs/amsl_dialog.dart';
@@ -15,18 +15,27 @@ class NewMilestoneData {
   String? title;
   DateTime date;
   String? description;
+  Set<String> goalIds;
 
-  NewMilestoneData({this.id, this.title, required this.date, this.description});
+  NewMilestoneData({
+    this.id,
+    this.title,
+    required this.date,
+    this.description,
+    Set<String>? goalIds,
+  }) : goalIds = goalIds ?? {};
 }
 
-class CreateMilestoneCard extends HookWidget {
+class CreateMilestoneCard extends HookConsumerWidget {
   const CreateMilestoneCard({super.key, required this.data});
 
   final NewMilestoneData data;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final goals = ref.watch(goalPodProvider).value?.values.toList() ?? [];
+    final selectedGoalIds = useState(Set<String>.from(data.goalIds));
 
     final titleController = useTextEditingController(text: data.title ?? '');
     final titleError = useState(false);
@@ -135,6 +144,44 @@ class CreateMilestoneCard extends HookWidget {
               ),
             ),
           ),
+          if (goals.isNotEmpty) ...[
+            const Gap(12),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: goals.map((goal) {
+                final selected = selectedGoalIds.value.contains(goal.id);
+                return FilterChip(
+                  label: Text(goal.name),
+                  selected: selected,
+                  onSelected: (v) {
+                    final updated = Set<String>.from(selectedGoalIds.value);
+                    if (v) {
+                      updated.add(goal.id);
+                    } else {
+                      updated.remove(goal.id);
+                    }
+                    selectedGoalIds.value = updated;
+                    data.goalIds = updated;
+                  },
+                  selectedColor: theme.colorScheme.secondaryContainer,
+                  checkmarkColor: theme.colorScheme.onSecondaryContainer,
+                  labelStyle: theme.textTheme.bodySmall?.copyWith(
+                    color: selected
+                        ? theme.colorScheme.onSecondaryContainer
+                        : theme.colorScheme.onSurface,
+                  ),
+                  backgroundColor: theme.colorScheme.surface,
+                  side: BorderSide(
+                    color: theme.colorScheme.outline.withValues(alpha: 0.4),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                );
+              }).toList(),
+            ),
+          ],
         ],
       ),
     );
@@ -183,6 +230,7 @@ void showCreateMilestoneSheet(
     title: milestone?.title,
     date: milestone?.date ?? initialDate ?? DateTime.now(),
     description: milestone?.description,
+    goalIds: milestone?.goals.map((g) => g.id).toSet(),
   );
 
   Future<void> save() async {
@@ -192,6 +240,11 @@ void showCreateMilestoneSheet(
     }
 
     final notifier = ref.read(milestonePodProvider.notifier);
+    final allGoals = ref.read(goalPodProvider).value ?? {};
+    final selectedGoals = [
+      for (final id in data.goalIds)
+        if (allGoals[id] != null) allGoals[id]!,
+    ];
 
     if (milestone != null) {
       await notifier.updateMilestone(
@@ -200,15 +253,17 @@ void showCreateMilestoneSheet(
         date: kOldDateFormat.format(data.date),
         description: data.description,
         clearDescription: data.description == null,
+        goals: selectedGoals,
       );
     } else {
-      await notifier.createMilestone(
-        NewPlannerMilestone(
-          title: data.title!,
-          date: kOldDateFormat.format(data.date),
-          description: data.description,
-        ),
+      final created = await notifier.createMilestone(
+        title: data.title!,
+        date: kOldDateFormat.format(data.date),
+        description: data.description,
       );
+      if (selectedGoals.isNotEmpty) {
+        await notifier.updateMilestone(created.id, goals: selectedGoals);
+      }
     }
     if (context.mounted) Navigator.of(context).pop();
   }

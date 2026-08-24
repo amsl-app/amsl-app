@@ -11,6 +11,11 @@ _PlannerMilestone _$PlannerMilestoneFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       title: json['title'] as String,
       date: DateTime.parse(json['date'] as String),
+      goals:
+          (json['goals'] as List<dynamic>?)
+              ?.map((e) => PlannerGoal.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
       description: json['description'] as String?,
       moduleId: json['module_id'] as String?,
       originId: json['origin_id'] as String?,
@@ -23,6 +28,7 @@ Map<String, dynamic> _$PlannerMilestoneToJson(_PlannerMilestone instance) =>
       'id': instance.id,
       'title': instance.title,
       'date': instance.date.toIso8601String(),
+      'goals': instance.goals,
       'description': instance.description,
       'module_id': instance.moduleId,
       'origin_id': instance.originId,
