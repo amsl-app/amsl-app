@@ -1,6 +1,7 @@
 import 'package:amsl_app/features/chat/repository/chat_channel.dart';
 import 'package:amsl_app/features/profile/providers/variant_provider.dart';
 import 'package:amsl_app/features/tracking/tracking.dart';
+import 'package:amsl_app/features/voice/voice_button.dart';
 import 'package:amsl_app/variants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_glow/flutter_glow.dart';
@@ -39,10 +40,10 @@ class ChatJournalInput extends StatefulHookConsumerWidget {
 }
 
 class _ChatJournalInputState extends ConsumerState<ChatJournalInput> {
-  var input = '';
+  bool voiceActive = false;
 
   bool get isNotEmpty {
-    return input.trim().isNotEmpty;
+    return widget.textEditingController.text.trim().isNotEmpty;
   }
 
   bool assistantUsed = false;
@@ -59,7 +60,6 @@ class _ChatJournalInputState extends ConsumerState<ChatJournalInput> {
       // This should never happen
       return Container();
     }
-    input = widget.textEditingController.value.text;
     return Container(
       padding: const EdgeInsets.only(
         left: 24.0,
@@ -81,7 +81,16 @@ class _ChatJournalInputState extends ConsumerState<ChatJournalInput> {
             border: Border.all(width: 2),
             color: Colors.white,
           ),
-          child: textInput(),
+          child: Padding(
+            padding: const EdgeInsets.all(6.0),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                Expanded(child: textInput()),
+                voiceInputButton(),
+              ],
+            ),
+          ),
         ),
         Padding(
           padding: const EdgeInsets.only(top: 8.0),
@@ -95,6 +104,7 @@ class _ChatJournalInputState extends ConsumerState<ChatJournalInput> {
                     )
                   : gptHelp(),
               const Gap(8.0),
+
               sendButton(),
             ],
           ),
@@ -238,34 +248,38 @@ class _ChatJournalInputState extends ConsumerState<ChatJournalInput> {
     widget.onMessageSubmitted(value.trim());
   }
 
+  Widget voiceInputButton() {
+    return VoiceButton(
+      textEditingController: widget.textEditingController,
+      onStart: () => setState(() {
+        voiceActive = true;
+      }),
+      onEnd: (_) => setState(() {
+        voiceActive = false;
+      }),
+    );
+  }
+
   Widget textInput() {
     final theme = Theme.of(context);
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: TextField(
-        style: theme.textTheme.bodyMedium!.copyWith(
-          color: theme.colorScheme.onSurface,
-        ),
-        enabled: widget.allowInput,
-        keyboardType: TextInputType.multiline,
-        maxLines: 10,
-        minLines: 3,
-        controller: widget.textEditingController,
-        focusNode: widget.focusNode,
-        textCapitalization: TextCapitalization.sentences,
-        decoration: InputDecoration(
-          hintText: widget.allowInput ? "Schreib etwas..." : '',
-          border: InputBorder.none,
-        ),
-        onChanged: (value) => setState(() {
-          if (assistantOptionSelected != null) {
-            textEditedAfterAssistantUsage = false;
-          }
-          input = value;
-        }),
-        onSubmitted: ((value) => isNotEmpty ? onMessageSubmitted(value) : null),
+    return TextField(
+      style: theme.textTheme.bodyMedium!.copyWith(
+        color: theme.colorScheme.onSurface,
       ),
+      enabled: widget.allowInput,
+      keyboardType: TextInputType.multiline,
+      maxLines: 10,
+      minLines: 3,
+      controller: widget.textEditingController,
+      focusNode: widget.focusNode,
+      textCapitalization: TextCapitalization.sentences,
+      decoration: InputDecoration(
+        hintText: widget.allowInput ? "Schreib etwas..." : '',
+        border: InputBorder.none,
+      ),
+      onChanged: (_) => setState(() {}),
+      onSubmitted: ((value) => isNotEmpty ? onMessageSubmitted(value) : null),
     );
   }
 }

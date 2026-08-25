@@ -1,4 +1,5 @@
 import 'package:amsl_app/features/quiz/widgets/multiple_choice_option.dart';
+import 'package:amsl_app/features/voice/voice_button.dart';
 import 'package:amsl_app/models/hikari/quiz/question.dart' show BloomLevel;
 import 'package:amsl_app/models/tori/quiz/question.dart';
 import 'package:amsl_app/widgets/text/markdown_text.dart';
@@ -112,22 +113,41 @@ class QuizQuestionAnswerField extends HookWidget {
               const Gap(16),
               question.options == null
                   ? Expanded(
-                      child: TextField(
-                        readOnly: question.answer != null,
-                        controller: controller,
-                        onChanged: onChanged,
-                        focusNode: focusNode,
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(4),
-                          ),
-                          hintText: "Schreibe deine Antwort... ",
+                      child: Container(
+                        padding: const EdgeInsets.all(8.0),
+                        decoration: BoxDecoration(
+                          border: Border.all(color: theme.colorScheme.primary),
+                          borderRadius: BorderRadius.circular(4),
                         ),
-                        style: theme.textTheme.bodyMedium,
-                        textAlign: TextAlign.start,
-                        textAlignVertical: TextAlignVertical.top,
-                        maxLines: null,
-                        expands: true,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Expanded(
+                              child: TextField(
+                                readOnly: question.answer != null,
+                                controller: controller,
+                                onChanged: onChanged,
+                                focusNode: focusNode,
+                                decoration: InputDecoration(
+                                  border: InputBorder.none,
+                                  hintText: "Schreibe deine Antwort... ",
+                                ),
+                                style: theme.textTheme.bodyMedium,
+                                textAlign: TextAlign.start,
+                                textAlignVertical: TextAlignVertical.top,
+                                maxLines: null,
+                                expands: true,
+                              ),
+                            ),
+
+                            VoiceButton(
+                              textEditingController: controller,
+                              onEnd: (text) {
+                                onChanged(text);
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     )
                   : Expanded(

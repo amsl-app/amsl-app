@@ -23,9 +23,9 @@ setup-git:
 	@git config --local filter.pbxprojclean.clean "python3 scripts/git_pbxproj_clean_filter.py"
 
 verify-git-filters:
-	@python3 -m py_compile scripts/git_env_clean_filter.py scripts/git_flavors_clean_filter.py scripts/git_firebase_json_clean_filter.py scripts/git_firebase_plist_clean_filter.py scripts/git_pbxproj_clean_filter.py
+	@python3 -m py_compile scripts/git_flavors_clean_filter.py scripts/git_firebase_json_clean_filter.py scripts/git_firebase_plist_clean_filter.py scripts/git_pbxproj_clean_filter.py
 	@python3 scripts/git_flavors_clean_filter.py < lib/flavors.dart | rg -q 'k8s\.win|k8s\.iism|kit\.edu|f5f804' && (printf '%s\n' 'flavorsclean check failed'; exit 1) || true
 	@python3 scripts/git_firebase_json_clean_filter.py < android/app/google-services.json | rg -q 'AIzaSy[A-Za-z0-9_-]{20,}' && (printf '%s\n' 'firebasejsonclean check failed'; exit 1) || true
 	@python3 scripts/git_firebase_plist_clean_filter.py < ios/Runner/GoogleService-Info.plist | rg -q 'edu\.kit|wi-amsl|ASVKeKfu|cbb65afa' && (printf '%s\n' 'firebaseplistclean check failed'; exit 1) || true
-	@python3 scripts/git_pbxproj_clean_filter.py < ios/Runner.xcodeproj/project.pbxproj | rg -q 'DEVELOPMENT_TEAM = "[^"]+";|"DEVELOPMENT_TEAM\[sdk=iphoneos\*\]" = "[^"]+";' && (printf '%s\n' 'pbxprojclean check failed'; exit 1) || true
+	@python3 scripts/git_pbxproj_clean_filter.py < ios/Runner.xcodeproj/project.pbxproj | rg -q 'DEVELOPMENT_TEAM(\[sdk=\w+\*])?"?\s+=\s+"?[^";]+"?;' && (printf '%s\n' 'pbxprojclean check failed'; exit 1) || true
 	@printf '%s\n' 'All git clean filters look good.'
