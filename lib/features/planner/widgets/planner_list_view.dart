@@ -60,7 +60,7 @@ class PlannerListView extends ConsumerWidget {
                       ),
                       const Gap(12),
                       Text(
-                        'Noch keine Aktivitäten.\nTippe auf + um eine neue Aktivität zu erstellen.',
+                        'Noch keine Ziele, Meilensteine oder Aktivitäten.\nTippe auf + und fange am besten mit deinem ersten Ziel an.',
                         textAlign: TextAlign.center,
                         style: theme.textTheme.bodyMedium?.copyWith(
                           color: theme.colorScheme.onTertiaryContainer

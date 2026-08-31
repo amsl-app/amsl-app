@@ -41,7 +41,6 @@ class PlannerEntryTile extends ConsumerWidget {
         return true;
       },
       child: Card(
-        margin: const EdgeInsets.only(bottom: 8),
         color: theme.colorScheme.surface,
         elevation: 0,
         shape: RoundedRectangleBorder(
