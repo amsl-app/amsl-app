@@ -4,24 +4,38 @@ import 'package:amsl_app/models/tori/assessments/scale.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 
-/// Bottom sheet content listing every datapoint for a scale (normalized
-/// to the same 1-5 range shown elsewhere), newest first.
-class ScaleDataPointsSheet extends StatelessWidget {
-  final Scale scale;
+/// Bottom sheet content listing dated values (already normalized to the
+/// same 1-5 range shown elsewhere), newest first.
+class DataPointsSheet extends StatelessWidget {
+  final String title;
+  final String? description;
+  final Map<DateTime, double> values;
 
-  const ScaleDataPointsSheet({super.key, required this.scale});
+  const DataPointsSheet({
+    super.key,
+    required this.title,
+    required this.values,
+    required this.description,
+  });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final entries = scale.values.entries.toList()
+    final entries = values.entries.toList()
       ..sort((a, b) => b.key.compareTo(a.key));
 
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(scale.title, style: theme.textTheme.titleMedium),
+        Text(title, style: theme.textTheme.titleMedium),
+        if (description != null)
+          Text(
+            description!,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
         const Gap(12),
         if (entries.isEmpty)
           Text(
@@ -32,20 +46,37 @@ class ScaleDataPointsSheet extends StatelessWidget {
           )
         else
           for (final entry in entries)
-            ScaleDataPointRow(
-              date: entry.key,
-              value: normalizeScaleValue(entry.value, scale),
-            ),
+            DataPointRow(date: entry.key, value: entry.value),
       ],
     );
   }
 }
 
-class ScaleDataPointRow extends StatelessWidget {
+/// Wraps [DataPointsSheet] for a single [Scale], normalizing its raw
+/// values onto the shared 1-5 range.
+class ScaleDataPointsSheet extends StatelessWidget {
+  final Scale scale;
+
+  const ScaleDataPointsSheet({super.key, required this.scale});
+
+  @override
+  Widget build(BuildContext context) {
+    return DataPointsSheet(
+      title: scale.title,
+      description: scale.description,
+      values: {
+        for (final entry in scale.values.entries)
+          entry.key: normalizeScaleValue(entry.value, scale),
+      },
+    );
+  }
+}
+
+class DataPointRow extends StatelessWidget {
   final DateTime date;
   final double value;
 
-  const ScaleDataPointRow({super.key, required this.date, required this.value});
+  const DataPointRow({super.key, required this.date, required this.value});
 
   @override
   Widget build(BuildContext context) {

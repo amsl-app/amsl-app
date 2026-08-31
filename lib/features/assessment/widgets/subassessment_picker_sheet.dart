@@ -56,7 +56,7 @@ class SubassessmentPickerTile extends StatelessWidget {
         child: Row(
           children: [
             Expanded(child: Text(title, style: theme.textTheme.bodyMedium)),
-            Icon(Icons.play_arrow, color: theme.colorScheme.primary),
+            Icon(Icons.arrow_forward, color: theme.colorScheme.primary),
           ],
         ),
       ),

@@ -8,10 +8,12 @@ class Assessment {
   final String assessmentId;
   final String title;
   final List<Question> questions;
+  final bool hidden;
   final List<Scale> scales;
 
   Assessment({
     required this.assessmentId,
+    required this.hidden,
     required this.title,
     required this.questions,
     required this.scales,
@@ -40,6 +42,7 @@ class Assessment {
 
     return Assessment(
       assessmentId: assessment.assessmentId,
+      hidden: assessment.hidden,
       title: assessment.title,
       questions: assessment.questions
           .map((question) => Question.fromHikari(question))

@@ -5,6 +5,8 @@ class Scale {
   final String title;
   final double min;
   final double max;
+  final double? reference;
+  final String? description;
   final Map<DateTime, double> values;
 
   Scale({
@@ -13,6 +15,8 @@ class Scale {
     required this.min,
     required this.max,
     required this.values,
+    this.reference,
+    this.description,
   });
 
   factory Scale.fromHikari(
@@ -24,7 +28,9 @@ class Scale {
       title: scale.title,
       min: scale.body.min,
       max: scale.body.max,
+      reference: scale.body.reference,
       values: scaleData,
+      description: scale.description,
     );
   }
 }

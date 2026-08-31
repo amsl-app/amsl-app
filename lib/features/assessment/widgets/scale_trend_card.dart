@@ -1,4 +1,4 @@
-import 'package:amsl_app/features/assessment/widgets/scale_data_points_sheet.dart';
+import 'package:amsl_app/features/assessment/widgets/data_points_sheet.dart';
 import 'package:amsl_app/features/assessment/widgets/scale_series.dart';
 import 'package:amsl_app/widgets/dialogs/amsl_dialog.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -26,6 +26,10 @@ class ScaleTrendCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final latest = series.latestValue;
+    final reference = series.scale.reference;
+    final normalizedReference = reference == null
+        ? null
+        : normalizeScaleValue(reference, series.scale);
 
     return InkWell(
       borderRadius: BorderRadius.circular(16),
@@ -58,6 +62,21 @@ class ScaleTrendCard extends StatelessWidget {
                               gridData: const FlGridData(show: false),
                               borderData: FlBorderData(show: false),
                               titlesData: const FlTitlesData(show: false),
+                              extraLinesData: normalizedReference == null
+                                  ? const ExtraLinesData()
+                                  : ExtraLinesData(
+                                      horizontalLines: [
+                                        HorizontalLine(
+                                          y: normalizedReference,
+                                          color: theme
+                                              .colorScheme
+                                              .onSurfaceVariant
+                                              .withValues(alpha: 0.5),
+                                          strokeWidth: 1,
+                                          dashArray: [4, 3],
+                                        ),
+                                      ],
+                                    ),
                               lineBarsData: [
                                 LineChartBarData(
                                   spots: series.spots,
@@ -112,6 +131,15 @@ class ScaleTrendCard extends StatelessWidget {
                     ),
                   ),
                 ),
+                if (normalizedReference != null) ...[
+                  const Gap(4),
+                  Text(
+                    "Ø ${normalizedReference.toStringAsFixed(1)}",
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
               ],
             ),
           ],

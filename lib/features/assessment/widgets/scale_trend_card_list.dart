@@ -1,6 +1,7 @@
 import 'package:amsl_app/features/assessment/widgets/scale_series.dart';
 import 'package:amsl_app/features/assessment/widgets/scale_trend_card.dart';
 import 'package:amsl_app/models/tori/assessments/scale.dart';
+import 'package:amsl_app/themes/assessment_theme.dart';
 import 'package:amsl_app/widgets/section_header.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -15,16 +16,7 @@ class ScaleTrendCardList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final colors = [
-      theme.colorScheme.primary,
-      theme.colorScheme.secondary,
-      theme.colorScheme.tertiary,
-      theme.colorScheme.error,
-      theme.colorScheme.primaryContainer,
-      theme.colorScheme.secondaryContainer,
-      theme.colorScheme.tertiaryContainer,
-      theme.colorScheme.errorContainer,
-    ];
+    final colors = theme.assessmentTheme.scaleColors;
 
     final sortedScales = [...scales]
       ..sort((a, b) => a.title.compareTo(b.title));

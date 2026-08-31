@@ -1,4 +1,5 @@
 import 'package:amsl_app/features/assessment/widgets/overall_score_summary_card.dart';
+import 'package:amsl_app/features/assessment/widgets/scale_series.dart';
 import 'package:amsl_app/models/tori/assessments/scale.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -79,9 +80,21 @@ class OverallScoreChart extends StatelessWidget {
         ? null
         : overallByDay[sortedDates[sortedDates.length - 2]];
 
+    final normalizedReferences = [
+      for (final scale in scales)
+        if (scale.reference != null)
+          normalizeScaleValue(scale.reference!, scale),
+    ];
+    final overallReference = normalizedReferences.isEmpty
+        ? null
+        : normalizedReferences.reduce((a, b) => a + b) /
+              normalizedReferences.length;
+
     return OverallScoreSummaryCard(
       latest: latest,
       previous: previous,
+      reference: overallReference,
+      values: overallByDay,
       spots: [
         for (final (index, date) in sortedDates.indexed)
           FlSpot(index.toDouble(), overallByDay[date]!),

@@ -115,7 +115,7 @@ Future<Map<String, Tool>> tools(Ref ref) async {
     if (variant.assessmentEnabled)
       "self_assessment": Tool(
         id: "self_assessment",
-        name: "Selbst- & Lernmanagement",
+        name: "Lernstrategien Assessment",
         widget: const SelfAssessmentOverviewScreen(),
         decoration: Builder(
           builder: (BuildContext context) {

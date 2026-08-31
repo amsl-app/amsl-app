@@ -9,12 +9,14 @@ class Assessment {
   @JsonKey(name: "assessment_id")
   final String assessmentId;
   final String title;
+  final bool hidden;
   final List<Question> questions;
   final List<Scale> scales;
 
   Assessment({
     required this.assessmentId,
     required this.title,
+    required this.hidden,
     required this.questions,
     required this.scales,
   });

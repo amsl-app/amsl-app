@@ -1,5 +1,6 @@
 import 'package:amsl_app/models/tori/modules/module_themes.dart';
 import 'package:amsl_app/models/tori/modules/session_themes.dart';
+import 'package:amsl_app/themes/assessment_theme.dart';
 import 'package:amsl_app/themes/chat_theme.dart';
 import 'package:amsl_app/themes/section_header_theme.dart';
 import 'package:amsl_app/themes/tool_card_theme.dart';
@@ -71,6 +72,14 @@ class AppTheme {
 
   static const fontFamily = "Mulish";
 
+  static const assessmentAccentColor = Color.fromRGBO(123, 44, 191, 1.0);
+  static const assessmentAccentContainerColor = Color.fromRGBO(
+    178,
+    132,
+    224,
+    1.0,
+  );
+
   static const sectionThemeColor = Color(0xFF5B5B5B);
   static const sectionTheme = SectionHeaderTheme(
     iconColor: sectionThemeColor,
@@ -96,6 +105,32 @@ class AppTheme {
       fontSize: 16,
       fontVariations: <FontVariation>[FontVariation('wght', 800.0)],
     ),
+  );
+
+  static var lightAssessmentTheme = AssessmentTheme(
+    scaleColors: [
+      lightColorScheme.primary,
+      lightColorScheme.secondary,
+      lightColorScheme.tertiary,
+      assessmentAccentColor,
+      lightColorScheme.primaryContainer,
+      lightColorScheme.secondaryContainer,
+      lightColorScheme.tertiaryContainer,
+      assessmentAccentContainerColor,
+    ],
+  );
+
+  static var darkAssessmentTheme = AssessmentTheme(
+    scaleColors: [
+      darkColorScheme.primary,
+      darkColorScheme.secondary,
+      darkColorScheme.tertiary,
+      assessmentAccentColor,
+      darkColorScheme.primaryContainer,
+      darkColorScheme.secondaryContainer,
+      darkColorScheme.tertiaryContainer,
+      assessmentAccentContainerColor,
+    ],
   );
 
   static var lightChatTheme = ChatTheme(
@@ -222,6 +257,7 @@ class AppTheme {
         sectionTheme,
         lightToolCardTheme,
         lightChatTheme,
+        lightAssessmentTheme,
         ModuleThemes.blue,
         SessionThemes.main,
       ],
@@ -266,6 +302,7 @@ class AppTheme {
         sectionTheme,
         darkToolCardTheme,
         darkChatTheme,
+        darkAssessmentTheme,
         ModuleThemes.blue,
         SessionThemes.main,
       ],

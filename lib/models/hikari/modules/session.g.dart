@@ -35,15 +35,15 @@ const _$LockTypeEnumMap = {
 };
 
 SessionsNext _$SessionsNextFromJson(Map<String, dynamic> json) => SessionsNext(
-  moduleId: json['module-id'] as String,
-  sessionId: json['session-id'] as String,
+  moduleId: json['module_id'] as String,
+  sessionId: json['session_id'] as String,
   force: json['force'] as bool,
 );
 
 Map<String, dynamic> _$SessionsNextToJson(SessionsNext instance) =>
     <String, dynamic>{
-      'module-id': instance.moduleId,
-      'session-id': instance.sessionId,
+      'module_id': instance.moduleId,
+      'session_id': instance.sessionId,
       'force': instance.force,
     };
 

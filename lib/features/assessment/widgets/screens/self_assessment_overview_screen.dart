@@ -34,14 +34,17 @@ class SelfAssessmentOverviewScreen extends ConsumerWidget {
         scrolledUnderElevation: 0.0,
         backgroundColor: theme.colorScheme.tertiaryContainer,
         title: Text(
-          "Selbst- & Lernmanagement",
+          "Lernstrategien Assessment",
           style: TextStyle(color: theme.colorScheme.onTertiaryContainer),
         ),
       ),
       body: asyncAssessments.build(
         context,
         builder: (context, assessments) => SelfAssessmentContent(
-          assessments: assessments?.values.toList() ?? const [],
+          assessments: [
+            for (final assessment in assessments?.values.toList() ?? const [])
+              if (!assessment.hidden) assessment,
+          ],
         ),
       ),
     );
@@ -89,9 +92,9 @@ class SelfAssessmentContent extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Mit diesem Tool kannst du deine Selbst- und Lernmanagement-Skills überprüfen. "
-            "Starte einen Selbsttest und sehe, was du schon gut kannst, wo noch "
-            "Raum für Verbesserung ist und wie sich dein Score über die Zeit "
+            "Mit diesem Tool kannst du deine Lernstrategie Skills überprüfen."
+            "Starte einen Assessment und sehe, was du schon gut kannst, welche Aspekte noch "
+            "Raum für Verbesserung haben und wie sich dein Score über die Zeit "
             "entwickelt.",
             style: theme.textTheme.bodyMedium?.copyWith(
               color: theme.colorScheme.onTertiaryContainer,
