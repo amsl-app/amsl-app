@@ -17,7 +17,6 @@ class PayloadContent {
     this.duration,
     this.buttonType,
     this.url,
-    this.imageUrl,
     this.cards,
     this.error,
     this.placeholder_text,
@@ -34,8 +33,6 @@ class PayloadContent {
   @JsonKey(name: "button_type")
   String? buttonType;
   String? url;
-  @JsonKey(name: "image_url")
-  String? imageUrl;
   List<Card>? cards;
   String? error;
   String? placeholder_text;
@@ -47,6 +44,6 @@ class PayloadContent {
 
   @override
   String toString() {
-    return "HikariPayload { title: $title, type: $type, displayType: $displayType, buttons: $buttons, payload: $payload, text: $text, duration: $duration, buttonType: $buttonType, url: $url, imageUrl: $imageUrl, cards: $cards, error: $error, placeholder_text: $placeholder_text }";
+    return "HikariPayload { title: $title, type: $type, displayType: $displayType, buttons: $buttons, payload: $payload, text: $text, duration: $duration, buttonType: $buttonType, url: $url, cards: $cards, error: $error, placeholder_text: $placeholder_text }";
   }
 }

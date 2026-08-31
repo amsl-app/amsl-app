@@ -20,11 +20,13 @@ class SessionCard extends StatefulHookConsumerWidget {
     required this.session,
     required this.index,
     this.onChat,
+    this.icon,
   });
 
   final Session session;
   final int index;
   final VoidCallback? onChat;
+  final IconData? icon;
 
   @override
   ConsumerState<SessionCard> createState() => _SessionCardState();
@@ -113,7 +115,9 @@ class _SessionCardState extends ConsumerState<SessionCard> {
                           showMessage(context, label: text);
                         }
                       },
-                      icon: !locked ? Icons.forum : Icons.lock_outline,
+                      icon: !locked
+                          ? (widget.icon ?? Icons.forum)
+                          : Icons.lock_outline,
                       iconColore: theme.moduleTheme.textColor,
                       buttonColor: theme.moduleTheme.containerColor,
                     ),

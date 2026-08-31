@@ -9,7 +9,7 @@ part of 'planner_goal.dart';
 _PlannerGoal _$PlannerGoalFromJson(Map<String, dynamic> json) => _PlannerGoal(
   id: json['id'] as String,
   name: json['name'] as String,
-  fullfilled: json['fullfilled'] as bool,
+  fullfilled: json['fullfilled'] as bool? ?? false,
   description: json['description'] as String?,
   createdAt: DateTime.parse(json['created_at'] as String),
   updatedAt: DateTime.parse(json['updated_at'] as String),

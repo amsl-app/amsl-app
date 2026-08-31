@@ -25,6 +25,7 @@ final class PlannerConfigPodProvider
           hikariPodProvider,
           plannerPodProvider,
           milestonePodProvider,
+          goalPodProvider,
         ],
         $allTransitiveDependencies: <ProviderOrFamily>{
           PlannerConfigPodProvider.$allTransitiveDependencies0,
@@ -33,6 +34,7 @@ final class PlannerConfigPodProvider
           PlannerConfigPodProvider.$allTransitiveDependencies3,
           PlannerConfigPodProvider.$allTransitiveDependencies4,
           PlannerConfigPodProvider.$allTransitiveDependencies5,
+          PlannerConfigPodProvider.$allTransitiveDependencies6,
         },
       );
 
@@ -45,6 +47,7 @@ final class PlannerConfigPodProvider
       HikariPodProvider.$allTransitiveDependencies2;
   static final $allTransitiveDependencies4 = plannerPodProvider;
   static final $allTransitiveDependencies5 = milestonePodProvider;
+  static final $allTransitiveDependencies6 = goalPodProvider;
 
   @override
   String debugGetCreateSourceHash() => _$plannerConfigPodHash();
@@ -54,7 +57,7 @@ final class PlannerConfigPodProvider
   PlannerConfigPod create() => PlannerConfigPod();
 }
 
-String _$plannerConfigPodHash() => r'101170f4c6830ca949fe016f5ce5a0e33d68bb26';
+String _$plannerConfigPodHash() => r'1000d6ce0ddebe30c82ab7809a47256f4d0cd9ea';
 
 abstract class _$PlannerConfigPod extends $AsyncNotifier<PlannerConfig> {
   FutureOr<PlannerConfig> build();

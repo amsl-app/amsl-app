@@ -151,7 +151,7 @@ class _ModuleQuizScreenInnerState extends ConsumerState<ModuleQuizScreenInner> {
         title: Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            "${module.title}  - Quiz",
+            "${module.title}  - Exam Coach",
             style: TextStyle(color: theme.colorScheme.onTertiaryContainer),
           ),
         ),
@@ -173,7 +173,7 @@ class _ModuleQuizScreenInnerState extends ConsumerState<ModuleQuizScreenInner> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Schau dir die Statistiken an oder wähle die Einheiten aus, um ein Quiz zu erstellen.',
+                'Schau dir die Statistiken an oder wähle die Einheiten aus, um den Exam Coach zu starten.',
                 style: textTheme.bodyMedium,
               ),
               Gap(16),
@@ -186,7 +186,7 @@ class _ModuleQuizScreenInnerState extends ConsumerState<ModuleQuizScreenInner> {
                     mainAxisSize: MainAxisSize.min,
                     borderColor: theme.colorScheme.primary,
                     label:
-                        "Quizfragen für ${selected.length} Einheiten erstellen",
+                        "Exam Coach für ${selected.length} Einheiten starten",
                     onTap: selected.isNotEmpty
                         ? () async {
                             try {
@@ -223,7 +223,7 @@ class _ModuleQuizScreenInnerState extends ConsumerState<ModuleQuizScreenInner> {
                       borderColor: theme.colorScheme.primary,
                       buttonColor: Colors.white,
                       labelColor: theme.colorScheme.primary,
-                      label: "Letztes Quiz fortsetzen",
+                      label: "Letzten Exam Coach fortsetzen",
                       onTap: () async {
                         if (await checkApproval(
                               context,

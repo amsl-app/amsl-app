@@ -8,6 +8,7 @@ abstract class PlannerGoal with _$PlannerGoal {
   factory PlannerGoal({
     required String id,
     required String name,
+    @JsonKey(defaultValue: false)
     required bool fullfilled,
     String? description,
     @JsonKey(name: 'created_at') required DateTime createdAt,

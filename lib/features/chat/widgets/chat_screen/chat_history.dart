@@ -5,12 +5,15 @@ import 'package:amsl_app/features/chat/models/message.dart';
 import 'package:amsl_app/features/chat/models/mood_message.dart';
 import 'package:amsl_app/features/chat/models/text_chunk.dart';
 import 'package:amsl_app/features/chat/models/text_message.dart';
+import 'package:amsl_app/features/chat/models/video_message.dart';
 import 'package:amsl_app/features/chat/repository/chat.dart';
 import 'package:amsl_app/features/chat/repository/chat_stream.dart';
 import 'package:amsl_app/features/chat/repository/chat_channel.dart';
 import 'package:amsl_app/features/chat/widgets/elements/bubble.dart';
 import 'package:amsl_app/features/chat/widgets/elements/image_message.dart'
     as image_message_widget;
+import 'package:amsl_app/features/chat/widgets/elements/video_message.dart'
+    as video_message_widget;
 import 'package:amsl_app/features/chat/widgets/elements/scroll_methods.dart';
 import 'package:amsl_app/features/chat/widgets/elements/typing_bubble.dart';
 import 'package:amsl_app/features/journal/widgets/focus/chat_focus_bubble.dart';
@@ -241,6 +244,8 @@ class _ChatHistoryState extends ConsumerState<ChatHistory> {
         return buildTextMessage(step.sender, step.content);
       case ImageMessage _:
         return image_message_widget.ImageMessage(uri: step.uri);
+      case VideoMessage _:
+        return video_message_widget.VideoMessage(uri: step.uri);
       case FocusMessage _:
         return buildFocusMessage(step);
       case MoodMessage _:

@@ -37,6 +37,9 @@ class SessionList extends StatelessWidget {
               session: session,
               index: sessions.indexOf(session),
               onChat: () => onChat?.call(session),
+              icon: module.category == ModuleCategory.journal
+                  ? Icons.description_outlined
+                  : Icons.forum,
             );
           })
           .toList(growable: false),
