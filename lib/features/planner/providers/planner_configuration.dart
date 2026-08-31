@@ -10,7 +10,10 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'planner_configuration.g.dart';
 
-@Riverpod(keepAlive: true, dependencies: [HikariPod, PlannerPod, MilestonePod, GoalPod])
+@Riverpod(
+  keepAlive: true,
+  dependencies: [HikariPod, PlannerPod, MilestonePod, GoalPod],
+)
 class PlannerConfigPod extends _$PlannerConfigPod {
   @override
   Future<PlannerConfig> build() async {

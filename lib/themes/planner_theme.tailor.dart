@@ -18,6 +18,8 @@ mixin _$PlannerThemeTailorMixin on ThemeExtension<PlannerTheme> {
   Color get highPriorityForeground;
   Color get milestoneAccent;
   Color get milestoneAccentBackground;
+  Color get goalAccent;
+  Color get goalAccentBackground;
 
   @override
   PlannerTheme copyWith({
@@ -29,6 +31,8 @@ mixin _$PlannerThemeTailorMixin on ThemeExtension<PlannerTheme> {
     Color? highPriorityForeground,
     Color? milestoneAccent,
     Color? milestoneAccentBackground,
+    Color? goalAccent,
+    Color? goalAccentBackground,
   }) {
     return PlannerTheme(
       lowPriorityBackground:
@@ -46,6 +50,8 @@ mixin _$PlannerThemeTailorMixin on ThemeExtension<PlannerTheme> {
       milestoneAccent: milestoneAccent ?? this.milestoneAccent,
       milestoneAccentBackground:
           milestoneAccentBackground ?? this.milestoneAccentBackground,
+      goalAccent: goalAccent ?? this.goalAccent,
+      goalAccentBackground: goalAccentBackground ?? this.goalAccentBackground,
     );
   }
 
@@ -89,6 +95,12 @@ mixin _$PlannerThemeTailorMixin on ThemeExtension<PlannerTheme> {
         other.milestoneAccentBackground,
         t,
       )!,
+      goalAccent: Color.lerp(goalAccent, other.goalAccent, t)!,
+      goalAccentBackground: Color.lerp(
+        goalAccentBackground,
+        other.goalAccentBackground,
+        t,
+      )!,
     );
   }
 
@@ -128,6 +140,14 @@ mixin _$PlannerThemeTailorMixin on ThemeExtension<PlannerTheme> {
             const DeepCollectionEquality().equals(
               milestoneAccentBackground,
               other.milestoneAccentBackground,
+            ) &&
+            const DeepCollectionEquality().equals(
+              goalAccent,
+              other.goalAccent,
+            ) &&
+            const DeepCollectionEquality().equals(
+              goalAccentBackground,
+              other.goalAccentBackground,
             ));
   }
 
@@ -143,6 +163,8 @@ mixin _$PlannerThemeTailorMixin on ThemeExtension<PlannerTheme> {
       const DeepCollectionEquality().hash(highPriorityForeground),
       const DeepCollectionEquality().hash(milestoneAccent),
       const DeepCollectionEquality().hash(milestoneAccentBackground),
+      const DeepCollectionEquality().hash(goalAccent),
+      const DeepCollectionEquality().hash(goalAccentBackground),
     );
   }
 }

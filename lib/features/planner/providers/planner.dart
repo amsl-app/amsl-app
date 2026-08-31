@@ -23,11 +23,15 @@ Map<DateTime, List<PlannerEntry>> groupEntriesByDay(
   return map;
 }
 
-/// Merges two sets of day-truncated keys (e.g. from [groupEntriesByDay] and
-/// groupMilestonesByDay) into one ascending, deduplicated list, so a day with
-/// a milestone but no entries (or vice versa) still gets a row.
-List<DateTime> mergedDayKeys(Iterable<DateTime> a, Iterable<DateTime> b) {
-  return {...a, ...b}.toList()..sort();
+/// Merges sets of day-truncated keys (e.g. from [groupEntriesByDay],
+/// groupMilestonesByDay, groupGoalsByDay) into one ascending, deduplicated
+/// list, so a day with only one kind of item still gets a row.
+List<DateTime> mergedDayKeys(
+  Iterable<DateTime> a,
+  Iterable<DateTime> b, [
+  Iterable<DateTime> c = const [],
+]) {
+  return {...a, ...b, ...c}.toList()..sort();
 }
 
 @Riverpod(keepAlive: true, dependencies: [HikariPod])

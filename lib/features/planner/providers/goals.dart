@@ -7,6 +7,16 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'goals.g.dart';
 
+/// Groups goals by their day (time component stripped), preserving order.
+Map<DateTime, List<PlannerGoal>> groupGoalsByDay(Iterable<PlannerGoal> goals) {
+  final map = <DateTime, List<PlannerGoal>>{};
+  for (final g in goals) {
+    final day = DateTime(g.date.year, g.date.month, g.date.day);
+    map.putIfAbsent(day, () => []).add(g);
+  }
+  return map;
+}
+
 @Riverpod(keepAlive: true, dependencies: [HikariPod])
 class GoalPod extends _$GoalPod {
   @override
@@ -31,6 +41,7 @@ class GoalPod extends _$GoalPod {
 
   Future<PlannerGoal> createGoal({
     required String name,
+    required String date,
     String? description,
   }) async {
     final hikari = ref.read(hikariPodProvider);
@@ -38,6 +49,7 @@ class GoalPod extends _$GoalPod {
       final goal = PlannerGoal.fromHikari(
         await hikari.plannerApi.createGoal(
           name: name,
+          date: date,
           description: description,
         ),
       );
@@ -51,7 +63,8 @@ class GoalPod extends _$GoalPod {
   Future<PlannerGoal> updateGoal(
     String goalId, {
     String? name,
-    bool? fullfilled,
+    String? date,
+    bool? fulfilled,
     String? description,
     bool clearDescription = false,
   }) async {
@@ -61,7 +74,8 @@ class GoalPod extends _$GoalPod {
         await hikari.plannerApi.updateGoal(
           goalId,
           name: name,
-          fullfilled: fullfilled,
+          date: date,
+          fulfilled: fulfilled,
           description: description,
           clearDescription: clearDescription,
         ),

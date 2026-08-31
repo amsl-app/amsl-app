@@ -1,6 +1,6 @@
 import 'package:amsl_app/constants.dart';
 import 'package:amsl_app/features/planner/providers/planner.dart';
-import 'package:amsl_app/features/planner/widgets/create_entry_sheet.dart';
+import 'package:amsl_app/features/planner/widgets/sheets/create_entry_sheet.dart';
 import 'package:amsl_app/features/planner/widgets/planner_priority_badge.dart';
 import 'package:amsl_app/models/tori/planner/planner_entry.dart';
 import 'package:flutter/material.dart';
@@ -41,7 +41,6 @@ class PlannerEntryTile extends ConsumerWidget {
         return true;
       },
       child: Card(
-        margin: const EdgeInsets.only(bottom: 8),
         color: theme.colorScheme.surface,
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -114,14 +113,31 @@ class PlannerEntryTile extends ConsumerWidget {
                           ),
                         ),
                       if (milestoneName != null)
-                        Text(
-                          milestoneName,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(
-                              alpha: 0.5,
-                            ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.flag_rounded,
+                                size: 14,
+                                color: theme.colorScheme.onSurface.withValues(
+                                  alpha: 0.5,
+                                ),
+                              ),
+                              const Gap(4),
+                              Flexible(
+                                child: Text(
+                                  milestoneName,
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: theme.colorScheme.onSurface
+                                        .withValues(alpha: 0.5),
+                                  ),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ),
+                            ],
                           ),
-                          overflow: TextOverflow.ellipsis,
                         ),
                     ],
                   ),

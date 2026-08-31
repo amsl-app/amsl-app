@@ -82,6 +82,7 @@ class HikariPlannerApi {
   Future<PlannerMilestone> createMilestone({
     required String title,
     required String date,
+    required List<String> goals,
     String? description,
   }) => hikari.post(
     '/planner/milestones',
@@ -89,6 +90,7 @@ class HikariPlannerApi {
       'title': title,
       'date': date,
       'description': description,
+      'goals': goals,
     }),
     transform: (json) => PlannerMilestone.fromJson(json),
   );
@@ -98,16 +100,16 @@ class HikariPlannerApi {
     String? title,
     String? date,
     String? description,
+    List<String>? goals,
     bool clearDescription = false,
-    List<PlannerGoal>? goals,
   }) => hikari.patch(
     '/planner/milestones/$id',
     body: jsonEncode({
       'title': ?title,
       'date': ?date,
+      'goals': ?goals,
       // ignore: use_null_aware_elements
       if (description != null || clearDescription) 'description': description,
-      if (goals != null) 'goals': goals.map((g) => g.toJson()).toList(),
     }),
     transform: (json) => PlannerMilestone.fromJson(json),
   );
@@ -122,24 +124,29 @@ class HikariPlannerApi {
     ],
   );
 
-  Future<PlannerGoal> createGoal({required String name, String? description}) =>
-      hikari.post(
-        '/planner/goals',
-        body: jsonEncode({'name': name, 'description': description}),
-        transform: (json) => PlannerGoal.fromJson(json),
-      );
+  Future<PlannerGoal> createGoal({
+    required String name,
+    required String date,
+    String? description,
+  }) => hikari.post(
+    '/planner/goals',
+    body: jsonEncode({'name': name, 'date': date, 'description': description}),
+    transform: (json) => PlannerGoal.fromJson(json),
+  );
 
   Future<PlannerGoal> updateGoal(
     String id, {
     String? name,
-    bool? fullfilled,
+    String? date,
+    bool? fulfilled,
     String? description,
     bool clearDescription = false,
   }) => hikari.patch(
     '/planner/goals/$id',
     body: jsonEncode({
       'name': ?name,
-      'fullfilled': ?fullfilled,
+      'date': ?date,
+      'fulfilled': ?fulfilled,
       // ignore: use_null_aware_elements
       if (description != null || clearDescription) 'description': description,
     }),

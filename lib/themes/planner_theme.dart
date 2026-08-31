@@ -17,6 +17,8 @@ class PlannerTheme extends ThemeExtension<PlannerTheme>
     required this.highPriorityForeground,
     required this.milestoneAccent,
     required this.milestoneAccentBackground,
+    required this.goalAccent,
+    required this.goalAccentBackground,
   });
 
   @override
@@ -35,4 +37,8 @@ class PlannerTheme extends ThemeExtension<PlannerTheme>
   final Color milestoneAccent;
   @override
   final Color milestoneAccentBackground;
+  @override
+  final Color goalAccent;
+  @override
+  final Color goalAccentBackground;
 }

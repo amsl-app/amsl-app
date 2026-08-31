@@ -1,6 +1,7 @@
 import 'package:amsl_app/features/planner/providers/goals.dart';
-import 'package:amsl_app/features/planner/widgets/create_goal_sheet.dart';
+import 'package:amsl_app/features/planner/widgets/sheets/create_goal_sheet.dart';
 import 'package:amsl_app/models/tori/planner/planner_goal.dart';
+import 'package:amsl_app/themes/planner_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -13,6 +14,7 @@ class PlannerGoalTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final planner = theme.plannerTheme;
 
     return Dismissible(
       key: ValueKey('goal-${goal.id}'),
@@ -33,14 +35,11 @@ class PlannerGoalTile extends ConsumerWidget {
         return true;
       },
       child: Card(
-        margin: const EdgeInsets.only(bottom: 8),
-        color: theme.colorScheme.surface,
+        color: planner.goalAccentBackground,
         elevation: 0,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: BorderSide(
-            color: theme.colorScheme.outline.withValues(alpha: 0.2),
-          ),
+          side: BorderSide(color: planner.goalAccent.withValues(alpha: 0.3)),
         ),
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
@@ -49,17 +48,13 @@ class PlannerGoalTile extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             child: Row(
               children: [
-                Checkbox(
-                  value: goal.fullfilled,
-                  activeColor: theme.colorScheme.secondary,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  onChanged: (_) => ref
-                      .read(goalPodProvider.notifier)
-                      .updateGoal(goal.id, fullfilled: !goal.fullfilled),
+                Icon(
+                  Icons.emoji_events_outlined,
+                  color: goal.fulfilled
+                      ? planner.goalAccent.withValues(alpha: 0.5)
+                      : planner.goalAccent,
                 ),
-                const Gap(4),
+                const Gap(8),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -68,14 +63,13 @@ class PlannerGoalTile extends ConsumerWidget {
                       Text(
                         goal.name,
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          decoration: goal.fullfilled
+                          fontWeight: FontWeight.bold,
+                          decoration: goal.fulfilled
                               ? TextDecoration.lineThrough
                               : null,
-                          color: goal.fullfilled
-                              ? theme.colorScheme.onSurface.withValues(
-                                  alpha: 0.5,
-                                )
-                              : null,
+                          color: goal.fulfilled
+                              ? planner.goalAccent.withValues(alpha: 0.5)
+                              : planner.goalAccent,
                         ),
                       ),
                       if (goal.description != null)
@@ -84,9 +78,7 @@ class PlannerGoalTile extends ConsumerWidget {
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurface.withValues(
-                              alpha: 0.5,
-                            ),
+                            color: planner.goalAccent.withValues(alpha: 0.7),
                           ),
                         ),
                     ],

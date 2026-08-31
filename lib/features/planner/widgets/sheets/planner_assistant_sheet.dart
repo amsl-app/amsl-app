@@ -1,7 +1,7 @@
 import 'package:amsl_app/constants.dart';
 import 'package:amsl_app/features/planner/providers/planner.dart';
 import 'package:amsl_app/features/planner/providers/planner_configuration.dart';
-import 'package:amsl_app/features/planner/widgets/create_entry_sheet.dart';
+import 'package:amsl_app/features/planner/widgets/sheets/create_entry_sheet.dart';
 import 'package:amsl_app/features/planner/widgets/planner_page_dots.dart';
 import 'package:amsl_app/hikari/exception.dart';
 import 'package:amsl_app/features/planner/models/new_planner_entry.dart';
@@ -41,7 +41,11 @@ class PlannerAssistantSheet extends HookConsumerWidget {
             );
         if (result.isEmpty) {
           if (context.mounted) {
-            showMessage(context, label: 'Keine Einträge erkannt', error: true);
+            showMessage(
+              context,
+              label: 'Keine Aktivitäten erkannt',
+              error: true,
+            );
           }
           return;
         }
@@ -121,7 +125,7 @@ class PlannerAssistantSheet extends HookConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      'Eintrag #${i + 1}',
+                      'Aktivität #${i + 1}',
                       style: theme.textTheme.titleSmall?.copyWith(
                         color: theme.colorScheme.onSurface.withValues(
                           alpha: 0.5,

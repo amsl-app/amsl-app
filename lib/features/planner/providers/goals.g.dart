@@ -46,7 +46,7 @@ final class GoalPodProvider
   GoalPod create() => GoalPod();
 }
 
-String _$goalPodHash() => r'ce805bbb254bbefa7130c5fdca67046261249e85';
+String _$goalPodHash() => r'5cf59e5bcf8ef82b5447e4845eeeac243a07017e';
 
 abstract class _$GoalPod extends $AsyncNotifier<Map<String, PlannerGoal>> {
   FutureOr<Map<String, PlannerGoal>> build();

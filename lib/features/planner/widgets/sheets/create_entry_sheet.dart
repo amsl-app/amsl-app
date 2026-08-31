@@ -165,39 +165,40 @@ class CreateEntryCard extends HookWidget {
           ),
           if (milestones.isNotEmpty) ...[
             const Gap(12),
-            DropdownButtonFormField<PlannerMilestone?>(
-              isExpanded: true,
-              initialValue: selectedMilestone.value,
-              decoration: InputDecoration(
-                labelText: 'Meilenstein (optional)',
-                border: inputBorder,
-                enabledBorder: inputBorder,
-                focusedBorder: focusedBorder,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: 12,
-                  vertical: 10,
-                ),
+            Text(
+              'Zu welchem Meilenstein gehört die Aktivität?',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
               ),
-              items: [
-                DropdownMenuItem(
-                  value: null,
-                  child: Text('Keiner', style: theme.textTheme.bodySmall),
-                ),
-                ...milestones.map(
-                  (m) => DropdownMenuItem(
-                    value: m,
-                    child: Text(
-                      m.title,
-                      style: theme.textTheme.bodySmall,
-                      overflow: TextOverflow.ellipsis,
-                    ),
+            ),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: milestones.map((m) {
+                final selected = selectedMilestone.value?.id == m.id;
+                return FilterChip(
+                  label: Text(m.title),
+                  selected: selected,
+                  onSelected: (v) {
+                    selectedMilestone.value = v ? m : null;
+                    entry.milestoneId = v ? m.id : null;
+                  },
+                  selectedColor: theme.colorScheme.primary,
+                  checkmarkColor: theme.colorScheme.onPrimaryContainer,
+                  labelStyle: theme.textTheme.bodySmall?.copyWith(
+                    color: selected
+                        ? theme.colorScheme.onPrimaryContainer
+                        : theme.colorScheme.onSurface,
                   ),
-                ),
-              ],
-              onChanged: (m) {
-                selectedMilestone.value = m;
-                entry.milestoneId = m?.id;
-              },
+                  backgroundColor: theme.colorScheme.surface,
+                  side: BorderSide(
+                    color: theme.colorScheme.outline.withValues(alpha: 0.4),
+                  ),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                );
+              }).toList(),
             ),
           ],
         ],
@@ -248,7 +249,7 @@ class CreateEntrySheet extends HookConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             Text(
-              'Eintrag bearbeiten',
+              'Aktivität bearbeiten',
               style: theme.textTheme.titleSmall?.copyWith(
                 color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                 letterSpacing: 0.5,
@@ -285,7 +286,7 @@ class CreateEntrySheet extends HookConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    'Neuer Eintrag #${i + 1}',
+                    'Neue Aktivität #${i + 1}',
                     style: theme.textTheme.titleSmall?.copyWith(
                       color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
                       letterSpacing: 0.5,
@@ -309,7 +310,7 @@ class CreateEntrySheet extends HookConsumerWidget {
         const Gap(8),
         TextButton.icon(
           icon: const Icon(Icons.add, size: 18),
-          label: const Text('Weiteren Eintrag hinzufügen'),
+          label: const Text('Weitere Aktivität hinzufügen'),
           onPressed: () {
             newEntries.add(NewEntryData(date: initialDate ?? DateTime.now()));
             entryCount.value = newEntries.length;

@@ -1,5 +1,5 @@
 import 'package:amsl_app/features/planner/providers/milestone.dart';
-import 'package:amsl_app/features/planner/widgets/create_milestone_sheet.dart';
+import 'package:amsl_app/features/planner/widgets/sheets/create_milestone_sheet.dart';
 import 'package:amsl_app/models/tori/planner/planner_milestone.dart';
 import 'package:amsl_app/themes/planner_theme.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +15,7 @@ class PlannerMilestoneTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final planner = theme.plannerTheme;
+    final goalNames = milestone.goals.map((g) => g.name).join(', ');
 
     return Dismissible(
       key: ValueKey('milestone-${milestone.id}'),
@@ -38,7 +39,6 @@ class PlannerMilestoneTile extends ConsumerWidget {
         return true;
       },
       child: Card(
-        margin: const EdgeInsets.only(bottom: 8),
         color: planner.milestoneAccentBackground,
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -78,6 +78,35 @@ class PlannerMilestoneTile extends ConsumerWidget {
                             color: theme.colorScheme.onSurface.withValues(
                               alpha: 0.5,
                             ),
+                          ),
+                        ),
+                      if (goalNames.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 2),
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Icon(
+                                Icons.emoji_events_outlined,
+                                size: 14,
+                                color: planner.milestoneAccent.withValues(
+                                  alpha: 0.7,
+                                ),
+                              ),
+                              const Gap(4),
+                              Flexible(
+                                child: Text(
+                                  goalNames,
+                                  maxLines: 1,
+                                  overflow: TextOverflow.ellipsis,
+                                  style: theme.textTheme.bodySmall?.copyWith(
+                                    color: planner.milestoneAccent.withValues(
+                                      alpha: 0.7,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                     ],

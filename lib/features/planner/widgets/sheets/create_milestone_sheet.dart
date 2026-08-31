@@ -146,6 +146,12 @@ class CreateMilestoneCard extends HookConsumerWidget {
           ),
           if (goals.isNotEmpty) ...[
             const Gap(12),
+            Text(
+              'Zu welchen Zielen gehört der Meilenstein?',
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              ),
+            ),
             Wrap(
               spacing: 8,
               runSpacing: 8,
@@ -164,11 +170,11 @@ class CreateMilestoneCard extends HookConsumerWidget {
                     selectedGoalIds.value = updated;
                     data.goalIds = updated;
                   },
-                  selectedColor: theme.colorScheme.secondaryContainer,
-                  checkmarkColor: theme.colorScheme.onSecondaryContainer,
+                  selectedColor: theme.colorScheme.primaryContainer,
+                  checkmarkColor: theme.colorScheme.onPrimaryContainer,
                   labelStyle: theme.textTheme.bodySmall?.copyWith(
                     color: selected
-                        ? theme.colorScheme.onSecondaryContainer
+                        ? theme.colorScheme.onPrimaryContainer
                         : theme.colorScheme.onSurface,
                   ),
                   backgroundColor: theme.colorScheme.surface,
@@ -240,11 +246,7 @@ void showCreateMilestoneSheet(
     }
 
     final notifier = ref.read(milestonePodProvider.notifier);
-    final allGoals = ref.read(goalPodProvider).value ?? {};
-    final selectedGoals = [
-      for (final id in data.goalIds)
-        if (allGoals[id] != null) allGoals[id]!,
-    ];
+    final selectedGoals = data.goalIds.toList();
 
     if (milestone != null) {
       await notifier.updateMilestone(
@@ -259,6 +261,7 @@ void showCreateMilestoneSheet(
       final created = await notifier.createMilestone(
         title: data.title!,
         date: kOldDateFormat.format(data.date),
+        goals: selectedGoals,
         description: data.description,
       );
       if (selectedGoals.isNotEmpty) {

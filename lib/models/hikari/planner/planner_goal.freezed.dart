@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PlannerGoal {
 
- String get id; String get name;@JsonKey(defaultValue: false) bool get fullfilled; String? get description;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt;
+ String get id; String get name;@JsonKey(defaultValue: false) bool get fulfilled; String? get description; DateTime get date;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt;
 /// Create a copy of PlannerGoal
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -28,16 +28,16 @@ $PlannerGoalCopyWith<PlannerGoal> get copyWith => _$PlannerGoalCopyWithImpl<Plan
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlannerGoal&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.fullfilled, fullfilled) || other.fullfilled == fullfilled)&&(identical(other.description, description) || other.description == description)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PlannerGoal&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.fulfilled, fulfilled) || other.fulfilled == fulfilled)&&(identical(other.description, description) || other.description == description)&&(identical(other.date, date) || other.date == date)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,fullfilled,description,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,name,fulfilled,description,date,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'PlannerGoal(id: $id, name: $name, fullfilled: $fullfilled, description: $description, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'PlannerGoal(id: $id, name: $name, fulfilled: $fulfilled, description: $description, date: $date, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -48,7 +48,7 @@ abstract mixin class $PlannerGoalCopyWith<$Res>  {
   factory $PlannerGoalCopyWith(PlannerGoal value, $Res Function(PlannerGoal) _then) = _$PlannerGoalCopyWithImpl;
 @useResult
 $Res call({
- String id, String name,@JsonKey(defaultValue: false) bool fullfilled, String? description,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
+ String id, String name,@JsonKey(defaultValue: false) bool fulfilled, String? description, DateTime date,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
 });
 
 
@@ -65,13 +65,14 @@ class _$PlannerGoalCopyWithImpl<$Res>
 
 /// Create a copy of PlannerGoal
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? fullfilled = null,Object? description = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? name = null,Object? fulfilled = null,Object? description = freezed,Object? date = null,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,fullfilled: null == fullfilled ? _self.fullfilled : fullfilled // ignore: cast_nullable_to_non_nullable
+as String,fulfilled: null == fulfilled ? _self.fulfilled : fulfilled // ignore: cast_nullable_to_non_nullable
 as bool,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String?,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
+as DateTime,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));
@@ -158,10 +159,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name, @JsonKey(defaultValue: false)  bool fullfilled,  String? description, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name, @JsonKey(defaultValue: false)  bool fulfilled,  String? description,  DateTime date, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PlannerGoal() when $default != null:
-return $default(_that.id,_that.name,_that.fullfilled,_that.description,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.name,_that.fulfilled,_that.description,_that.date,_that.createdAt,_that.updatedAt);case _:
   return orElse();
 
 }
@@ -179,10 +180,10 @@ return $default(_that.id,_that.name,_that.fullfilled,_that.description,_that.cre
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name, @JsonKey(defaultValue: false)  bool fullfilled,  String? description, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name, @JsonKey(defaultValue: false)  bool fulfilled,  String? description,  DateTime date, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _PlannerGoal():
-return $default(_that.id,_that.name,_that.fullfilled,_that.description,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.name,_that.fulfilled,_that.description,_that.date,_that.createdAt,_that.updatedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -199,10 +200,10 @@ return $default(_that.id,_that.name,_that.fullfilled,_that.description,_that.cre
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name, @JsonKey(defaultValue: false)  bool fullfilled,  String? description, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name, @JsonKey(defaultValue: false)  bool fulfilled,  String? description,  DateTime date, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _PlannerGoal() when $default != null:
-return $default(_that.id,_that.name,_that.fullfilled,_that.description,_that.createdAt,_that.updatedAt);case _:
+return $default(_that.id,_that.name,_that.fulfilled,_that.description,_that.date,_that.createdAt,_that.updatedAt);case _:
   return null;
 
 }
@@ -214,13 +215,14 @@ return $default(_that.id,_that.name,_that.fullfilled,_that.description,_that.cre
 @JsonSerializable()
 
 class _PlannerGoal implements PlannerGoal {
-   _PlannerGoal({required this.id, required this.name, @JsonKey(defaultValue: false) required this.fullfilled, this.description, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt});
+   _PlannerGoal({required this.id, required this.name, @JsonKey(defaultValue: false) required this.fulfilled, this.description, required this.date, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt});
   factory _PlannerGoal.fromJson(Map<String, dynamic> json) => _$PlannerGoalFromJson(json);
 
 @override final  String id;
 @override final  String name;
-@override@JsonKey(defaultValue: false) final  bool fullfilled;
+@override@JsonKey(defaultValue: false) final  bool fulfilled;
 @override final  String? description;
+@override final  DateTime date;
 @override@JsonKey(name: 'created_at') final  DateTime createdAt;
 @override@JsonKey(name: 'updated_at') final  DateTime updatedAt;
 
@@ -237,16 +239,16 @@ Map<String, dynamic> toJson() {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlannerGoal&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.fullfilled, fullfilled) || other.fullfilled == fullfilled)&&(identical(other.description, description) || other.description == description)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PlannerGoal&&(identical(other.id, id) || other.id == id)&&(identical(other.name, name) || other.name == name)&&(identical(other.fulfilled, fulfilled) || other.fulfilled == fulfilled)&&(identical(other.description, description) || other.description == description)&&(identical(other.date, date) || other.date == date)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.updatedAt, updatedAt) || other.updatedAt == updatedAt));
 }
 
 @JsonKey(includeFromJson: false, includeToJson: false)
 @override
-int get hashCode => Object.hash(runtimeType,id,name,fullfilled,description,createdAt,updatedAt);
+int get hashCode => Object.hash(runtimeType,id,name,fulfilled,description,date,createdAt,updatedAt);
 
 @override
 String toString() {
-  return 'PlannerGoal(id: $id, name: $name, fullfilled: $fullfilled, description: $description, createdAt: $createdAt, updatedAt: $updatedAt)';
+  return 'PlannerGoal(id: $id, name: $name, fulfilled: $fulfilled, description: $description, date: $date, createdAt: $createdAt, updatedAt: $updatedAt)';
 }
 
 
@@ -257,7 +259,7 @@ abstract mixin class _$PlannerGoalCopyWith<$Res> implements $PlannerGoalCopyWith
   factory _$PlannerGoalCopyWith(_PlannerGoal value, $Res Function(_PlannerGoal) _then) = __$PlannerGoalCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name,@JsonKey(defaultValue: false) bool fullfilled, String? description,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
+ String id, String name,@JsonKey(defaultValue: false) bool fulfilled, String? description, DateTime date,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
 });
 
 
@@ -274,13 +276,14 @@ class __$PlannerGoalCopyWithImpl<$Res>
 
 /// Create a copy of PlannerGoal
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? fullfilled = null,Object? description = freezed,Object? createdAt = null,Object? updatedAt = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? name = null,Object? fulfilled = null,Object? description = freezed,Object? date = null,Object? createdAt = null,Object? updatedAt = null,}) {
   return _then(_PlannerGoal(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,name: null == name ? _self.name : name // ignore: cast_nullable_to_non_nullable
-as String,fullfilled: null == fullfilled ? _self.fullfilled : fullfilled // ignore: cast_nullable_to_non_nullable
+as String,fulfilled: null == fulfilled ? _self.fulfilled : fulfilled // ignore: cast_nullable_to_non_nullable
 as bool,description: freezed == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
-as String?,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
+as String?,date: null == date ? _self.date : date // ignore: cast_nullable_to_non_nullable
+as DateTime,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,updatedAt: null == updatedAt ? _self.updatedAt : updatedAt // ignore: cast_nullable_to_non_nullable
 as DateTime,
   ));

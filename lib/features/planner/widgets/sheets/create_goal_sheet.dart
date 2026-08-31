@@ -1,3 +1,4 @@
+import 'package:amsl_app/constants.dart';
 import 'package:amsl_app/features/planner/providers/goals.dart';
 import 'package:amsl_app/models/tori/planner/planner_goal.dart';
 import 'package:amsl_app/widgets/buttons/rounded_corner_button.dart';
@@ -12,13 +13,15 @@ class NewGoalData {
   String? id;
   String? name;
   String? description;
-  bool fullfilled;
+  DateTime date;
+  bool fulfilled;
 
   NewGoalData({
     this.id,
     this.name,
     this.description,
-    this.fullfilled = false,
+    required this.date,
+    this.fulfilled = false,
   });
 }
 
@@ -37,7 +40,8 @@ class CreateGoalCard extends HookWidget {
     final descriptionController = useTextEditingController(
       text: data.description ?? '',
     );
-    final fullfilled = useState(data.fullfilled);
+    final selectedDate = useState(data.date);
+    final fulfilled = useState(data.fulfilled);
 
     final inputBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
@@ -104,18 +108,53 @@ class CreateGoalCard extends HookWidget {
               ),
             ),
           ),
+          const Gap(12),
+          OutlinedButton.icon(
+            style: OutlinedButton.styleFrom(
+              foregroundColor: theme.colorScheme.onSurface,
+              alignment: Alignment.centerLeft,
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+              side: BorderSide(
+                color: theme.colorScheme.outline.withValues(alpha: 0.4),
+              ),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(12),
+              ),
+            ),
+            onPressed: () async {
+              final picked = await showDatePicker(
+                context: context,
+                initialDate: selectedDate.value,
+                firstDate: DateTime(2020),
+                lastDate: DateTime(2100),
+              );
+              if (picked != null) {
+                selectedDate.value = picked;
+                data.date = picked;
+              }
+            },
+            icon: Icon(
+              Icons.calendar_today,
+              size: 16,
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+            ),
+            label: Text(
+              kNewDateFormat.format(selectedDate.value),
+              style: theme.textTheme.bodyLarge,
+            ),
+          ),
           if (isEdit) ...[
             const Gap(12),
             CheckboxListTile(
-              value: fullfilled.value,
+              value: fulfilled.value,
               onChanged: (v) {
-                fullfilled.value = v ?? false;
-                data.fullfilled = v ?? false;
+                fulfilled.value = v ?? false;
+                data.fulfilled = v ?? false;
               },
               controlAffinity: ListTileControlAffinity.leading,
               contentPadding: EdgeInsets.zero,
               title: Text('Erreicht', style: theme.textTheme.bodyMedium),
-              activeColor: theme.colorScheme.secondary,
+              activeColor: theme.colorScheme.primary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(12),
                 side: BorderSide(
@@ -125,6 +164,84 @@ class CreateGoalCard extends HookWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+class _SmartGoalsInfoBox extends HookWidget {
+  const _SmartGoalsInfoBox();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final expanded = useState(false);
+
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: () => expanded.value = !expanded.value,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.tertiaryContainer.withValues(alpha: 0.4),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                Icon(
+                  Icons.info_outline,
+                  size: 18,
+                  color: theme.colorScheme.onTertiaryContainer,
+                ),
+                const Gap(8),
+                Expanded(
+                  child: Text(
+                    'Was macht ein SMARTes Ziel aus?',
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onTertiaryContainer,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+                Icon(
+                  expanded.value ? Icons.expand_less : Icons.expand_more,
+                  size: 20,
+                  color: theme.colorScheme.onTertiaryContainer,
+                ),
+              ],
+            ),
+            AnimatedCrossFade(
+              firstChild: const SizedBox(width: double.infinity),
+              secondChild: Padding(
+                padding: const EdgeInsets.only(top: 8),
+                child: Text(
+                  'SMART Ziele sind eine Methode zur Zielsetzung, die '
+                  'sicherstellt, dass Ziele klar und erreichbar formuliert '
+                  'sind. SMART steht für:\n'
+                  '1. Spezifisch: Das Ziel sollte klar und eindeutig sein.\n'
+                  '2. Messbar: Es sollte möglich sein, den Fortschritt zu '
+                  'messen.\n'
+                  '3. Attraktiv: Das Ziel sollte motivierend und '
+                  'realistisch sein.\n'
+                  '4. Relevant: Das Ziel sollte für dich von Bedeutung '
+                  'sein.\n'
+                  '5. Terminiert: Es sollte ein klarer Zeitrahmen für die '
+                  'Erreichung des Ziels festgelegt werden',
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onTertiaryContainer,
+                  ),
+                ),
+              ),
+              crossFadeState: expanded.value
+                  ? CrossFadeState.showSecond
+                  : CrossFadeState.showFirst,
+              duration: const Duration(milliseconds: 200),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -151,6 +268,7 @@ class CreateGoalSheet extends StatelessWidget {
               letterSpacing: 0.5,
             ),
           ),
+          if (goal == null) ...[const Gap(12), const _SmartGoalsInfoBox()],
           const Gap(16),
           CreateGoalCard(data: data, isEdit: goal != null),
         ],
@@ -170,7 +288,8 @@ void showCreateGoalSheet(
     id: goal?.id,
     name: goal?.name,
     description: goal?.description,
-    fullfilled: goal?.fullfilled ?? false,
+    date: goal?.date ?? DateTime.now(),
+    fulfilled: goal?.fulfilled ?? false,
   );
 
   Future<void> save() async {
@@ -185,12 +304,17 @@ void showCreateGoalSheet(
       await notifier.updateGoal(
         goal.id,
         name: data.name,
-        fullfilled: data.fullfilled,
+        date: kOldDateFormat.format(data.date),
+        fulfilled: data.fulfilled,
         description: data.description,
         clearDescription: data.description == null,
       );
     } else {
-      await notifier.createGoal(name: data.name!, description: data.description);
+      await notifier.createGoal(
+        name: data.name!,
+        date: kOldDateFormat.format(data.date),
+        description: data.description,
+      );
     }
     if (context.mounted) Navigator.of(context).pop();
   }

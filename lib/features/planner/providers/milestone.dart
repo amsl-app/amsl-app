@@ -1,7 +1,6 @@
 import 'package:amsl_app/features/planner/providers/planner.dart';
 import 'package:amsl_app/hikari/exception.dart';
 import 'package:amsl_app/hikari/hikari.dart';
-import 'package:amsl_app/models/tori/planner/planner_goal.dart';
 import 'package:amsl_app/models/tori/planner/planner_milestone.dart';
 import 'package:amsl_app/providers/hikari_provider.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -68,6 +67,7 @@ class MilestonePod extends _$MilestonePod {
   Future<PlannerMilestone> createMilestone({
     required String title,
     required String date,
+    required List<String> goals,
     String? description,
   }) async {
     final hikari = ref.read(hikariPodProvider);
@@ -76,6 +76,7 @@ class MilestonePod extends _$MilestonePod {
         await hikari.plannerApi.createMilestone(
           title: title,
           date: date,
+          goals: goals,
           description: description,
         ),
       );
@@ -83,8 +84,12 @@ class MilestonePod extends _$MilestonePod {
       return created;
     } on HikariException catch (e) {
       throw e.copyWith(
-        resolve: () =>
-            createMilestone(title: title, date: date, description: description),
+        resolve: () => createMilestone(
+          title: title,
+          date: date,
+          goals: goals,
+          description: description,
+        ),
       );
     }
   }
@@ -94,8 +99,8 @@ class MilestonePod extends _$MilestonePod {
     String? title,
     String? date,
     String? description,
+    List<String>? goals,
     bool clearDescription = false,
-    List<PlannerGoal>? goals,
   }) async {
     final hikari = ref.read(hikariPodProvider);
     try {
@@ -106,7 +111,7 @@ class MilestonePod extends _$MilestonePod {
           date: date,
           description: description,
           clearDescription: clearDescription,
-          goals: goals?.map((g) => g.toHikari()).toList(),
+          goals: goals,
         ),
       );
       update((milestones) async => {...milestones, id: updated});

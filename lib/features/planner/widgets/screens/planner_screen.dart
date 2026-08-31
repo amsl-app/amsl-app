@@ -1,11 +1,10 @@
 import 'package:amsl_app/constants.dart';
-import 'package:amsl_app/features/planner/widgets/create_entry_sheet.dart';
-import 'package:amsl_app/features/planner/widgets/create_goal_sheet.dart';
-import 'package:amsl_app/features/planner/widgets/create_milestone_sheet.dart';
-import 'package:amsl_app/features/planner/widgets/planner_assistant_sheet.dart';
+import 'package:amsl_app/features/planner/widgets/sheets/create_entry_sheet.dart';
+import 'package:amsl_app/features/planner/widgets/sheets/create_goal_sheet.dart';
+import 'package:amsl_app/features/planner/widgets/sheets/create_milestone_sheet.dart';
+import 'package:amsl_app/features/planner/widgets/sheets/planner_assistant_sheet.dart';
 import 'package:amsl_app/features/planner/widgets/planner_calendar_view.dart';
-import 'package:amsl_app/features/planner/widgets/planner_goals_view.dart';
-import 'package:amsl_app/features/planner/widgets/planner_ical_sheet.dart';
+import 'package:amsl_app/features/planner/widgets/sheets/planner_ical_sheet.dart';
 import 'package:amsl_app/features/planner/widgets/planner_list_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -18,7 +17,7 @@ class PlannerScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final tabController = useTabController(initialLength: 3);
+    final tabController = useTabController(initialLength: 2);
     final selectedDate = useState(DateTime.now());
 
     return Scaffold(
@@ -62,7 +61,7 @@ class PlannerScreen extends HookConsumerWidget {
                       color: theme.colorScheme.onSurface,
                     ),
                     const Gap(8.0),
-                    Text('Neuer Eintrag', style: theme.textTheme.bodyMedium),
+                    Text('Neue Aktivität', style: theme.textTheme.bodyMedium),
                   ],
                 ),
               ),
@@ -104,19 +103,6 @@ class PlannerScreen extends HookConsumerWidget {
             ],
           ),
         ],
-        bottom: TabBar(
-          controller: tabController,
-          indicatorColor: theme.colorScheme.tertiary,
-          labelColor: theme.colorScheme.onTertiaryContainer,
-          unselectedLabelColor: theme.colorScheme.onTertiaryContainer
-              .withValues(alpha: 0.5),
-          dividerColor: Colors.transparent,
-          tabs: const [
-            Tab(text: 'Liste'),
-            Tab(text: 'Kalender'),
-            Tab(text: 'Ziele'),
-          ],
-        ),
       ),
       floatingActionButton: Padding(
         padding: EdgeInsets.only(bottom: getBottomBarPadding(context)),
@@ -127,33 +113,56 @@ class PlannerScreen extends HookConsumerWidget {
           child: const Icon(Icons.auto_fix_high),
         ),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
-            child: Text(
-              'Der Planner unterstützt dich bei der Lernplanung und beim '
-              'Erreichen deiner Ziele. Das Planner-Tool ermöglicht es, '
-              'Meilensteine festzulegen, konkrete Lernaktivitäten zu planen '
-              'und diese mit deinem Kalender zu synchronisieren.',
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onTertiaryContainer,
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) => [
+          SliverOverlapAbsorber(
+            handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
+            sliver: SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                      left: 20,
+                      top: 8,
+                      right: 20,
+                      bottom: 0,
+                    ),
+                    child: Text(
+                      'Der Planner unterstützt dich bei der Lernplanung und beim '
+                      'Erreichen deiner Ziele. Das Planner-Tool ermöglicht es, '
+                      'Meilensteine festzulegen, konkrete Lernaktivitäten zu planen '
+                      'und diese mit deinem Kalender zu synchronisieren.',
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: theme.colorScheme.onTertiaryContainer,
+                      ),
+                    ),
+                  ),
+                  TabBar(
+                    controller: tabController,
+                    indicatorColor: theme.colorScheme.tertiary,
+                    labelColor: theme.colorScheme.onTertiaryContainer,
+                    unselectedLabelColor: theme.colorScheme.onTertiaryContainer
+                        .withValues(alpha: 0.5),
+                    dividerColor: Colors.transparent,
+                    tabs: const [
+                      Tab(text: 'Liste'),
+                      Tab(text: 'Kalender'),
+                    ],
+                  ),
+                ],
               ),
             ),
           ),
-          Expanded(
-            child: TabBarView(
-              controller: tabController,
-              children: [
-                const PlannerListView(),
-                PlannerCalendarView(
-                  onDaySelected: (day) => selectedDate.value = day,
-                ),
-                const PlannerGoalsView(),
-              ],
-            ),
-          ),
         ],
+        body: TabBarView(
+          controller: tabController,
+          children: [
+            const PlannerListView(),
+            PlannerCalendarView(
+              onDaySelected: (day) => selectedDate.value = day,
+            ),
+          ],
+        ),
       ),
     );
   }
