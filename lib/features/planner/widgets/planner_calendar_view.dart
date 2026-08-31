@@ -3,6 +3,7 @@ import 'package:amsl_app/features/planner/providers/goals.dart';
 import 'package:amsl_app/features/planner/providers/milestone.dart';
 import 'package:amsl_app/features/planner/providers/planner.dart';
 import 'package:amsl_app/features/planner/providers/planner_configuration.dart';
+import 'package:amsl_app/features/planner/widgets/planner_sliver_helpers.dart';
 import 'package:amsl_app/features/planner/widgets/tiles/planner_entry_tile.dart';
 import 'package:amsl_app/features/planner/widgets/tiles/planner_goal_tile.dart';
 import 'package:amsl_app/features/planner/widgets/tiles/planner_milestone_tile.dart';
@@ -14,7 +15,6 @@ import 'package:amsl_app/widgets/async_value_extension.dart';
 import 'package:amsl_app/widgets/loading/skeleton_loading_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -27,20 +27,6 @@ class PlannerCalendarView extends HookConsumerWidget {
     final normalized = DateTime(day.year, day.month, day.day);
     return normalized.subtract(
       Duration(days: (normalized.weekday - DateTime.monday) % 7),
-    );
-  }
-
-  // Wraps sliver content with the overlap injector required by the
-  // enclosing NestedScrollView (see planner_screen.dart) so this tab's
-  // scrolling merges into the same scroll as the header/tab bar above it.
-  Widget _sliverScrollView(BuildContext context, List<Widget> slivers) {
-    return CustomScrollView(
-      slivers: [
-        SliverOverlapInjector(
-          handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-        ),
-        ...slivers,
-      ],
     );
   }
 
@@ -62,10 +48,12 @@ class PlannerCalendarView extends HookConsumerWidget {
 
     return configAsync.build(
       context,
-      loadingBuilder: (_) =>
-          _sliverScrollView(context, [SliverToBoxAdapter(child: skeleton)]),
-      errorBuilder: (_, e, st) =>
-          _sliverScrollView(context, [SliverToBoxAdapter(child: skeleton)]),
+      loadingBuilder: (_) => plannerSliverScrollView(context, [
+        SliverToBoxAdapter(child: skeleton),
+      ]),
+      errorBuilder: (_, e, st) => plannerSliverScrollView(context, [
+        SliverToBoxAdapter(child: skeleton),
+      ]),
       builder: (context, data) {
         final entriesByDay = groupEntriesByDay(data?.entries ?? []);
         final milestonesByDay = groupMilestonesByDay(
@@ -224,28 +212,30 @@ class PlannerCalendarView extends HookConsumerWidget {
                         ),
                       ),
                     ),
-                    ...milestonesForDay(
-                      day,
-                    ).map((m) => PlannerMilestoneTile(milestone: m)),
-                    ...goalsForDay(day).map((g) => PlannerGoalTile(goal: g)),
-                    ...entriesForDay(
-                      day,
-                    ).map((entry) => PlannerEntryTile(entry: entry)),
+                    ...intersperseGroups([
+                      milestonesForDay(
+                        day,
+                      ).map((m) => PlannerMilestoneTile(milestone: m)).toList(),
+                      goalsForDay(
+                        day,
+                      ).map((g) => PlannerGoalTile(goal: g)).toList(),
+                      entriesForDay(
+                        day,
+                      ).map((entry) => PlannerEntryTile(entry: entry)).toList(),
+                    ]),
                   ],
               ]
-            : [
-                ...selectedGoals.map((g) => PlannerGoalTile(goal: g)),
-                const Gap(4),
-                ...selectedMilestones.map(
-                  (m) => PlannerMilestoneTile(milestone: m),
-                ),
-                const Gap(4),
-                ...selectedEntries.map(
-                  (entry) => PlannerEntryTile(entry: entry),
-                ),
-              ];
+            : intersperseGroups([
+                selectedGoals.map((g) => PlannerGoalTile(goal: g)).toList(),
+                selectedMilestones
+                    .map((m) => PlannerMilestoneTile(milestone: m))
+                    .toList(),
+                selectedEntries
+                    .map((entry) => PlannerEntryTile(entry: entry))
+                    .toList(),
+              ]);
 
-        return _sliverScrollView(context, [
+        return plannerSliverScrollView(context, [
           SliverToBoxAdapter(child: calendar),
           if (!hasAnyItems)
             SliverFillRemaining(

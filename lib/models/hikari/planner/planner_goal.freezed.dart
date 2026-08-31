@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$PlannerGoal {
 
- String get id; String get name;@JsonKey(defaultValue: false) bool get fulfilled; String? get description; DateTime get date;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt;
+ String get id; String get name;@JsonKey(defaultValue: false) bool get fulfilled; String? get description;@JsonKey(fromJson: _dateFromJson) DateTime get date;@JsonKey(name: 'created_at') DateTime get createdAt;@JsonKey(name: 'updated_at') DateTime get updatedAt;
 /// Create a copy of PlannerGoal
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $PlannerGoalCopyWith<$Res>  {
   factory $PlannerGoalCopyWith(PlannerGoal value, $Res Function(PlannerGoal) _then) = _$PlannerGoalCopyWithImpl;
 @useResult
 $Res call({
- String id, String name,@JsonKey(defaultValue: false) bool fulfilled, String? description, DateTime date,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
+ String id, String name,@JsonKey(defaultValue: false) bool fulfilled, String? description,@JsonKey(fromJson: _dateFromJson) DateTime date,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
 });
 
 
@@ -159,7 +159,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name, @JsonKey(defaultValue: false)  bool fulfilled,  String? description,  DateTime date, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String name, @JsonKey(defaultValue: false)  bool fulfilled,  String? description, @JsonKey(fromJson: _dateFromJson)  DateTime date, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _PlannerGoal() when $default != null:
 return $default(_that.id,_that.name,_that.fulfilled,_that.description,_that.date,_that.createdAt,_that.updatedAt);case _:
@@ -180,7 +180,7 @@ return $default(_that.id,_that.name,_that.fulfilled,_that.description,_that.date
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name, @JsonKey(defaultValue: false)  bool fulfilled,  String? description,  DateTime date, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String name, @JsonKey(defaultValue: false)  bool fulfilled,  String? description, @JsonKey(fromJson: _dateFromJson)  DateTime date, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)  $default,) {final _that = this;
 switch (_that) {
 case _PlannerGoal():
 return $default(_that.id,_that.name,_that.fulfilled,_that.description,_that.date,_that.createdAt,_that.updatedAt);case _:
@@ -200,7 +200,7 @@ return $default(_that.id,_that.name,_that.fulfilled,_that.description,_that.date
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name, @JsonKey(defaultValue: false)  bool fulfilled,  String? description,  DateTime date, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String name, @JsonKey(defaultValue: false)  bool fulfilled,  String? description, @JsonKey(fromJson: _dateFromJson)  DateTime date, @JsonKey(name: 'created_at')  DateTime createdAt, @JsonKey(name: 'updated_at')  DateTime updatedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _PlannerGoal() when $default != null:
 return $default(_that.id,_that.name,_that.fulfilled,_that.description,_that.date,_that.createdAt,_that.updatedAt);case _:
@@ -215,14 +215,14 @@ return $default(_that.id,_that.name,_that.fulfilled,_that.description,_that.date
 @JsonSerializable()
 
 class _PlannerGoal implements PlannerGoal {
-   _PlannerGoal({required this.id, required this.name, @JsonKey(defaultValue: false) required this.fulfilled, this.description, required this.date, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt});
+   _PlannerGoal({required this.id, required this.name, @JsonKey(defaultValue: false) required this.fulfilled, this.description, @JsonKey(fromJson: _dateFromJson) required this.date, @JsonKey(name: 'created_at') required this.createdAt, @JsonKey(name: 'updated_at') required this.updatedAt});
   factory _PlannerGoal.fromJson(Map<String, dynamic> json) => _$PlannerGoalFromJson(json);
 
 @override final  String id;
 @override final  String name;
 @override@JsonKey(defaultValue: false) final  bool fulfilled;
 @override final  String? description;
-@override final  DateTime date;
+@override@JsonKey(fromJson: _dateFromJson) final  DateTime date;
 @override@JsonKey(name: 'created_at') final  DateTime createdAt;
 @override@JsonKey(name: 'updated_at') final  DateTime updatedAt;
 
@@ -259,7 +259,7 @@ abstract mixin class _$PlannerGoalCopyWith<$Res> implements $PlannerGoalCopyWith
   factory _$PlannerGoalCopyWith(_PlannerGoal value, $Res Function(_PlannerGoal) _then) = __$PlannerGoalCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String name,@JsonKey(defaultValue: false) bool fulfilled, String? description, DateTime date,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
+ String id, String name,@JsonKey(defaultValue: false) bool fulfilled, String? description,@JsonKey(fromJson: _dateFromJson) DateTime date,@JsonKey(name: 'created_at') DateTime createdAt,@JsonKey(name: 'updated_at') DateTime updatedAt
 });
 
 

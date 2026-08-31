@@ -26,15 +26,3 @@ abstract class PlannerGoal with _$PlannerGoal {
     date: g.date,
   );
 }
-
-extension PlannerGoalToHikari on PlannerGoal {
-  hikari_planner.PlannerGoal toHikari() => hikari_planner.PlannerGoal(
-    id: id,
-    name: name,
-    fulfilled: fulfilled,
-    description: description,
-    createdAt: createdAt,
-    updatedAt: updatedAt,
-    date: date,
-  );
-}

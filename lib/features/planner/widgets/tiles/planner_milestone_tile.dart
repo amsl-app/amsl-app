@@ -39,6 +39,7 @@ class PlannerMilestoneTile extends ConsumerWidget {
         return true;
       },
       child: Card(
+        margin: const EdgeInsets.only(bottom: 8),
         color: planner.milestoneAccentBackground,
         elevation: 0,
         shape: RoundedRectangleBorder(

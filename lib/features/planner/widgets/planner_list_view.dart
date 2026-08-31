@@ -3,6 +3,7 @@ import 'package:amsl_app/features/planner/providers/goals.dart';
 import 'package:amsl_app/features/planner/providers/milestone.dart';
 import 'package:amsl_app/features/planner/providers/planner.dart';
 import 'package:amsl_app/features/planner/providers/planner_configuration.dart';
+import 'package:amsl_app/features/planner/widgets/planner_sliver_helpers.dart';
 import 'package:amsl_app/features/planner/widgets/tiles/planner_entry_tile.dart';
 import 'package:amsl_app/features/planner/widgets/tiles/planner_goal_tile.dart';
 import 'package:amsl_app/features/planner/widgets/tiles/planner_milestone_tile.dart';
@@ -14,20 +15,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class PlannerListView extends ConsumerWidget {
   const PlannerListView({super.key});
-
-  // Wraps sliver content with the overlap injector required by the
-  // enclosing NestedScrollView (see planner_screen.dart) so this tab's
-  // scrolling merges into the same scroll as the header/tab bar above it.
-  Widget _sliverScrollView(BuildContext context, List<Widget> slivers) {
-    return CustomScrollView(
-      slivers: [
-        SliverOverlapInjector(
-          handle: NestedScrollView.sliverOverlapAbsorberHandleFor(context),
-        ),
-        ...slivers,
-      ],
-    );
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -44,16 +31,18 @@ class PlannerListView extends ConsumerWidget {
 
     return configAsync.build(
       context,
-      loadingBuilder: (_) =>
-          _sliverScrollView(context, [SliverToBoxAdapter(child: skeleton)]),
-      errorBuilder: (_, e, st) =>
-          _sliverScrollView(context, [SliverToBoxAdapter(child: skeleton)]),
+      loadingBuilder: (_) => plannerSliverScrollView(context, [
+        SliverToBoxAdapter(child: skeleton),
+      ]),
+      errorBuilder: (_, e, st) => plannerSliverScrollView(context, [
+        SliverToBoxAdapter(child: skeleton),
+      ]),
       builder: (context, data) {
         final entries = data?.entries ?? [];
         final milestones = data?.sortedMilestones ?? [];
         final goals = data?.goals.values.toList() ?? [];
         if (entries.isEmpty && milestones.isEmpty && goals.isEmpty) {
-          return _sliverScrollView(context, [
+          return plannerSliverScrollView(context, [
             SliverFillRemaining(
               hasScrollBody: false,
               child: Center(
@@ -95,7 +84,7 @@ class PlannerListView extends ConsumerWidget {
           goalsByDay.keys,
         );
 
-        return _sliverScrollView(context, [
+        return plannerSliverScrollView(context, [
           SliverPadding(
             padding: EdgeInsets.only(
               left: 20,
@@ -121,15 +110,15 @@ class PlannerListView extends ConsumerWidget {
                         ),
                       ),
                     ),
-                    ...dayGoals.map((g) => PlannerGoalTile(goal: g)),
-                    const Gap(4),
-                    ...dayMilestones.map(
-                      (m) => PlannerMilestoneTile(milestone: m),
-                    ),
-                    const Gap(4),
-                    ...dayEntries.map(
-                      (entry) => PlannerEntryTile(entry: entry),
-                    ),
+                    ...intersperseGroups([
+                      dayGoals.map((g) => PlannerGoalTile(goal: g)).toList(),
+                      dayMilestones
+                          .map((m) => PlannerMilestoneTile(milestone: m))
+                          .toList(),
+                      dayEntries
+                          .map((entry) => PlannerEntryTile(entry: entry))
+                          .toList(),
+                    ]),
                   ],
                 );
               }, childCount: keys.length),

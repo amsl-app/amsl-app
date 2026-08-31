@@ -258,15 +258,12 @@ void showCreateMilestoneSheet(
         goals: selectedGoals,
       );
     } else {
-      final created = await notifier.createMilestone(
+      await notifier.createMilestone(
         title: data.title!,
         date: kOldDateFormat.format(data.date),
         goals: selectedGoals,
         description: data.description,
       );
-      if (selectedGoals.isNotEmpty) {
-        await notifier.updateMilestone(created.id, goals: selectedGoals);
-      }
     }
     if (context.mounted) Navigator.of(context).pop();
   }

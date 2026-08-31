@@ -11,7 +11,7 @@ _PlannerGoal _$PlannerGoalFromJson(Map<String, dynamic> json) => _PlannerGoal(
   name: json['name'] as String,
   fulfilled: json['fulfilled'] as bool? ?? false,
   description: json['description'] as String?,
-  date: DateTime.parse(json['date'] as String),
+  date: _dateFromJson(json['date']),
   createdAt: DateTime.parse(json['created_at'] as String),
   updatedAt: DateTime.parse(json['updated_at'] as String),
 );

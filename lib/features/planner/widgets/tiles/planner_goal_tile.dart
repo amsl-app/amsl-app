@@ -35,6 +35,7 @@ class PlannerGoalTile extends ConsumerWidget {
         return true;
       },
       child: Card(
+        margin: const EdgeInsets.only(bottom: 8),
         color: planner.goalAccentBackground,
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -48,13 +49,17 @@ class PlannerGoalTile extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
             child: Row(
               children: [
-                Icon(
-                  Icons.emoji_events_outlined,
-                  color: goal.fulfilled
-                      ? planner.goalAccent.withValues(alpha: 0.5)
-                      : planner.goalAccent,
+                Checkbox(
+                  value: goal.fulfilled,
+                  activeColor: planner.goalAccent,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  onChanged: (_) => ref
+                      .read(goalPodProvider.notifier)
+                      .updateGoal(goal.id, fulfilled: !goal.fulfilled),
                 ),
-                const Gap(8),
+                const Gap(4),
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
