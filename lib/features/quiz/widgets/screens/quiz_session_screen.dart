@@ -40,12 +40,12 @@ String getQuestionLoadingMessages() {
   List<String> messages = [
     'Wir tüfteln gerade an spannenden Fragen für dich …',
     'Die nächste Challenge wird schon zusammengebaut …',
-    'Neue Quizfragen nehmen gerade Form an – gleich geht’s los!',
+    'Der Exam Coach stellt gerade neue Fragen zusammen – gleich geht’s los!',
     'Wir mischen Wissen und Kreativität für deine nächste Aufgabe …',
     'Die Fragenmaschine läuft heiß – bitte kurz warten!',
-    'Fast fertig – dein Quiz steht gleich bereit!',
+    'Fast fertig – dein Exam Coach steht gleich bereit!',
     'Frischer Fragenstoff wird für dich angerührt …',
-    'Wir basteln neue Quizfragen – gleich kannst du loslegen!',
+    'Der Exam Coach bastelt neue Fragen – gleich kannst du loslegen!',
     'Die Aufgabenwürze wird gerade gemischt …',
     'Deine nächste Herausforderung entsteht in diesem Moment …',
     'Die Fragen werden sortiert und verpackt …',
@@ -93,7 +93,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
         title: Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            "Quiz zu '${module.title}'",
+            "Exam Coach zu '${module.title}'",
             style: TextStyle(color: theme.colorScheme.onTertiaryContainer),
           ),
         ),

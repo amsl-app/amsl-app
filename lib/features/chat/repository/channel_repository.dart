@@ -22,6 +22,7 @@ import 'package:amsl_app/features/chat/models/mood_message.dart';
 import 'package:amsl_app/features/chat/models/number_input.dart';
 import 'package:amsl_app/features/chat/models/text_chunk.dart';
 import 'package:amsl_app/features/chat/models/text_message.dart';
+import 'package:amsl_app/features/chat/models/video_message.dart';
 import 'package:amsl_app/features/chat/repository/channel_source.dart';
 import 'package:amsl_app/features/chat/repository/chat_channel.dart';
 import 'package:amsl_app/features/chat/repository/chat_repository.dart';
@@ -295,7 +296,8 @@ class ChatChannelRepositoryNotifier extends _$ChatChannelRepositoryNotifier {
           DurationMessage _ ||
           FocusMessage _ ||
           MoodMessage _ ||
-          ImageMessage _:
+          ImageMessage _ ||
+          VideoMessage _:
         setTyping(typing: false);
         addChatMessages([step.step]);
         break;

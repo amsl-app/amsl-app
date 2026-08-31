@@ -175,7 +175,7 @@ class _SessionSelectionScreenState
     return Column(
       children: [
         Text(
-          "Du glaubst, dass du die Inhalte der Einheiten gut verstanden hast? Teste hier dein Wissen im Prüfungsquiz!",
+          "Du glaubst, dass du die Inhalte der Einheiten gut verstanden hast? Teste hier dein Wissen mit dem Exam Coach!",
           style: theme.textTheme.bodySmall!.copyWith(
             color: theme.moduleTheme.descriptionColor,
           ),
@@ -184,7 +184,7 @@ class _SessionSelectionScreenState
         RoundedCornerButton(
           buttonColor: theme.moduleTheme.containerColor,
           labelColor: theme.moduleTheme.descriptionColor,
-          label: "Zum Prüfungsquiz",
+          label: "Zum Exam Coach",
           icon: Icons.open_in_new_outlined,
           onTap: () => {
             context.goNamed(
