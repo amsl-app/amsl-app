@@ -25,23 +25,124 @@ class NewGoalData {
   });
 }
 
-class CreateGoalCard extends HookWidget {
+void showCreateGoalSheet(
+  BuildContext context,
+  WidgetRef ref, {
+  PlannerGoal? goal,
+}) {
+  final theme = Theme.of(context);
+
+  final data = NewGoalData(
+    id: goal?.id,
+    name: goal?.name,
+    description: goal?.description,
+    date: goal?.date ?? DateTime.now(),
+    fulfilled: goal?.fulfilled ?? false,
+  );
+
+  Future<void> save() async {
+    if (data.name == null || data.name!.trim().isEmpty) {
+      showMessage(context, label: 'Bitte einen Titel eingeben', error: true);
+      return;
+    }
+
+    final notifier = ref.read(goalPodProvider.notifier);
+
+    if (goal != null) {
+      await notifier.updateGoal(
+        goal.id,
+        name: data.name,
+        date: kOldDateFormat.format(data.date),
+        fulfilled: data.fulfilled,
+        description: data.description,
+        clearDescription: data.description == null,
+      );
+    } else {
+      await notifier.createGoal(
+        name: data.name!,
+        date: kOldDateFormat.format(data.date),
+        description: data.description,
+      );
+    }
+    if (context.mounted) Navigator.of(context).pop();
+  }
+
+  showAmslBottomSheet(
+    context: context,
+    child: CreateGoalSheet(data: data, goal: goal),
+    onClose: () => Navigator.of(context).pop(),
+    bottomBar: true,
+    buttonBar: [
+      RoundedCornerButton(
+        label: 'Speichern',
+        onTap: save,
+        buttonColor: theme.colorScheme.primary,
+        labelColor: theme.colorScheme.onPrimary,
+      ),
+    ],
+  );
+}
+
+class CreateGoalSheet extends StatelessWidget {
+  const CreateGoalSheet({super.key, required this.data, this.goal});
+
+  final NewGoalData data;
+  final PlannerGoal? goal;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            goal != null ? 'Ziel bearbeiten' : 'Neues Ziel',
+            style: theme.textTheme.titleSmall?.copyWith(
+              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
+              letterSpacing: 0.5,
+            ),
+          ),
+          if (goal == null) ...[const Gap(12), const _SmartGoalsInfoBox()],
+          const Gap(16),
+          CreateGoalCard(data: data, isEdit: goal != null),
+        ],
+      ),
+    );
+  }
+}
+
+class CreateGoalCard extends StatefulWidget {
   const CreateGoalCard({super.key, required this.data, this.isEdit = false});
 
   final NewGoalData data;
   final bool isEdit;
 
   @override
+  State<CreateGoalCard> createState() => _CreateGoalCardState();
+}
+
+class _CreateGoalCardState extends State<CreateGoalCard> {
+  late final _nameController = TextEditingController(
+    text: widget.data.name ?? '',
+  );
+
+  late final _descriptionController = TextEditingController(
+    text: widget.data.description ?? '',
+  );
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    final nameController = useTextEditingController(text: data.name ?? '');
-    final nameError = useState(false);
-    final descriptionController = useTextEditingController(
-      text: data.description ?? '',
-    );
-    final selectedDate = useState(data.date);
-    final fulfilled = useState(data.fulfilled);
+    final data = widget.data;
 
     final inputBorder = OutlineInputBorder(
       borderRadius: BorderRadius.circular(12),
@@ -60,16 +161,14 @@ class CreateGoalCard extends HookWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           TextField(
-            controller: nameController,
+            controller: _nameController,
             textCapitalization: TextCapitalization.sentences,
             style: theme.textTheme.bodyLarge,
             onChanged: (v) {
               data.name = v;
-              nameError.value = false;
             },
             decoration: InputDecoration(
               hintText: 'Titel',
-              errorText: nameError.value ? 'Bitte einen Titel eingeben' : null,
               border: inputBorder,
               enabledBorder: inputBorder,
               focusedBorder: focusedBorder,
@@ -92,7 +191,7 @@ class CreateGoalCard extends HookWidget {
           ),
           const Gap(12),
           TextField(
-            controller: descriptionController,
+            controller: _descriptionController,
             textCapitalization: TextCapitalization.sentences,
             maxLines: 3,
             style: theme.textTheme.bodyMedium,
@@ -124,13 +223,12 @@ class CreateGoalCard extends HookWidget {
             onPressed: () async {
               final picked = await showDatePicker(
                 context: context,
-                initialDate: selectedDate.value,
+                initialDate: data.date,
                 firstDate: DateTime(2020),
                 lastDate: DateTime(2100),
               );
               if (picked != null) {
-                selectedDate.value = picked;
-                data.date = picked;
+                setState(() => data.date = picked);
               }
             },
             icon: Icon(
@@ -139,17 +237,16 @@ class CreateGoalCard extends HookWidget {
               color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
             ),
             label: Text(
-              kNewDateFormat.format(selectedDate.value),
+              kNewDateFormat.format(data.date),
               style: theme.textTheme.bodyLarge,
             ),
           ),
-          if (isEdit) ...[
+          if (widget.isEdit) ...[
             const Gap(12),
             CheckboxListTile(
-              value: fulfilled.value,
+              value: data.fulfilled,
               onChanged: (v) {
-                fulfilled.value = v ?? false;
-                data.fulfilled = v ?? false;
+                setState(() => data.fulfilled = v ?? false);
               },
               controlAffinity: ListTileControlAffinity.leading,
               contentPadding: EdgeInsets.zero,
@@ -245,92 +342,4 @@ class _SmartGoalsInfoBox extends HookWidget {
       ),
     );
   }
-}
-
-class CreateGoalSheet extends StatelessWidget {
-  const CreateGoalSheet({super.key, required this.data, this.goal});
-
-  final NewGoalData data;
-  final PlannerGoal? goal;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Text(
-            goal != null ? 'Ziel bearbeiten' : 'Neues Ziel',
-            style: theme.textTheme.titleSmall?.copyWith(
-              color: theme.colorScheme.onSurface.withValues(alpha: 0.5),
-              letterSpacing: 0.5,
-            ),
-          ),
-          if (goal == null) ...[const Gap(12), const _SmartGoalsInfoBox()],
-          const Gap(16),
-          CreateGoalCard(data: data, isEdit: goal != null),
-        ],
-      ),
-    );
-  }
-}
-
-void showCreateGoalSheet(
-  BuildContext context,
-  WidgetRef ref, {
-  PlannerGoal? goal,
-}) {
-  final theme = Theme.of(context);
-
-  final data = NewGoalData(
-    id: goal?.id,
-    name: goal?.name,
-    description: goal?.description,
-    date: goal?.date ?? DateTime.now(),
-    fulfilled: goal?.fulfilled ?? false,
-  );
-
-  Future<void> save() async {
-    if (data.name == null || data.name!.trim().isEmpty) {
-      showMessage(context, label: 'Bitte einen Titel eingeben', error: true);
-      return;
-    }
-
-    final notifier = ref.read(goalPodProvider.notifier);
-
-    if (goal != null) {
-      await notifier.updateGoal(
-        goal.id,
-        name: data.name,
-        date: kOldDateFormat.format(data.date),
-        fulfilled: data.fulfilled,
-        description: data.description,
-        clearDescription: data.description == null,
-      );
-    } else {
-      await notifier.createGoal(
-        name: data.name!,
-        date: kOldDateFormat.format(data.date),
-        description: data.description,
-      );
-    }
-    if (context.mounted) Navigator.of(context).pop();
-  }
-
-  showAmslBottomSheet(
-    context: context,
-    child: CreateGoalSheet(data: data, goal: goal),
-    onClose: () => Navigator.of(context).pop(),
-    bottomBar: true,
-    buttonBar: [
-      RoundedCornerButton(
-        label: 'Speichern',
-        onTap: save,
-        buttonColor: theme.colorScheme.primary,
-        labelColor: theme.colorScheme.onPrimary,
-      ),
-    ],
-  );
 }

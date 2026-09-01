@@ -10,6 +10,15 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+void showPlannerIcalSheet(BuildContext context, WidgetRef ref) {
+  showAmslBottomSheet(
+    context: context,
+    child: const PlannerIcalSheet(),
+    onClose: () => Navigator.of(context).pop(),
+    bottomBar: true,
+  );
+}
+
 class PlannerIcalSheet extends ConsumerWidget {
   const PlannerIcalSheet({super.key});
 
@@ -143,44 +152,19 @@ class PlannerIcalSheet extends ConsumerWidget {
             ),
             const Gap(8),
             Center(
-              child: TextButton(
-                onPressed: () async {
-                  final confirmed = await showDialog<bool>(
-                    context: context,
-                    builder: (ctx) => AlertDialog(
-                      title: const Text('Link widerrufen?'),
-                      content: const Text(
-                        'Der aktuelle Kalender-Link wird ungültig. Du kannst anschließend einen neuen Link generieren.',
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.of(ctx).pop(false),
-                          child: const Text('Abbrechen'),
-                        ),
-                        TextButton(
-                          onPressed: () => Navigator.of(ctx).pop(true),
-                          child: Text(
-                            'Widerrufen',
-                            style: TextStyle(color: theme.colorScheme.onError),
-                          ),
-                        ),
-                      ],
-                    ),
-                  );
-                  if (confirmed == true) {
-                    try {
-                      await ref
-                          .read(icalTokenProviderProvider.notifier)
-                          .revoke();
-                    } on HikariException catch (_) {
-                      if (context.mounted) showMessage(context, error: true);
+              child: RoundedCornerButton(
+                label: 'Link widerrufen',
+                buttonColor: theme.colorScheme.surface,
+                labelColor: theme.colorScheme.onError,
+                onTap: () async {
+                  try {
+                    await ref.read(icalTokenProviderProvider.notifier).revoke();
+                  } on Exception catch (error) {
+                    if (context.mounted) {
+                      showException(context, error);
                     }
                   }
                 },
-                child: Text(
-                  'Link widerrufen',
-                  style: TextStyle(color: theme.colorScheme.onError),
-                ),
               ),
             ),
           ],
@@ -188,13 +172,4 @@ class PlannerIcalSheet extends ConsumerWidget {
       },
     );
   }
-}
-
-void showPlannerIcalSheet(BuildContext context, WidgetRef ref) {
-  showAmslBottomSheet(
-    context: context,
-    child: const PlannerIcalSheet(),
-    onClose: () => Navigator.of(context).pop(),
-    bottomBar: true,
-  );
 }

@@ -18,7 +18,8 @@ class PlannerScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final tabController = useTabController(initialLength: 2);
-    final selectedDate = useState(DateTime.now());
+
+    DateTime selectedDate = DateTime.now();
 
     return Scaffold(
       backgroundColor: theme.colorScheme.tertiaryContainer,
@@ -50,9 +51,7 @@ class PlannerScreen extends HookConsumerWidget {
                 onTap: () => showCreateEntrySheet(
                   context,
                   ref,
-                  initialDate: tabController.index == 1
-                      ? selectedDate.value
-                      : null,
+                  initialDate: tabController.index == 1 ? selectedDate : null,
                 ),
                 child: Row(
                   children: [
@@ -69,9 +68,7 @@ class PlannerScreen extends HookConsumerWidget {
                 onTap: () => showCreateMilestoneSheet(
                   context,
                   ref,
-                  initialDate: tabController.index == 1
-                      ? selectedDate.value
-                      : null,
+                  initialDate: tabController.index == 1 ? selectedDate : null,
                 ),
                 child: Row(
                   children: [
@@ -158,9 +155,7 @@ class PlannerScreen extends HookConsumerWidget {
           controller: tabController,
           children: [
             const PlannerListView(),
-            PlannerCalendarView(
-              onDaySelected: (day) => selectedDate.value = day,
-            ),
+            PlannerCalendarView(onDaySelected: (day) => selectedDate = day),
           ],
         ),
       ),
