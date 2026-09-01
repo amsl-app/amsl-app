@@ -95,7 +95,7 @@ void showCreateEntrySheet(
       initialEntries: initialEntries,
       newEntries: newEntries,
     ),
-    onClose: () => Navigator.of(context).pop(),
+    onClose: () => context.pop(),
     bottomBar: true,
     buttonBar: [
       RoundedCornerButton(

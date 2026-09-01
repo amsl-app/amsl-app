@@ -7,6 +7,7 @@ import 'package:amsl_app/widgets/error/error_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -14,7 +15,7 @@ void showPlannerIcalSheet(BuildContext context, WidgetRef ref) {
   showAmslBottomSheet(
     context: context,
     child: const PlannerIcalSheet(),
-    onClose: () => Navigator.of(context).pop(),
+    onClose: () => context.pop(),
     bottomBar: true,
   );
 }

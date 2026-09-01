@@ -5,6 +5,7 @@ import 'package:amsl_app/widgets/error/error_bar.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -59,7 +60,7 @@ void showAddModuleDialog(BuildContext context) {
                   if (context.mounted) {
                     showMessage(context, label: "Erfolgreich hinzugefügt");
                     reloadAll(ref, context);
-                    Navigator.of(context).pop();
+                    context.pop();
                   }
                 }
               } on Exception {

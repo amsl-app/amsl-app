@@ -7,6 +7,7 @@ import 'package:amsl_app/widgets/dialogs/amsl_dialog.dart';
 import 'package:amsl_app/widgets/error/error_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 
 class NewMilestoneData {
@@ -67,13 +68,13 @@ void showCreateMilestoneSheet(
         description: data.description,
       );
     }
-    if (context.mounted) Navigator.of(context).pop();
+    if (context.mounted) context.pop();
   }
 
   showAmslBottomSheet(
     context: context,
     child: CreateMilestoneSheet(data: data, milestone: milestone),
-    onClose: () => Navigator.of(context).pop(),
+    onClose: () => context.pop(),
     bottomBar: true,
     buttonBar: [
       RoundedCornerButton(

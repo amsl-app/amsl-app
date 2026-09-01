@@ -19,7 +19,7 @@ void showPlannerAssistantSheet(BuildContext context, WidgetRef ref) {
         showCreateEntrySheet(context, ref, initialEntries: entries);
       },
     ),
-    onClose: () => Navigator.of(context).pop(),
+    onClose: () => context.pop(),
     bottomBar: true,
   );
 }

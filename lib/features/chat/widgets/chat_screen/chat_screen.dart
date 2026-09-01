@@ -338,7 +338,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                             context: context,
                             content:
                                 "Dieser Chat ist ein KI-Chat. Bitte beachte, dass diese Nachrichten von einer KI generiert werden und keine Garantie auf Richtigkeit besteht.\n\nGib keine persönlichen Informationen preis.",
-                            onClose: () => Navigator.of(context).pop(),
+                            onClose: () => context.pop(),
                           );
                         },
                         child: Container(
