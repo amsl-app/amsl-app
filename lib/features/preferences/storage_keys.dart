@@ -26,6 +26,25 @@ enum StorageKey {
   notificationEnabled("allow_notification"),
   notificationTimeHour("notification_time_hour"),
   notificationTimeMinute("notification_time_minute"),
+  dailyPlanningNotificationEnabled("allow_daily_planning_notification"),
+  dailyPlanningNotificationTimeHour("daily_planning_notification_time_hour"),
+  dailyPlanningNotificationTimeMinute(
+    "daily_planning_notification_time_minute",
+  ),
+  weeklyPlanningNotificationEnabled("allow_weekly_planning_notification"),
+  weeklyPlanningNotificationDay("weekly_planning_notification_day"),
+  weeklyPlanningNotificationTimeHour("weekly_planning_notification_time_hour"),
+  weeklyPlanningNotificationTimeMinute(
+    "weekly_planning_notification_time_minute",
+  ),
+  monthlyPlanningNotificationEnabled("allow_monthly_planning_notification"),
+  monthlyPlanningNotificationDay("monthly_planning_notification_day"),
+  monthlyPlanningNotificationTimeHour(
+    "monthly_planning_notification_time_hour",
+  ),
+  monthlyPlanningNotificationTimeMinute(
+    "monthly_planning_notification_time_minute",
+  ),
   acceptOpenAI("accept_openai"),
   acceptOpenAIAssistant("accept_openai_assistant"),
   acceptOpenAIChat("accept_openai_chat"),
