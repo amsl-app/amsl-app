@@ -73,6 +73,18 @@ class _AppScreenState extends ConsumerState<AppScreen>
       }),
 
       ref.listenManual(assessmentSessionsProvider, (previous, next) {
+        final List<Session>? oldSessions;
+        final List<Session>? newSessions;
+        try {
+          oldSessions = previous?.value;
+          newSessions = next.value;
+        } on HikariNotInitializedException catch (e) {
+          log.info("Ignoring error: $e");
+          return;
+        }
+
+        if (newSessions == null || newSessions == oldSessions) return;
+
         ref.read(assessmentPodProvider.notifier).reloadAssessments();
       }),
 

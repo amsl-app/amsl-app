@@ -1,4 +1,5 @@
 import 'package:amsl_app/features/assessment/widgets/data_points_sheet.dart';
+import 'package:amsl_app/features/assessment/widgets/scale_sparkline.dart';
 import 'package:amsl_app/widgets/dialogs/amsl_dialog.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
@@ -128,48 +129,10 @@ class OverallScoreSummaryCard extends StatelessWidget {
               const Gap(12),
               SizedBox(
                 height: 36,
-                child: LineChart(
-                  LineChartData(
-                    minY: 1,
-                    maxY: 5,
-                    lineTouchData: const LineTouchData(enabled: false),
-                    gridData: const FlGridData(show: false),
-                    borderData: FlBorderData(show: false),
-                    titlesData: const FlTitlesData(show: false),
-                    extraLinesData: reference == null
-                        ? const ExtraLinesData()
-                        : ExtraLinesData(
-                            horizontalLines: [
-                              HorizontalLine(
-                                y: reference!,
-                                color: theme.colorScheme.onSurfaceVariant
-                                    .withValues(alpha: 0.5),
-                                strokeWidth: 1,
-                                dashArray: [4, 3],
-                              ),
-                            ],
-                          ),
-                    lineBarsData: [
-                      LineChartBarData(
-                        spots: spots,
-                        isCurved: true,
-                        color: theme.colorScheme.primary,
-                        barWidth: 2,
-                        dotData: const FlDotData(show: false),
-                        belowBarData: BarAreaData(
-                          show: true,
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              theme.colorScheme.primary.withValues(alpha: 0.25),
-                              theme.colorScheme.primary.withValues(alpha: 0.0),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                child: ScaleSparkline(
+                  spots: spots,
+                  color: theme.colorScheme.primary,
+                  referenceY: reference,
                 ),
               ),
             ],

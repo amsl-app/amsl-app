@@ -57,14 +57,11 @@ abstract class AssessmentConfiguration with _$AssessmentConfiguration {
     final perScaleDays = <List<MapEntry<DateTime, double>>>[];
 
     for (final scale in scales) {
-      final range = scale.max - scale.min;
-      if (range <= 0) continue;
+      if (scale.max - scale.min <= 0) continue;
       final byDay = <DateTime, double>{};
       for (final entry in scale.values.entries) {
-        final fraction = ((entry.value - scale.min) / range).clamp(0.0, 1.0);
-        final normalized = 1 + fraction * 4;
         final day = DateTime(entry.key.year, entry.key.month, entry.key.day);
-        byDay[day] = normalized;
+        byDay[day] = normalizeScaleValue(entry.value, scale);
       }
       if (byDay.isEmpty) continue;
       final sorted = byDay.entries.toList()

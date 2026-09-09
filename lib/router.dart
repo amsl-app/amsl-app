@@ -186,9 +186,20 @@ GoRouter createRouterDelegate(LoginState logInState) {
                         name: 'self_assessment_run',
                         path: 'run',
                         builder: (BuildContext context, GoRouterState state) {
+                          final extra = state.extra!;
+                          late List<String> assessmentIds;
+                          if (extra is String) {
+                            assessmentIds = [extra];
+                          } else if (extra is List<String>) {
+                            assessmentIds = extra;
+                          } else {
+                            throw Exception(
+                              "Invalid extra type for self_assessment_run route: ${extra.runtimeType}",
+                            );
+                          }
                           return AssessmentScreen(
                             flow: SelfAssessmentFlow(
-                              assessmentIds: state.extra! as List<String>,
+                              assessmentIds: assessmentIds,
                             ),
                           );
                         },

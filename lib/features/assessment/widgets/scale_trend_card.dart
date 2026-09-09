@@ -1,8 +1,8 @@
 import 'package:amsl_app/features/assessment/widgets/data_points_sheet.dart';
 import 'package:amsl_app/features/assessment/widgets/scale_series.dart';
+import 'package:amsl_app/features/assessment/widgets/scale_sparkline.dart';
 import 'package:amsl_app/models/tori/assessments/scale.dart';
 import 'package:amsl_app/widgets/dialogs/amsl_dialog.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -53,52 +53,10 @@ class ScaleTrendCard extends StatelessWidget {
                     height: 36,
                     child: series.spots.isEmpty
                         ? null
-                        : LineChart(
-                            LineChartData(
-                              minY: 1,
-                              maxY: 5,
-                              lineTouchData: const LineTouchData(
-                                enabled: false,
-                              ),
-                              gridData: const FlGridData(show: false),
-                              borderData: FlBorderData(show: false),
-                              titlesData: const FlTitlesData(show: false),
-                              extraLinesData: normalizedReference == null
-                                  ? const ExtraLinesData()
-                                  : ExtraLinesData(
-                                      horizontalLines: [
-                                        HorizontalLine(
-                                          y: normalizedReference,
-                                          color: theme
-                                              .colorScheme
-                                              .onSurfaceVariant
-                                              .withValues(alpha: 0.5),
-                                          strokeWidth: 1,
-                                          dashArray: [4, 3],
-                                        ),
-                                      ],
-                                    ),
-                              lineBarsData: [
-                                LineChartBarData(
-                                  spots: series.spots,
-                                  isCurved: true,
-                                  color: series.color,
-                                  barWidth: 2,
-                                  dotData: const FlDotData(show: false),
-                                  belowBarData: BarAreaData(
-                                    show: true,
-                                    gradient: LinearGradient(
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                      colors: [
-                                        series.color.withValues(alpha: 0.25),
-                                        series.color.withValues(alpha: 0.0),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
+                        : ScaleSparkline(
+                            spots: series.spots,
+                            color: series.color,
+                            referenceY: normalizedReference,
                           ),
                   ),
                 ],

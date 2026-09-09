@@ -105,6 +105,7 @@ class _AssessmentScreenState extends ConsumerState<AssessmentScreen> {
     }
 
     if (!started) {
+      started = true;
       Future.delayed(Duration.zero, () async {
         if (context.mounted) {
           ref
@@ -112,7 +113,6 @@ class _AssessmentScreenState extends ConsumerState<AssessmentScreen> {
               .startModuleAssessment(flow.moduleID, flow.prePost)
               .handle(context);
         }
-        started = true;
       });
     }
 
@@ -222,7 +222,6 @@ class _AssessmentScreenState extends ConsumerState<AssessmentScreen> {
         SharedPreferences sharedPreferences = ref.read(storagesProvider).shared;
         if (!(sharedPreferences.getBool(StorageKey.firstAssessmentDone.key) ??
             false)) {
-          sharedPreferences.setBool(StorageKey.showEvaluationHint.key, true);
           sharedPreferences.setBool(StorageKey.firstAssessmentDone.key, true);
         }
         close(context);

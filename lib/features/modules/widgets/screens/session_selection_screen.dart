@@ -1,6 +1,5 @@
 import 'package:amsl_app/features/modules/providers/module_assessment_set.dart';
 import 'package:amsl_app/features/planner/providers/milestone.dart';
-import 'package:amsl_app/features/preferences/storage_keys.dart';
 import 'package:amsl_app/features/preferences/storages.dart';
 import 'package:amsl_app/models/hikari/assessments/assessment_session.dart'
     as hikari_assessment;
@@ -46,7 +45,6 @@ class SessionSelectionScreen extends StatefulHookConsumerWidget {
 class _SessionSelectionScreenState
     extends ConsumerState<SessionSelectionScreen> {
   bool showPostAssessmentToDo = true;
-  bool showEvaluationHint = false;
   bool hasAssessment = false;
 
   late SharedPreferences sharedPreferences;
@@ -96,10 +94,6 @@ class _SessionSelectionScreenState
 
     final assessmentEnabled =
         ref.watch(variantPodProvider).value?.assessmentEnabled ?? true;
-
-    showEvaluationHint =
-        assessmentEnabled &&
-        (sharedPreferences.getBool(StorageKey.showEvaluationHint.key) ?? false);
 
     hasAssessment =
         assessmentEnabled &&

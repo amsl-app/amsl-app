@@ -3,6 +3,7 @@ import 'package:amsl_app/models/hikari/assessments/assessment.dart'
 import 'package:amsl_app/models/hikari/assessments/scale_data.dart';
 import 'package:amsl_app/models/tori/assessments/question.dart';
 import 'package:amsl_app/models/tori/assessments/scale.dart';
+import 'package:collection/collection.dart';
 
 class Assessment {
   final String assessmentId;
@@ -34,10 +35,14 @@ class Assessment {
 
     final scales = scaleData
         .map((scaleId, values) {
-          final scale = assessment.scales.firstWhere((s) => s.id == scaleId);
+          final scale = assessment.scales.firstWhereOrNull(
+            (s) => s.id == scaleId,
+          );
+          if (scale == null) return MapEntry(scaleId, null);
           return MapEntry(scaleId, Scale.fromHikari(scale, values));
         })
         .values
+        .whereType<Scale>()
         .toList();
 
     return Assessment(
