@@ -7,18 +7,10 @@ import 'package:amsl_app/models/tori/assessments/assessment.dart';
 import 'package:amsl_app/widgets/async_value_extension.dart';
 import 'package:amsl_app/widgets/buttons/rounded_corner_button.dart';
 import 'package:amsl_app/widgets/buttons/secondary_button.dart';
-import 'package:amsl_app/widgets/dialogs/amsl_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
-Future<void> startSelfAssessment(
-  BuildContext context,
-  List<String> assessmentIds,
-) async {
-  context.pushNamed('self_assessment_run', extra: assessmentIds);
-}
 
 class SelfAssessmentOverviewScreen extends ConsumerWidget {
   const SelfAssessmentOverviewScreen({super.key});
@@ -26,7 +18,7 @@ class SelfAssessmentOverviewScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final asyncAssessments = ref.watch(assessmentPodProvider);
+    final asyncConfig = ref.watch(assessmentPodProvider);
 
     return Scaffold(
       backgroundColor: theme.colorScheme.tertiaryContainer,
@@ -38,13 +30,10 @@ class SelfAssessmentOverviewScreen extends ConsumerWidget {
           style: TextStyle(color: theme.colorScheme.onTertiaryContainer),
         ),
       ),
-      body: asyncAssessments.build(
+      body: asyncConfig.build(
         context,
-        builder: (context, assessments) => SelfAssessmentContent(
-          assessments: [
-            for (final assessment in assessments?.values.toList() ?? const [])
-              if (!assessment.hidden) assessment,
-          ],
+        builder: (context, config) => SelfAssessmentContent(
+          assessments: config?.shownAssessments.toList() ?? const [],
         ),
       ),
     );
@@ -55,21 +44,6 @@ class SelfAssessmentContent extends StatelessWidget {
   final List<Assessment> assessments;
 
   const SelfAssessmentContent({super.key, required this.assessments});
-
-  Future<void> _openSinglePartPicker(BuildContext context) async {
-    await showAmslBottomSheet(
-      context: context,
-      bottomBar: true,
-      onClose: () => context.pop(),
-      child: SubassessmentPickerSheet(
-        assessments: assessments,
-        onSelect: (assessment) {
-          context.pop();
-          startSelfAssessment(context, [assessment.assessmentId]);
-        },
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,7 +75,7 @@ class SelfAssessmentContent extends StatelessWidget {
             ),
           ),
           const Gap(20),
-          OverallScoreChart(scales: scales),
+          const OverallScoreChart(),
           const Gap(12),
           SizedBox(
             width: double.infinity,
@@ -109,9 +83,9 @@ class SelfAssessmentContent extends StatelessWidget {
               label: "Selbsttest starten",
               buttonColor: theme.colorScheme.primary,
               labelColor: theme.colorScheme.onPrimary,
-              onTap: () => startSelfAssessment(
-                context,
-                assessments
+              onTap: () => context.pushNamed(
+                'self_assessment_run',
+                extra: assessments
                     .map((assessment) => assessment.assessmentId)
                     .toList(),
               ),
@@ -120,7 +94,7 @@ class SelfAssessmentContent extends StatelessWidget {
           Center(
             child: SecondaryButton(
               label: "Einen Teil auswählen",
-              onTap: () => _openSinglePartPicker(context),
+              onTap: () => showSubAssessmentPickerSheet(context, assessments),
             ),
           ),
           const Gap(32),

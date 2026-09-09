@@ -34,3 +34,12 @@ class Scale {
     );
   }
 }
+
+/// Min-max normalizes a scale's raw value onto a 1-5 range, so
+/// differently scaled scores are comparable and consistent everywhere
+/// they're displayed.
+double normalizeScaleValue(double value, Scale scale) {
+  final range = scale.max - scale.min;
+  if (range <= 0) return 1;
+  return 1 + ((value - scale.min) / range).clamp(0.0, 1.0) * 4;
+}

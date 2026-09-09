@@ -1,7 +1,7 @@
 import 'package:amsl_app/constants.dart';
 import 'package:amsl_app/features/assessment/providers/assessment_sessions.dart';
-import 'package:amsl_app/features/assessment/widgets/answer_field.dart';
-import 'package:amsl_app/features/assessment/widgets/yes_or_no.dart';
+import 'package:amsl_app/features/assessment/widgets/elements/answer_field.dart';
+import 'package:amsl_app/features/assessment/widgets/elements/yes_or_no.dart';
 import 'package:amsl_app/features/modules/providers/module_assessment_set.dart';
 import 'package:amsl_app/features/preferences/storage_keys.dart';
 import 'package:amsl_app/features/preferences/storages.dart';
@@ -22,9 +22,27 @@ import '../../../../models/tori/assessments/assessment_session.dart';
 import '../../../../models/tori/assessments/question.dart';
 import '../../../../widgets/buttons/rounded_button.dart';
 import '../../../../widgets/error/error_bar.dart';
-import '../choice.dart';
-import '../linear_numbered_box_scale.dart';
-import 'assessment_flow.dart';
+import '../elements/choice.dart';
+import '../elements/linear_numbered_box_scale.dart';
+import 'package:amsl_app/models/hikari/assessments/assessment_session.dart'
+    as hikari_assessment;
+
+sealed class AssessmentFlow {
+  const AssessmentFlow();
+}
+
+class ModuleAssessmentFlow extends AssessmentFlow {
+  final String moduleID;
+  final hikari_assessment.AssessmentType prePost;
+
+  const ModuleAssessmentFlow({required this.moduleID, required this.prePost});
+}
+
+class SelfAssessmentFlow extends AssessmentFlow {
+  final List<String> assessmentIds;
+
+  const SelfAssessmentFlow({required this.assessmentIds});
+}
 
 class AssessmentScreen extends StatefulHookConsumerWidget {
   final AssessmentFlow flow;

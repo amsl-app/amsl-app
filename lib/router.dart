@@ -1,5 +1,4 @@
 import 'package:amsl_app/authentication/async_login_provider.dart';
-import 'package:amsl_app/features/assessment/widgets/screens/assessment_flow.dart';
 import 'package:amsl_app/features/assessment/widgets/screens/assessment_screen.dart';
 import 'package:amsl_app/features/assessment/widgets/screens/self_assessment_overview_screen.dart';
 import 'package:amsl_app/features/chat/widgets/chat_screen/chat_screen.dart';

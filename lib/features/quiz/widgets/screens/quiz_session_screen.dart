@@ -294,7 +294,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
               context,
               builder: (BuildContext context, question) {
                 if (context.mounted) {
-                  Navigator.of(context).pop();
+                  context.pop();
                 }
                 return Container();
               },
@@ -302,7 +302,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
                 return AmslLoadingOverlay(label: getFeedbackLoadingMessages());
               },
               errorBuilder: (context, e, s) {
-                Navigator.of(context).pop();
+                context.pop();
                 return Container();
               },
             );
@@ -337,7 +337,7 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
         ),
       ],
       context: context,
-      onClose: () => Navigator.of(context).pop(),
+      onClose: () => context.pop(),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

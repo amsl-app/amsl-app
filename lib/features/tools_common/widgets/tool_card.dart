@@ -1,6 +1,7 @@
 import 'package:amsl_app/themes/tool_card_theme.dart';
 import 'package:amsl_app/widgets/dialogs/amsl_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class Tool {
   final String id;
@@ -34,7 +35,7 @@ class ToolCard extends StatelessWidget {
                   showAmslBottomSheet(
                     bottomBar: true,
                     onClose: () {
-                      Navigator.of(context).pop();
+                      context.pop();
                     },
                     context: context,
                     child: Text(

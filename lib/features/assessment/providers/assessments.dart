@@ -3,6 +3,7 @@ import 'package:amsl_app/models/hikari/assessments/scale_data.dart';
 import 'package:amsl_app/models/tori/assessments/assessment.dart';
 import 'package:amsl_app/models/hikari/assessments/assessment.dart'
     as hikari_assessment;
+import 'package:amsl_app/models/tori/assessments/assessment_configuration.dart';
 import 'package:amsl_app/providers/hikari_provider.dart';
 import 'package:collection/collection.dart';
 import 'package:logging/logging.dart';
@@ -15,10 +16,11 @@ class AssessmentPod extends _$AssessmentPod {
   static final log = Logger("AssessmentPod");
 
   @override
-  Future<Map<String, Assessment>> build() async {
+  Future<AssessmentConfiguration> build() async {
     final hikari = ref.watch(hikariPodProvider);
 
-    return await _loadAssessmentsFromApi(hikari);
+    final assessments = await _loadAssessmentsFromApi(hikari);
+    return AssessmentConfiguration(assessments: assessments);
   }
 
   Future<Map<String, Assessment>> _loadAssessmentsFromApi(Hikari hikari) async {
@@ -48,7 +50,7 @@ class AssessmentPod extends _$AssessmentPod {
     return Map.fromEntries(zipped);
   }
 
-  Future<Map<String, Assessment>> reloadAssessments() async {
+  Future<AssessmentConfiguration> reloadAssessments() async {
     ref.invalidateSelf();
     return future;
   }

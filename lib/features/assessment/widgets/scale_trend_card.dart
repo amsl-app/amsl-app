@@ -1,5 +1,6 @@
 import 'package:amsl_app/features/assessment/widgets/data_points_sheet.dart';
 import 'package:amsl_app/features/assessment/widgets/scale_series.dart';
+import 'package:amsl_app/models/tori/assessments/scale.dart';
 import 'package:amsl_app/widgets/dialogs/amsl_dialog.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';

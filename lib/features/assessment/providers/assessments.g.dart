@@ -13,7 +13,7 @@ part of 'assessments.dart';
 final assessmentPodProvider = AssessmentPodProvider._();
 
 final class AssessmentPodProvider
-    extends $AsyncNotifierProvider<AssessmentPod, Map<String, Assessment>> {
+    extends $AsyncNotifierProvider<AssessmentPod, AssessmentConfiguration> {
   AssessmentPodProvider._()
     : super(
         from: null,
@@ -46,27 +46,27 @@ final class AssessmentPodProvider
   AssessmentPod create() => AssessmentPod();
 }
 
-String _$assessmentPodHash() => r'8bd05cef619524b8d59de6265955f001f4f8e8e9';
+String _$assessmentPodHash() => r'f1fa3ae3688320a160beec65e4a8b30ef9e4e647';
 
-abstract class _$AssessmentPod extends $AsyncNotifier<Map<String, Assessment>> {
-  FutureOr<Map<String, Assessment>> build();
+abstract class _$AssessmentPod extends $AsyncNotifier<AssessmentConfiguration> {
+  FutureOr<AssessmentConfiguration> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final ref =
         this.ref
             as $Ref<
-              AsyncValue<Map<String, Assessment>>,
-              Map<String, Assessment>
+              AsyncValue<AssessmentConfiguration>,
+              AssessmentConfiguration
             >;
     final element =
         ref.element
             as $ClassProviderElement<
               AnyNotifier<
-                AsyncValue<Map<String, Assessment>>,
-                Map<String, Assessment>
+                AsyncValue<AssessmentConfiguration>,
+                AssessmentConfiguration
               >,
-              AsyncValue<Map<String, Assessment>>,
+              AsyncValue<AssessmentConfiguration>,
               Object?,
               Object?
             >;
