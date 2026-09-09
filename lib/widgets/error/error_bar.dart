@@ -10,6 +10,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import '../../constants.dart';
 import '../../features/assessment/providers/assessment_sessions.dart';
 import '../../features/journal/providers/journal.dart';
+import '../../features/planner/providers/milestone.dart';
+import '../../features/planner/providers/planner.dart';
 import '../../features/profile/providers/user_provider.dart';
 import '../../hikari/exception.dart';
 
@@ -360,11 +362,15 @@ Future<void> reloadAll(WidgetRef ref, BuildContext context) async {
   final journalNotifier = ref.read(journalProvider.notifier);
   final assessmentNotifier = ref.read(assessmentSessionsProvider.notifier);
   final variantNotifier = ref.read(variantPodProvider.notifier);
+  final plannerNotifier = ref.read(plannerPodProvider.notifier);
+  final milestoneNotifier = ref.read(milestonePodProvider.notifier);
 
   await userNotifier.reloadUser();
   await assessmentNotifier.reloadAssessmentSessions();
   await variantNotifier.reload();
   await journalNotifier.reloadJournals();
+  await plannerNotifier.reloadEntries();
+  await milestoneNotifier.reloadMilestones();
 }
 
 class MessageBarException {

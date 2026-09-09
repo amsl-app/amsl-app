@@ -5,6 +5,8 @@ import 'package:amsl_app/hikari/exception.dart';
 import 'package:amsl_app/hikari/hikari_api.dart';
 import 'package:amsl_app/models/hikari/chat/websocket/websocket_request.dart';
 import 'package:amsl_app/models/hikari/chat/websocket/websocket_response.dart';
+import 'package:amsl_app/models/hikari/planner/module_milestone.dart';
+import 'package:amsl_app/models/hikari/planner/planner_milestone.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
@@ -55,6 +57,30 @@ class HikariModuleApi {
       return modules;
     },
   );
+
+  Future<List<ModuleMilestone>> getMilestones(String moduleId) async =>
+      hikari.get(
+        "/modules/$moduleId/milestones",
+        transform: (json) {
+          List<ModuleMilestone> milestones = [];
+          for (Map<String, dynamic> element in json) {
+            milestones.add(ModuleMilestone.fromJson(element));
+          }
+          return milestones;
+        },
+      );
+
+  Future<List<PlannerMilestone>> importMilestones(String moduleId) async =>
+      hikari.post(
+        "/modules/$moduleId/milestones/import",
+        transform: (json) {
+          List<PlannerMilestone> milestones = [];
+          for (Map<String, dynamic> element in json) {
+            milestones.add(PlannerMilestone.fromJson(element));
+          }
+          return milestones;
+        },
+      );
 
   Future<List<ModuleGroup>> getModuleGroups() async => hikari.get(
     "/modules/groups",

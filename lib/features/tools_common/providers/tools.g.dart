@@ -82,4 +82,4 @@ final class ToolsProvider
   }
 }
 
-String _$toolsHash() => r'880c352ebde8b2fa4597c9bf1fcf6b7bd659738b';
+String _$toolsHash() => r'0c270f5de51c44cdd5912e56e96d79328b9d8ac6';
