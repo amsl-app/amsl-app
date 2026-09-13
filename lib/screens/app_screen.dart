@@ -1,12 +1,15 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:amsl_app/features/assessment/providers/assessment_sessions.dart';
+import 'package:amsl_app/features/assessment/providers/assessments.dart';
 import 'package:amsl_app/features/notifications/notification.dart';
 import 'package:amsl_app/features/preferences/preferences.dart';
 import 'package:amsl_app/features/profile/providers/variant_provider.dart';
 import 'package:amsl_app/features/preferences/storage_keys.dart';
 import 'package:amsl_app/features/preferences/storages.dart';
 import 'package:amsl_app/features/tracking/tracking.dart';
+import 'package:amsl_app/models/tori/assessments/assessment_session.dart';
 import 'package:amsl_app/models/tori/modules/module_configuration.dart';
 import 'package:amsl_app/providers/hikari_provider.dart';
 import 'package:amsl_app/variants.dart';
@@ -68,6 +71,22 @@ class _AppScreenState extends ConsumerState<AppScreen>
           ref.read(preferencesProvider),
           moduleConfig: newModules,
         );
+      }),
+
+      ref.listenManual(assessmentSessionsProvider, (previous, next) {
+        final Map<String, ToriAssessmentSession>? oldSessions;
+        final Map<String, ToriAssessmentSession>? newSessions;
+        try {
+          oldSessions = previous?.value;
+          newSessions = next.value;
+        } on HikariNotInitializedException catch (e) {
+          log.info("Ignoring error: $e");
+          return;
+        }
+
+        if (newSessions == null || newSessions == oldSessions) return;
+
+        ref.read(assessmentPodProvider.notifier).reloadAssessments();
       }),
 
       // Preference Listeners

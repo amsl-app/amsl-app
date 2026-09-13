@@ -10,8 +10,9 @@ List<O> generateInterruptedMulti<I, O>(
   required int perRow,
 }) {
   final list = List<I>.from(iter, growable: false);
+  final rows = (list.length + perRow - 1) ~/ perRow;
 
-  return List.generate(max(list.length + list.length ~/ perRow, 0), (index) {
+  return List.generate(max(2 * rows - 1, 0), (index) {
     if (index % 2 == 0) {
       final start = (index ~/ 2) * perRow;
       var sublist = list.sublist(start, min(start + perRow, list.length));

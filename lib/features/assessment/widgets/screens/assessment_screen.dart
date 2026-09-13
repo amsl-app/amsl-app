@@ -1,13 +1,13 @@
 import 'package:amsl_app/constants.dart';
 import 'package:amsl_app/features/assessment/providers/assessment_sessions.dart';
-import 'package:amsl_app/features/assessment/widgets/answer_field.dart';
-import 'package:amsl_app/features/assessment/widgets/yes_or_no.dart';
+import 'package:amsl_app/features/assessment/widgets/elements/answer_field.dart';
+import 'package:amsl_app/features/assessment/widgets/elements/yes_or_no.dart';
 import 'package:amsl_app/features/modules/providers/module_assessment_set.dart';
 import 'package:amsl_app/features/preferences/storage_keys.dart';
 import 'package:amsl_app/features/preferences/storages.dart';
 import 'package:amsl_app/hikari/exception.dart';
 import 'package:amsl_app/models/hikari/assessments/assessment_session.dart'
-    as hikari_assessment;
+    show AssessmentType;
 import 'package:amsl_app/widgets/async_value_extension.dart';
 import 'package:amsl_app/widgets/loading/skeleton_loading_screen.dart';
 import 'package:flutter/material.dart';
@@ -20,21 +20,34 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../models/tori/assessments/assessment_session.dart';
 import '../../../../models/tori/assessments/question.dart';
-import '../../../../models/tori/modules/module_assessment.dart';
 import '../../../../widgets/buttons/rounded_button.dart';
 import '../../../../widgets/error/error_bar.dart';
-import '../choice.dart';
-import '../linear_numbered_box_scale.dart';
+import '../elements/choice.dart';
+import '../elements/linear_numbered_box_scale.dart';
+import 'package:amsl_app/models/hikari/assessments/assessment_session.dart'
+    as hikari_assessment;
+
+sealed class AssessmentFlow {
+  const AssessmentFlow();
+}
+
+class ModuleAssessmentFlow extends AssessmentFlow {
+  final String moduleID;
+  final hikari_assessment.AssessmentType prePost;
+
+  const ModuleAssessmentFlow({required this.moduleID, required this.prePost});
+}
+
+class SelfAssessmentFlow extends AssessmentFlow {
+  final List<String> assessmentIds;
+
+  const SelfAssessmentFlow({required this.assessmentIds});
+}
 
 class AssessmentScreen extends StatefulHookConsumerWidget {
-  final hikari_assessment.AssessmentType prePost;
-  final String moduleID;
+  final AssessmentFlow flow;
 
-  const AssessmentScreen({
-    super.key,
-    required this.prePost,
-    required this.moduleID,
-  });
+  const AssessmentScreen({super.key, required this.flow});
 
   @override
   ConsumerState<AssessmentScreen> createState() => _AssessmentScreenState();
@@ -46,6 +59,7 @@ class _AssessmentScreenState extends ConsumerState<AssessmentScreen> {
   List<int> notAnswered = [];
   bool started = false;
   bool loading = false;
+  int selfAssessmentIndex = 0;
   ToriAssessmentSession? assessmentSession;
 
   ItemScrollController itemScrollController = ItemScrollController();
@@ -53,7 +67,16 @@ class _AssessmentScreenState extends ConsumerState<AssessmentScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final module = ref.watch(moduleAssessmentSetProvider(widget.moduleID));
+    switch (widget.flow) {
+      case ModuleAssessmentFlow flow:
+        return _buildModuleFlow(context, flow);
+      case SelfAssessmentFlow flow:
+        return _buildSelfAssessmentFlow(context, flow);
+    }
+  }
+
+  Widget _buildModuleFlow(BuildContext context, ModuleAssessmentFlow flow) {
+    final module = ref.watch(moduleAssessmentSetProvider(flow.moduleID));
 
     if (module == null) {
       showException(context, const FrontendEndException("Module not found"));
@@ -63,11 +86,11 @@ class _AssessmentScreenState extends ConsumerState<AssessmentScreen> {
       return const Scaffold();
     }
 
-    switch (widget.prePost) {
-      case hikari_assessment.AssessmentType.pre:
+    switch (flow.prePost) {
+      case AssessmentType.pre:
         assessmentSession = module.preAssessment.assessmentSession;
         break;
-      case hikari_assessment.AssessmentType.post:
+      case AssessmentType.post:
         assessmentSession = module.postAssessment.assessmentSession;
         break;
     }
@@ -75,44 +98,82 @@ class _AssessmentScreenState extends ConsumerState<AssessmentScreen> {
     if (assessmentSession != null) {
       return Stack(
         children: [
-          _build(context, widget.prePost, module),
+          _build(context, assessmentSession!),
           if (loading) const SkeletonLoadingScreen(goBackAllowed: true),
         ],
       );
     }
 
     if (!started) {
+      started = true;
       Future.delayed(Duration.zero, () async {
         if (context.mounted) {
           ref
               .read(assessmentSessionsProvider.notifier)
-              .startAssessment(widget.moduleID, widget.prePost)
+              .startModuleAssessment(flow.moduleID, flow.prePost)
               .handle(context);
         }
-        started = true;
       });
     }
 
     return SkeletonLoadingScreen(goBackAllowed: true);
   }
 
-  void close(BuildContext context, String moduleID) {
-    context.goNamed("module", pathParameters: {"moduleID": moduleID});
+  Widget _buildSelfAssessmentFlow(
+    BuildContext context,
+    SelfAssessmentFlow flow,
+  ) {
     if (assessmentSession != null) {
-      ref
-          .read(assessmentSessionsProvider.notifier)
-          .reloadSingleAssessmentSession(
-            assessmentID: assessmentSession!.assessmentId,
-            sessionID: assessmentSession!.sessionId,
-          );
+      return Stack(
+        children: [
+          _build(context, assessmentSession!),
+          if (loading) const SkeletonLoadingScreen(goBackAllowed: true),
+        ],
+      );
+    }
+
+    if (!started) {
+      started = true;
+      Future.delayed(Duration.zero, () async {
+        if (context.mounted) {
+          ref
+              .read(assessmentSessionsProvider.notifier)
+              .startAssessment(flow.assessmentIds[selfAssessmentIndex])
+              .handle(
+                context,
+                onData: (session) {
+                  if (mounted) {
+                    setState(() {
+                      assessmentSession = session;
+                    });
+                  }
+                },
+              );
+        }
+      });
+    }
+
+    return const SkeletonLoadingScreen(goBackAllowed: true);
+  }
+
+  void close(BuildContext context) {
+    switch (widget.flow) {
+      case ModuleAssessmentFlow(:final moduleID):
+        context.goNamed("module", pathParameters: {"moduleID": moduleID});
+        if (assessmentSession != null) {
+          ref
+              .read(assessmentSessionsProvider.notifier)
+              .reloadSingleAssessmentSession(
+                assessmentId: assessmentSession!.assessmentId,
+                sessionID: assessmentSession!.sessionId,
+              );
+        }
+      case SelfAssessmentFlow():
+        context.goNamed("self_assessment");
     }
   }
 
-  void submit(
-    BuildContext context,
-    ModuleAssessmentSet moduleAssessmentSet,
-    hikari_assessment.AssessmentType assessmentType,
-  ) {
+  void submit(BuildContext context) {
     unHighlight(assessmentSession!);
     if (allAnswered(assessmentSession!)) {
       setState(() {
@@ -121,41 +182,17 @@ class _AssessmentScreenState extends ConsumerState<AssessmentScreen> {
       if (mounted) {
         ref
             .read(assessmentSessionsProvider.notifier)
-            .submitAssessment(
-              moduleAssessmentSet: moduleAssessmentSet,
-              assessmentType: assessmentType,
-            )
+            .submitAssessment(assessmentSession: assessmentSession!)
             .handle(
               context,
-              onData: (_) {
-                SharedPreferences sharedPreferences = ref
-                    .read(storagesProvider)
-                    .shared;
-                if (!(sharedPreferences.getBool(
-                      StorageKey.firstAssessmentDone.key,
-                    ) ??
-                    false)) {
-                  sharedPreferences.setBool(
-                    StorageKey.showEvaluationHint.key,
-                    true,
-                  );
-                  sharedPreferences.setBool(
-                    StorageKey.firstAssessmentDone.key,
-                    true,
-                  );
-                }
-                close(context, moduleAssessmentSet.module.id);
-              },
+              onData: (_) => _onSubmitted(context),
               onError: (e, s) {
                 setState(() {
                   loading = false;
                 });
                 final Object exception;
                 if (e is HikariException) {
-                  exception = e.copyWith(
-                    resolve: () =>
-                        submit(context, moduleAssessmentSet, assessmentType),
-                  );
+                  exception = e.copyWith(resolve: () => submit(context));
                 } else {
                   exception = e;
                 }
@@ -163,12 +200,7 @@ class _AssessmentScreenState extends ConsumerState<AssessmentScreen> {
                   showException(
                     context,
                     exception,
-                    functions: [
-                      (
-                        "Verwerfen",
-                        () => close(context, moduleAssessmentSet.module.id),
-                      ),
-                    ],
+                    functions: [("Verwerfen", () => close(context))],
                   );
                 }
               },
@@ -184,6 +216,36 @@ class _AssessmentScreenState extends ConsumerState<AssessmentScreen> {
     }
   }
 
+  void _onSubmitted(BuildContext context) {
+    switch (widget.flow) {
+      case ModuleAssessmentFlow():
+        SharedPreferences sharedPreferences = ref.read(storagesProvider).shared;
+        if (!(sharedPreferences.getBool(StorageKey.firstAssessmentDone.key) ??
+            false)) {
+          sharedPreferences.setBool(StorageKey.firstAssessmentDone.key, true);
+        }
+        close(context);
+      case SelfAssessmentFlow(:final assessmentIds):
+        if (selfAssessmentIndex + 1 < assessmentIds.length) {
+          setState(() {
+            selfAssessmentIndex += 1;
+            assessmentSession = null;
+            started = false;
+            loading = false;
+            notAnswered = [];
+          });
+        } else {
+          setState(() {
+            loading = false;
+          });
+          if (context.mounted) {
+            showMessage(context, label: "Selbsttest abgeschlossen");
+            close(context);
+          }
+        }
+    }
+  }
+
   Future setQuestionValue(Question question, dynamic value) async {
     log.info("Setting value of ${question.id} to $value");
     setState(() {
@@ -191,16 +253,7 @@ class _AssessmentScreenState extends ConsumerState<AssessmentScreen> {
     });
   }
 
-  Widget _build(
-    BuildContext context,
-    hikari_assessment.AssessmentType assessmentType,
-    ModuleAssessmentSet singleModule,
-  ) {
-    final ToriAssessmentSession assessmentSession =
-        (assessmentType == hikari_assessment.AssessmentType.pre)
-        ? singleModule.preAssessment.assessmentSession!
-        : singleModule.postAssessment.assessmentSession!;
-
+  Widget _build(BuildContext context, ToriAssessmentSession assessmentSession) {
     final theme = Theme.of(context);
 
     Widget buildQuestion(BuildContext context, Question question, int index) {
@@ -323,7 +376,7 @@ class _AssessmentScreenState extends ConsumerState<AssessmentScreen> {
                       ? theme.colorScheme.primary
                       : theme.colorScheme.surfaceContainer,
                   label: "Abschließen",
-                  onTap: () => submit(context, singleModule, assessmentType),
+                  onTap: () => submit(context),
                 ),
                 Gap(getBottomBarPadding(context)),
               ],

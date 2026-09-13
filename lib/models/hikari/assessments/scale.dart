@@ -11,6 +11,7 @@ class Scale {
 
   final ScaleBody body;
   final List<ScaleItem> items;
+  final String? description;
 
   const Scale({
     required this.id,
@@ -19,6 +20,7 @@ class Scale {
     required this.items,
     required this.body,
     required this.type,
+    this.description,
   });
 
   factory Scale.fromJson(Map<String, dynamic> json) => _$ScaleFromJson(json);
@@ -43,8 +45,9 @@ class ScaleItem {
 class ScaleBody {
   final double min;
   final double max;
+  final double? reference;
 
-  ScaleBody({required this.min, required this.max});
+  ScaleBody({required this.min, required this.max, this.reference});
 
   factory ScaleBody.fromJson(Map<String, dynamic> json) =>
       _$ScaleBodyFromJson(json);

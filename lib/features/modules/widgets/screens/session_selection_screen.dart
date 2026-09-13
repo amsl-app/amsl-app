@@ -1,6 +1,5 @@
 import 'package:amsl_app/features/modules/providers/module_assessment_set.dart';
 import 'package:amsl_app/features/planner/providers/milestone.dart';
-import 'package:amsl_app/features/preferences/storage_keys.dart';
 import 'package:amsl_app/features/preferences/storages.dart';
 import 'package:amsl_app/models/hikari/assessments/assessment_session.dart'
     as hikari_assessment;
@@ -46,7 +45,6 @@ class SessionSelectionScreen extends StatefulHookConsumerWidget {
 class _SessionSelectionScreenState
     extends ConsumerState<SessionSelectionScreen> {
   bool showPostAssessmentToDo = true;
-  bool showEvaluationHint = false;
   bool hasAssessment = false;
 
   late SharedPreferences sharedPreferences;
@@ -97,10 +95,6 @@ class _SessionSelectionScreenState
     final assessmentEnabled =
         ref.watch(variantPodProvider).value?.assessmentEnabled ?? true;
 
-    showEvaluationHint =
-        assessmentEnabled &&
-        (sharedPreferences.getBool(StorageKey.showEvaluationHint.key) ?? false);
-
     hasAssessment =
         assessmentEnabled &&
         (moduleAssessmentSet.preAssessment.isDefined ||
@@ -118,14 +112,6 @@ class _SessionSelectionScreenState
             ),
             backgroundColor: moduleTheme.color,
             actions: [
-              if (hasAssessment && assessmentEnabled)
-                IconButton(
-                  icon: const Icon(Icons.analytics_outlined),
-                  onPressed: () => context.goNamed(
-                    "assessment_evaluation",
-                    pathParameters: {"moduleID": moduleAssessmentSet.module.id},
-                  ),
-                ),
               IconButton(
                 icon: const Icon(Icons.flag),
                 onPressed: () {
@@ -219,8 +205,6 @@ class _SessionSelectionScreenState
                 _preAssessment(context, moduleAssessmentSet.preAssessment),
               if (assessmentEnabled)
                 ..._postAssessment(context, moduleAssessmentSet),
-              if (assessmentEnabled)
-                _evaluation(context, moduleAssessmentSet.module),
             ],
           ),
         ),
@@ -513,47 +497,6 @@ class _SessionSelectionScreenState
         ),
       ),
     ];
-  }
-
-  Widget _evaluation(BuildContext context, Module module) {
-    final theme = Theme.of(context);
-
-    return Visibility(
-      visible: showEvaluationHint,
-      child: Stack(
-        children: [
-          Blur(blurColor: theme.moduleTheme.color, child: Container()),
-          AmslDialog(
-            onClose: () => setState(() {
-              sharedPreferences.setBool(
-                StorageKey.showEvaluationHint.key,
-                false,
-              );
-            }),
-            bottomBar: true,
-            buttonBar: [
-              RoundedCornerButton(
-                label: "Zur Evaluation",
-                onTap: () {
-                  setState(() {
-                    sharedPreferences.setBool(
-                      StorageKey.showEvaluationHint.key,
-                      false,
-                    );
-                  });
-                  context.goNamed(
-                    "assessment_evaluation",
-                    pathParameters: {"moduleID": module.id},
-                  );
-                },
-              ),
-            ],
-            content:
-                "Du hast deinen ersten Selbsttest abgeschlossen. Du kannst über das Icon oben rechts auf die Auswertung zugreifen.",
-          ),
-        ],
-      ),
-    );
   }
 
   List<Widget> _header(BuildContext context, double maxWidth, Module module) {
