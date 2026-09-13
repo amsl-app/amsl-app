@@ -48,6 +48,14 @@ class Settings extends HookConsumerWidget {
                   context.goNamed('notification_settings');
                 },
               ),
+              const Gap(16),
+              SettingsButton(
+                label: "Leistungsnachweise",
+                icon: Icons.workspace_premium_outlined,
+                onTap: () {
+                  context.goNamed('transcript_records');
+                },
+              ),
               if (journalEnabled) const Gap(16),
               if (journalEnabled)
                 SettingsButton(
