@@ -130,12 +130,12 @@ the backend's evaluation logic.
 
 ## Testing
 
-- Widget test for `TranscriptRecordTile`: locked (checklist rendering) vs
-  unlocked (export button) states.
-- Provider test for `transcriptRecordsProvider` against a mocked Hikari
-  client returning fixture JSON matching the contract above.
-- No test coverage for `TranscriptPdfGenerator` itself — consistent with
-  the existing `journal/pdf/pdf_generator.dart`, which has none either.
+This repo currently has no `test/` directory and no mocking library
+(`mockito`/`get_it`) in `pubspec.yaml` — no feature in the codebase has
+automated tests today. Bootstrapping test infrastructure is out of scope
+for this feature; verification is `flutter analyze` plus manual smoke
+testing in a running app, consistent with existing precedent (e.g.
+`journal/pdf/pdf_generator.dart` has no test coverage either).
 
 ## Open item for backend coordination
 
