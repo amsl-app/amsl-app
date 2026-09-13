@@ -58,7 +58,7 @@ final class ModuleNotifierProvider
   ModuleNotifier create() => ModuleNotifier();
 }
 
-String _$moduleNotifierHash() => r'8d5b5c406c03248f1c74d3021cc9468ab4161062';
+String _$moduleNotifierHash() => r'ca7a80721adee4babb898650eee8aec4d7f18c5c';
 
 abstract class _$ModuleNotifier
     extends $AsyncNotifier<Map<String, ModuleAssessmentSet>> {

@@ -46,7 +46,7 @@ final class FocusProvider
   Focus create() => Focus();
 }
 
-String _$focusHash() => r'27e70e77ebd9ce0c8da7c79de7d5c47a002e0db3';
+String _$focusHash() => r'bea10d2a1956ae81eb11bd2ca42090cc92dd85ec';
 
 abstract class _$Focus extends $AsyncNotifier<Map<String, JournalFocus>> {
   FutureOr<Map<String, JournalFocus>> build();
