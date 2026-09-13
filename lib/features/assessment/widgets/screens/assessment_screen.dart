@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:amsl_app/constants.dart';
 import 'package:amsl_app/features/assessment/providers/assessment_sessions.dart';
 import 'package:amsl_app/features/assessment/widgets/elements/answer_field.dart';
@@ -9,7 +11,6 @@ import 'package:amsl_app/hikari/exception.dart';
 import 'package:amsl_app/models/hikari/assessments/assessment_session.dart'
     show AssessmentType;
 import 'package:amsl_app/widgets/async_value_extension.dart';
-import 'package:amsl_app/widgets/loading/skeleton_loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -17,6 +18,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:scrollable_positioned_list/scrollable_positioned_list.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:shimmer/shimmer.dart';
 
 import '../../../../models/tori/assessments/assessment_session.dart';
 import '../../../../models/tori/assessments/question.dart';
@@ -99,7 +101,7 @@ class _AssessmentScreenState extends ConsumerState<AssessmentScreen> {
       return Stack(
         children: [
           _build(context, assessmentSession!),
-          if (loading) const SkeletonLoadingScreen(goBackAllowed: true),
+          if (loading) const _AssessmentSkeleton(),
         ],
       );
     }
@@ -116,7 +118,7 @@ class _AssessmentScreenState extends ConsumerState<AssessmentScreen> {
       });
     }
 
-    return SkeletonLoadingScreen(goBackAllowed: true);
+    return const _AssessmentSkeleton();
   }
 
   Widget _buildSelfAssessmentFlow(
@@ -127,7 +129,7 @@ class _AssessmentScreenState extends ConsumerState<AssessmentScreen> {
       return Stack(
         children: [
           _build(context, assessmentSession!),
-          if (loading) const SkeletonLoadingScreen(goBackAllowed: true),
+          if (loading) const _AssessmentSkeleton(),
         ],
       );
     }
@@ -153,7 +155,7 @@ class _AssessmentScreenState extends ConsumerState<AssessmentScreen> {
       });
     }
 
-    return const SkeletonLoadingScreen(goBackAllowed: true);
+    return const _AssessmentSkeleton();
   }
 
   void close(BuildContext context) {
@@ -375,7 +377,7 @@ class _AssessmentScreenState extends ConsumerState<AssessmentScreen> {
                   buttonColor: allAnswered(assessmentSession)
                       ? theme.colorScheme.primary
                       : theme.colorScheme.surfaceContainer,
-                  label: "Abschließen",
+                  label: _submitButtonLabel(),
                   onTap: () => submit(context),
                 ),
                 Gap(getBottomBarPadding(context)),
@@ -400,6 +402,17 @@ class _AssessmentScreenState extends ConsumerState<AssessmentScreen> {
     );
   }
 
+  String _submitButtonLabel() {
+    switch (widget.flow) {
+      case ModuleAssessmentFlow():
+        return "Abschließen";
+      case SelfAssessmentFlow(:final assessmentIds):
+        return selfAssessmentIndex + 1 < assessmentIds.length
+            ? "Weiter"
+            : "Abschließen";
+    }
+  }
+
   bool allAnswered(ToriAssessmentSession assessment) {
     for (Question q in assessment.questions.values) {
       if (q.answer == null) return false;
@@ -420,5 +433,78 @@ class _AssessmentScreenState extends ConsumerState<AssessmentScreen> {
     setState(() {
       notAnswered.clear();
     });
+  }
+}
+
+class _AssessmentSkeleton extends StatelessWidget {
+  const _AssessmentSkeleton();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final bgColor = theme.colorScheme.surface;
+    final lineColor = bgColor.withValues(
+      red: max(bgColor.r - 0.1, 0),
+      green: max(bgColor.g - 0.1, 0),
+      blue: max(bgColor.b - 0.1, 0),
+    );
+    final highlightColor = lineColor.withValues(
+      red: min(lineColor.r + 0.15, 255),
+      green: min(lineColor.g + 0.15, 255),
+      blue: min(lineColor.b + 0.15, 255),
+    );
+
+    Widget line({double width = double.infinity}) => Container(
+      height: 20,
+      width: width,
+      decoration: BoxDecoration(
+        color: lineColor,
+        borderRadius: BorderRadius.circular(4),
+      ),
+    );
+
+    Widget box() => Container(
+      height: 36,
+      width: 36,
+      decoration: BoxDecoration(
+        color: lineColor,
+        borderRadius: BorderRadius.circular(12),
+      ),
+    );
+
+    Widget question() => Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 20.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          line(width: 220),
+          const Gap(12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: List.generate(5, (_) => box()),
+          ),
+        ],
+      ),
+    );
+
+    return Scaffold(
+      backgroundColor: bgColor,
+      appBar: AppBar(
+        scrolledUnderElevation: 0.0,
+        titleSpacing: 0,
+        backgroundColor: bgColor,
+      ),
+      body: SafeArea(
+        child: Shimmer.fromColors(
+          baseColor: lineColor,
+          highlightColor: highlightColor,
+          period: const Duration(milliseconds: 3000),
+          child: ListView(
+            physics: const NeverScrollableScrollPhysics(),
+            children: List.generate(5, (_) => question()),
+          ),
+        ),
+      ),
+    );
   }
 }

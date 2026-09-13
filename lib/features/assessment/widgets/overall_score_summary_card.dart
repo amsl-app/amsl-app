@@ -33,7 +33,7 @@ class OverallScoreSummaryCard extends StatelessWidget {
       bottomBar: true,
       onClose: () => context.pop(),
       child: DataPointsSheet(
-        title: "Gesamtwert",
+        title: "Gesamtwert (pro Tag)",
         values: values,
         description: null,
       ),
