@@ -2,6 +2,7 @@ import 'package:amsl_app/hikari/apis/hikari_assessment_api.dart';
 import 'package:amsl_app/hikari/apis/hikari_journal_api.dart';
 import 'package:amsl_app/hikari/apis/hikari_planner_api.dart';
 import 'package:amsl_app/hikari/apis/hikari_quiz_api.dart';
+import 'package:amsl_app/hikari/apis/hikari_transcript_api.dart';
 import 'package:amsl_app/hikari/hikari_api.dart';
 import 'package:logging/logging.dart';
 
@@ -20,6 +21,7 @@ class Hikari {
   final HikariUtilApi utilApi;
   final HikariQuizApi quizApi;
   final HikariPlannerApi plannerApi;
+  final HikariTranscriptApi transcriptApi;
 
   Hikari({required this.apiClient})
     : assessmentApi = HikariAssessmentApi(apiClient),
@@ -28,5 +30,6 @@ class Hikari {
       userApi = HikariUserApi(apiClient),
       utilApi = HikariUtilApi(apiClient),
       quizApi = HikariQuizApi(apiClient),
-      plannerApi = HikariPlannerApi(apiClient);
+      plannerApi = HikariPlannerApi(apiClient),
+      transcriptApi = HikariTranscriptApi(apiClient);
 }
