@@ -5,16 +5,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'error/error_bar.dart';
 
 extension AsyncValueHandler<T> on AsyncValue<T> {
-  /// Returns the value if it's available (AsyncData), or null otherwise.
-  T? get valueOrNull {
-    switch (this) {
-      case AsyncData(value: final value):
-        return value;
-      case AsyncLoading() || AsyncError():
-        return null;
-    }
-  }
-
   Widget build(
     BuildContext context, {
     required Widget Function(BuildContext context, T? data) builder,

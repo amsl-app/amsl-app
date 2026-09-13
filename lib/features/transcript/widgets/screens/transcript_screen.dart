@@ -12,7 +12,7 @@ class TranscriptScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final asyncRecords = ref.watch(transcriptRecordsProvider);
-    final userId = ref.watch(userPodProvider).valueOrNull?.id;
+    final userId = ref.watch(userPodProvider).value?.id;
     final theme = Theme.of(context);
 
     return Scaffold(
