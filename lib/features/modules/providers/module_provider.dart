@@ -149,9 +149,8 @@ class ModuleNotifier extends _$ModuleNotifier {
 
     try {
       final module = await _loadSingleModuleFromApi(hikari, moduleID: moduleID);
-      update((state) async {
-        state[moduleID] = module;
-        return state;
+      await update((state) async {
+        return {...state, moduleID: module};
       });
       return module;
     } on HikariException catch (e, s) {
@@ -203,16 +202,16 @@ class ModuleNotifier extends _$ModuleNotifier {
 
     try {
       await hikari.moduleApi.abortModule(moduleId: moduleId);
-      update((state) {
-        Module module = state[moduleId]!.module;
+      await update((state) {
+        final module = state[moduleId]!.module;
 
-        for (Session session in module.sessions.values) {
-          session = session.copyWith(
+        for (Session session in module.sessions.values.toList()) {
+          module.sessions[session.id] = session.copyWith(
             status: hikari_session.SessionStatus.notStarted,
             completion: null,
           );
         }
-        return state;
+        return {...state};
       });
     } on HikariException catch (e) {
       throw e.copyWith(resolve: () => abortModule(moduleId: moduleId));
@@ -222,7 +221,7 @@ class ModuleNotifier extends _$ModuleNotifier {
   void setSessionStatusLocal(
     Session session,
     hikari_session.SessionStatus sessionStatus,
-  ) {
+  ) async {
     if (session.status == sessionStatus) {
       return;
     }
@@ -239,10 +238,10 @@ class ModuleNotifier extends _$ModuleNotifier {
       );
     }
 
-    update((state) {
+    await update((state) {
       state[session.module.target!.id]!.module.sessions[session.id] = session
           .copyWith(status: sessionStatus, completion: completion);
-      return state;
+      return {...state};
     });
   }
 }

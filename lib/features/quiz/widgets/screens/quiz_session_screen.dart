@@ -281,7 +281,6 @@ class _QuizSessionScreenState extends ConsumerState<QuizSessionScreen> {
     String questionID,
     String answer,
   ) async {
-    debugPrint("Sending answer: $answer");
     await showDialog(
       context: context,
       builder: (context) {

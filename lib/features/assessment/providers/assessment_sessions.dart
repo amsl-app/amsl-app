@@ -1,12 +1,11 @@
 import 'package:amsl_app/hikari/exception.dart';
-import 'package:amsl_app/models/tori/assessments/assessment_session.dart';
 import 'package:amsl_app/models/hikari/assessments/assessment_session.dart'
     as hikari_assessment;
+import 'package:amsl_app/models/tori/assessments/assessment_session.dart';
 import 'package:logging/logging.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../hikari/hikari.dart';
-import '../../../models/tori/assessments/question.dart';
 import '../../../providers/hikari_provider.dart';
 
 part 'assessment_sessions.g.dart';
@@ -78,9 +77,8 @@ class AssessmentSessions extends _$AssessmentSessions {
         assessmentId: assessmentId,
         sessionID: sessionID,
       );
-      update((state) {
-        state[sessionID] = session;
-        return state;
+      await update((state) {
+        return {...state, sessionID: session};
       });
       return session;
     } on HikariException catch (e, s) {
@@ -146,15 +144,6 @@ class AssessmentSessions extends _$AssessmentSessions {
     );
   }
 
-  void saveAssessmentLocally(ToriAssessmentSession assessmentSession) {
-    update((state) {
-      for (Question q in assessmentSession.questions.values) {
-        state[assessmentSession.sessionId]!.questions[q.id]!.answer = q.answer;
-      }
-      return state;
-    });
-  }
-
   Future<void> submitAssessment({
     required ToriAssessmentSession assessmentSession,
   }) async {
@@ -171,14 +160,15 @@ class AssessmentSessions extends _$AssessmentSessions {
         sessionID: assessmentSession.sessionId,
         body: body,
       );
-      saveAssessmentLocally(assessmentSession);
-      update((state) {
-        final session = state[assessmentSession.sessionId];
-        state[assessmentSession.sessionId] = session!.copyWith(
-          completed: DateTime.now(),
-          status: hikari_assessment.AssessmentStatus.finished,
-        );
-        return state;
+
+      await update((state) {
+        return {
+          ...state,
+          assessmentSession.sessionId: assessmentSession.copyWith(
+            status: hikari_assessment.AssessmentStatus.finished,
+            completed: DateTime.now(),
+          ),
+        };
       });
     } on HikariException catch (e) {
       throw e.copyWith(

@@ -7,6 +7,7 @@ import 'package:amsl_app/models/tori/assessments/assessment.dart';
 import 'package:amsl_app/widgets/async_value_extension.dart';
 import 'package:amsl_app/widgets/buttons/rounded_corner_button.dart';
 import 'package:amsl_app/widgets/buttons/secondary_button.dart';
+import 'package:amsl_app/widgets/loading/skeleton_loading_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:go_router/go_router.dart';
@@ -34,6 +35,9 @@ class SelfAssessmentOverviewScreen extends ConsumerWidget {
         context,
         builder: (context, config) => SelfAssessmentContent(
           assessments: config?.shownAssessments.toList() ?? const [],
+        ),
+        loadingBuilder: (context) => SkeletonLoadingScreen(
+          backgroundColor: theme.colorScheme.tertiaryContainer,
         ),
       ),
     );

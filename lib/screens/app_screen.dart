@@ -9,7 +9,6 @@ import 'package:amsl_app/features/profile/providers/variant_provider.dart';
 import 'package:amsl_app/features/preferences/storage_keys.dart';
 import 'package:amsl_app/features/preferences/storages.dart';
 import 'package:amsl_app/features/tracking/tracking.dart';
-import 'package:amsl_app/models/tori/assessments/assessment_session.dart';
 import 'package:amsl_app/models/tori/modules/module_configuration.dart';
 import 'package:amsl_app/providers/hikari_provider.dart';
 import 'package:amsl_app/variants.dart';
@@ -74,18 +73,6 @@ class _AppScreenState extends ConsumerState<AppScreen>
       }),
 
       ref.listenManual(assessmentSessionsProvider, (previous, next) {
-        final Map<String, ToriAssessmentSession>? oldSessions;
-        final Map<String, ToriAssessmentSession>? newSessions;
-        try {
-          oldSessions = previous?.value;
-          newSessions = next.value;
-        } on HikariNotInitializedException catch (e) {
-          log.info("Ignoring error: $e");
-          return;
-        }
-
-        if (newSessions == null || newSessions == oldSessions) return;
-
         ref.read(assessmentPodProvider.notifier).reloadAssessments();
       }),
 
@@ -108,25 +95,28 @@ class _AppScreenState extends ConsumerState<AppScreen>
               ?.value,
         );
       }, fireImmediately: true),
+      ref.listenManual<AsyncValue<Variant>>(variantPodProvider, (
+        previous,
+        next,
+      ) {
+        final variantName = next.value?.variantName;
+        if (variantName != null) {
+          trackDimension(
+            dimension: TrackingDimension.variant,
+            value: variantName,
+          );
+        }
+      }),
     ]);
-
-    ref.listenManual<AsyncValue<Variant>>(variantPodProvider, (previous, next) {
-      final variantName = next.value?.variantName;
-      if (variantName != null) {
-        trackDimension(
-          dimension: TrackingDimension.variant,
-          value: variantName,
-        );
-      }
-    });
   }
 
   @override
   void dispose() {
+    log.info("AppScreenState dispose called");
     WidgetsBinding.instance.removeObserver(this);
-    // for (final listener in listeners) {
-    //   listener.close();
-    // }
+    for (final listener in listeners) {
+      listener.close();
+    }
     super.dispose();
   }
 
