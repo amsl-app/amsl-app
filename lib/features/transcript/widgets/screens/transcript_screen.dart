@@ -30,28 +30,28 @@ class TranscriptScreen extends ConsumerWidget {
         ),
         backgroundColor: theme.colorScheme.surface,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 20.0),
-        child: asyncRecords.build(
-          context,
-          builder: (context, records) {
-            if (records == null || records.isEmpty) {
-              return Center(
-                child: Text(
-                  "Du hast keine Leistungsnachweise. Füge neue Module hinzu, um Leistungsnachweise zu freizuschalten.",
-                  style: theme.textTheme.bodyLarge,
-                  textAlign: TextAlign.center,
-                ),
-              );
-            }
-            return ListView.separated(
+      body: asyncRecords.build(
+        context,
+        builder: (context, records) {
+          if (records == null || records.isEmpty) {
+            return Center(
+              child: Text(
+                "Du hast keine Leistungsnachweise. Füge neue Module hinzu, um Leistungsnachweise zu freizuschalten.",
+                style: theme.textTheme.bodyLarge,
+                textAlign: TextAlign.center,
+              ),
+            );
+          }
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: ListView.separated(
               itemCount: records.length,
               separatorBuilder: (context, index) => const Gap(12),
               itemBuilder: (context, index) =>
                   TranscriptRecordTile(record: records[index], userId: userId),
-            );
-          },
-        ),
+            ),
+          );
+        },
       ),
     );
   }

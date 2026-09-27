@@ -24,22 +24,36 @@ class TranscriptPdfGenerator {
       name: record.id,
     );
 
-    final pdf = pw.Document();
-    final widget = await _buildPdf(record, userId);
+    File? file;
+    try {
+      final pdf = pw.Document();
+      final widget = await _buildPdf(record, userId);
 
-    pdf.addPage(
-      pw.MultiPage(
-        pageFormat: PdfPageFormat.a4,
-        build: (pw.Context context) => [widget],
-      ),
-    );
+      pdf.addPage(
+        pw.MultiPage(
+          pageFormat: PdfPageFormat.a4,
+          build: (pw.Context context) => [widget],
+        ),
+      );
 
-    final bytes = await pdf.save();
-    final dir = await getApplicationDocumentsDirectory();
-    final file = File('${dir.path}/${record.id}.pdf');
-    await file.writeAsBytes(bytes);
-    await OpenFile.open(file.path);
-    file.delete();
+      final bytes = await pdf.save();
+      final dir = await getApplicationDocumentsDirectory();
+      file = File('${dir.path}/${record.id}.pdf');
+      await file.writeAsBytes(bytes);
+      await OpenFile.open(file.path);
+    } catch (e, stackTrace) {
+      log.warning(
+        "Failed to export transcript record ${record.id}",
+        e,
+        stackTrace,
+      );
+    } finally {
+      try {
+        await file?.delete();
+      } catch (e, stackTrace) {
+        log.warning("Failed to delete temporary transcript PDF", e, stackTrace);
+      }
+    }
   }
 
   static Future<pw.Widget> _buildPdf(

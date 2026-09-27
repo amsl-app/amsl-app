@@ -69,7 +69,9 @@ class Settings extends HookConsumerWidget {
                       ?.value
                       .onboarding
                       ?.module;
-                  if (onboarding == null) {
+                  if (onboarding == null ||
+                      (onboarding.defaultSession == null &&
+                          onboarding.sessions.isEmpty)) {
                     showMessage(
                       context,
                       label: "Onboarding ist aktuell nicht verfügbar.",
