@@ -176,11 +176,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     );
   }
 
-  Future _onClose({
-    required Session session,
-    required bool isConversationEnd,
-    bool abort = false,
-  }) async {
+  Future _onClose({required Session session, bool abort = false}) async {
     FocusManager.instance.primaryFocus?.unfocus();
 
     if (abort) {
@@ -196,7 +192,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     }
 
     // Check if forced next session popup should be shown
-    if (isConversationEnd && session.next != null && session.next!.force) {
+    if (session.next != null && session.next!.force) {
       final nextSession = session.resolveNext(
         ref.read(moduleConfigurationProviderProvider).value,
       );
@@ -430,11 +426,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                       ],
                     ),
                     onTap: () async {
-                      await _onClose(
-                        session: session,
-                        isConversationEnd: false,
-                        abort: true,
-                      );
+                      await _onClose(session: session, abort: true);
                     },
                   ),
                 if (session.sources.isNotEmpty)
@@ -525,12 +517,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
       leading: IconButton(
         icon: const Icon(Icons.close),
         onPressed: () {
-          _onClose(
-            session: session,
-            isConversationEnd: ref
-                .watch(chatProvider(channel))
-                .isConversationEnd,
-          );
+          _onClose(session: session);
           FocusManager.instance.primaryFocus?.unfocus();
         },
       ),

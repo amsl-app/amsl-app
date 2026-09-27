@@ -39,7 +39,7 @@ class QuizScoreProvider extends _$QuizScoreProvider {
     final hikari = ref.read(hikariPodProvider);
     final module_scores = await _loadScoresByModule(hikari, moduleId);
 
-    update((state) async {
+    await update((state) async {
       final currentScores = state;
       final filteredScores = currentScores
           .where((score) => score.moduleId != moduleId)

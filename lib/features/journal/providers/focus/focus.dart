@@ -56,12 +56,14 @@ class Focus extends _$Focus {
       );
       await update((state) async {
         JournalFocus focus = state[focusID]!;
-        state[focusID] = focus.copyWith(
-          name: name ?? focus.name,
-          iconString: icon ?? focus.iconString,
-          hidden: hidden ?? focus.hidden,
-        );
-        return state;
+        return {
+          ...state,
+          focusID: focus.copyWith(
+            name: name ?? focus.name,
+            iconString: icon ?? focus.iconString,
+            hidden: hidden ?? focus.hidden,
+          ),
+        };
       });
     } on HikariException catch (e) {
       throw e.copyWith(
@@ -81,9 +83,8 @@ class Focus extends _$Focus {
         name: name,
       );
       focus = JournalFocus.fromHikari(hikariFocus);
-      update((state) async {
-        state[focus.id] = focus;
-        return state;
+      await update((state) async {
+        return {...state, focus.id: focus};
       });
       return focus.id;
     } on HikariException catch (e) {

@@ -1,6 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'focus.dart';
+part of 'assessments.dart';
 
 // **************************************************************************
 // RiverpodGenerator
@@ -9,24 +9,24 @@ part of 'focus.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 
-@ProviderFor(Focus)
-final focusProvider = FocusProvider._();
+@ProviderFor(AssessmentPod)
+final assessmentPodProvider = AssessmentPodProvider._();
 
-final class FocusProvider
-    extends $AsyncNotifierProvider<Focus, Map<String, JournalFocus>> {
-  FocusProvider._()
+final class AssessmentPodProvider
+    extends $AsyncNotifierProvider<AssessmentPod, AssessmentConfiguration> {
+  AssessmentPodProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
-        name: r'focusProvider',
+        name: r'assessmentPodProvider',
         isAutoDispose: false,
         dependencies: <ProviderOrFamily>[hikariPodProvider],
         $allTransitiveDependencies: <ProviderOrFamily>{
-          FocusProvider.$allTransitiveDependencies0,
-          FocusProvider.$allTransitiveDependencies1,
-          FocusProvider.$allTransitiveDependencies2,
-          FocusProvider.$allTransitiveDependencies3,
+          AssessmentPodProvider.$allTransitiveDependencies0,
+          AssessmentPodProvider.$allTransitiveDependencies1,
+          AssessmentPodProvider.$allTransitiveDependencies2,
+          AssessmentPodProvider.$allTransitiveDependencies3,
         },
       );
 
@@ -39,34 +39,34 @@ final class FocusProvider
       HikariPodProvider.$allTransitiveDependencies2;
 
   @override
-  String debugGetCreateSourceHash() => _$focusHash();
+  String debugGetCreateSourceHash() => _$assessmentPodHash();
 
   @$internal
   @override
-  Focus create() => Focus();
+  AssessmentPod create() => AssessmentPod();
 }
 
-String _$focusHash() => r'bea10d2a1956ae81eb11bd2ca42090cc92dd85ec';
+String _$assessmentPodHash() => r'f1fa3ae3688320a160beec65e4a8b30ef9e4e647';
 
-abstract class _$Focus extends $AsyncNotifier<Map<String, JournalFocus>> {
-  FutureOr<Map<String, JournalFocus>> build();
+abstract class _$AssessmentPod extends $AsyncNotifier<AssessmentConfiguration> {
+  FutureOr<AssessmentConfiguration> build();
   @$mustCallSuper
   @override
   void runBuild() {
     final ref =
         this.ref
             as $Ref<
-              AsyncValue<Map<String, JournalFocus>>,
-              Map<String, JournalFocus>
+              AsyncValue<AssessmentConfiguration>,
+              AssessmentConfiguration
             >;
     final element =
         ref.element
             as $ClassProviderElement<
               AnyNotifier<
-                AsyncValue<Map<String, JournalFocus>>,
-                Map<String, JournalFocus>
+                AsyncValue<AssessmentConfiguration>,
+                AssessmentConfiguration
               >,
-              AsyncValue<Map<String, JournalFocus>>,
+              AsyncValue<AssessmentConfiguration>,
               Object?,
               Object?
             >;
