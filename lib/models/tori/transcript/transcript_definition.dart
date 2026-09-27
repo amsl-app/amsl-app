@@ -1,4 +1,4 @@
-import 'package:amsl_app/features/transcript/models/transcript_condition.dart';
+import 'package:amsl_app/models/tori/transcript/transcript_condition.dart';
 
 /// A single catalog entry: what it's called, and the conditions that must
 /// all be met (AND) for it to unlock. See `transcript_catalog.dart` for the

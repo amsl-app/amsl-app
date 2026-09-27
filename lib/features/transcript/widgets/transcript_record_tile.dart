@@ -1,5 +1,5 @@
 import 'package:amsl_app/features/transcript/repository/transcript_pdf_generator.dart';
-import 'package:amsl_app/models/tori/transcript/transcript_record.dart';
+import 'package:amsl_app/features/transcript/models/transcript_record.dart';
 import 'package:amsl_app/widgets/buttons/rounded_corner_button.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';

@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:amsl_app/constants.dart';
 import 'package:amsl_app/features/tracking/tracking.dart';
-import 'package:amsl_app/models/tori/transcript/transcript_record.dart';
+import 'package:amsl_app/features/transcript/models/transcript_record.dart';
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
 import 'package:open_file/open_file.dart';

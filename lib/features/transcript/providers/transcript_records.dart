@@ -5,9 +5,9 @@ import 'package:amsl_app/features/modules/providers/module_provider.dart';
 import 'package:amsl_app/features/planner/providers/goals.dart';
 import 'package:amsl_app/features/planner/providers/milestone.dart';
 import 'package:amsl_app/features/planner/providers/planner.dart';
-import 'package:amsl_app/features/transcript/models/transcript_condition.dart';
-import 'package:amsl_app/features/transcript/transcript_catalog.dart';
-import 'package:amsl_app/models/tori/transcript/transcript_record.dart';
+import 'package:amsl_app/features/transcript/models/transcript_record.dart';
+import 'package:amsl_app/models/tori/transcript/transcript_catalog.dart';
+import 'package:amsl_app/models/tori/transcript/transcript_condition.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 part 'transcript_records.g.dart';

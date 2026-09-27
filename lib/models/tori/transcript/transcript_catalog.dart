@@ -1,5 +1,5 @@
-import 'package:amsl_app/features/transcript/models/transcript_condition.dart';
-import 'package:amsl_app/features/transcript/models/transcript_definition.dart';
+import 'package:amsl_app/models/tori/transcript/transcript_condition.dart';
+import 'package:amsl_app/models/tori/transcript/transcript_definition.dart';
 
 /// The catalog of transcripts of record shown in the "Leistungsnachweise"
 /// screen. Edit this list to configure real module/session/assessment IDs,
