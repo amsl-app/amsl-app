@@ -77,3 +77,4 @@ makefile
 # Agents
 .claude/agent-memory
 .superpowers/
+/docs/superpowers/
