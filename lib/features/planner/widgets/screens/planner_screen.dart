@@ -48,19 +48,15 @@ class PlannerScreen extends HookConsumerWidget {
             icon: Icon(Icons.add, color: theme.colorScheme.onTertiaryContainer),
             itemBuilder: (context) => [
               PopupMenuItem(
-                onTap: () => showCreateEntrySheet(
-                  context,
-                  ref,
-                  initialDate: tabController.index == 1 ? selectedDate : null,
-                ),
+                onTap: () => showCreateGoalSheet(context, ref),
                 child: Row(
                   children: [
                     Icon(
-                      Icons.checklist_rtl,
+                      Icons.emoji_events_outlined,
                       color: theme.colorScheme.onSurface,
                     ),
                     const Gap(8.0),
-                    Text('Neue Aktivität', style: theme.textTheme.bodyMedium),
+                    Text('Neues Ziel', style: theme.textTheme.bodyMedium),
                   ],
                 ),
               ),
@@ -85,15 +81,19 @@ class PlannerScreen extends HookConsumerWidget {
                 ),
               ),
               PopupMenuItem(
-                onTap: () => showCreateGoalSheet(context, ref),
+                onTap: () => showCreateEntrySheet(
+                  context,
+                  ref,
+                  initialDate: tabController.index == 1 ? selectedDate : null,
+                ),
                 child: Row(
                   children: [
                     Icon(
-                      Icons.emoji_events_outlined,
+                      Icons.checklist_rtl,
                       color: theme.colorScheme.onSurface,
                     ),
                     const Gap(8.0),
-                    Text('Neues Ziel', style: theme.textTheme.bodyMedium),
+                    Text('Neue Aktivität', style: theme.textTheme.bodyMedium),
                   ],
                 ),
               ),
