@@ -1,5 +1,4 @@
 import 'package:amsl_app/models/hikari/modules/module.dart' as hikari_module;
-import 'package:amsl_app/models/hikari/modules/session.dart' as hikari_session;
 import 'package:amsl_app/models/tori/modules/session.dart';
 import 'package:amsl_app/models/tori/theme/module_theme.dart';
 import 'package:collection/collection.dart';
@@ -147,15 +146,12 @@ class Module {
   // if any session is started
   bool get started {
     if (completion != null) return true; // have to be started to be completed
-
-    for (Session session in sessions.values) {
-      if (session.status != hikari_session.SessionStatus.notStarted ||
-          session.completion != null) {
-        return true;
-      }
-    }
-    return false;
+    return sessions.values.any((session) => session.started);
   }
+
+  /// The session to begin at: the configured default, or the first session
+  /// if none is set.
+  Session get startSession => defaultSession ?? sessions.valueAt(0);
 }
 
 class ModuleVariant {

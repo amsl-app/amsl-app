@@ -22,6 +22,7 @@ import 'package:amsl_app/features/quiz/widgets/screens/module_quiz_screen.dart';
 import 'package:amsl_app/features/quiz/widgets/screens/quiz.dart';
 import 'package:amsl_app/features/quiz/widgets/screens/quiz_session_screen.dart';
 import 'package:amsl_app/features/tracking/tracking.dart';
+import 'package:amsl_app/features/transcript/widgets/screens/transcript_screen.dart';
 import 'package:amsl_app/features/upgrade_check/upgrade_alert.dart';
 import 'package:amsl_app/models/hikari/assessments/assessment_session.dart'
     as hikari_assessment;
@@ -308,6 +309,12 @@ GoRouter createRouterDelegate(LoginState logInState) {
                     path: 'profile/focus_settings',
                     builder: (BuildContext context, GoRouterState state) =>
                         const FocusSettings(),
+                  ),
+                  GoRoute(
+                    name: 'transcript_records',
+                    path: 'profile/transcript_records',
+                    builder: (BuildContext context, GoRouterState state) =>
+                        const TranscriptScreen(),
                   ),
                   GoRoute(
                     name: 'debug_settings',

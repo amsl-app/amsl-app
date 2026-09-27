@@ -20,6 +20,7 @@ flowchart LR
   ChatRepositoryNotifier --> ChatChannelRepositoryNotifier
   ChatStreamNotifier --> ChatControllerNotifier
   Focus --> HikariPod
+  GoalPod --> HikariPod
   HikariPod --> AsyncLoginNotifier
   HikariPod --> login
   HistoryProvider --> AssessmentSessions
@@ -28,6 +29,8 @@ flowchart LR
   IcalTokenProvider --> HikariPod
   Journal --> HikariPod
   Journal --> VariantPod
+  MilestonePod --> HikariPod
+  MilestonePod --> PlannerPod
   ModuleConfigurationProvider --> HikariPod
   ModuleConfigurationProvider --> ModuleGroupsProvider
   ModuleConfigurationProvider --> ModuleNotifier
@@ -36,7 +39,11 @@ flowchart LR
   ModuleNotifier --> HikariPod
   ModuleNotifier --> ModuleGroupsProvider
   PDFStore --> HikariPod
-  PlannerProvider --> HikariPod
+  PlannerConfigPod --> GoalPod
+  PlannerConfigPod --> HikariPod
+  PlannerConfigPod --> MilestonePod
+  PlannerConfigPod --> PlannerPod
+  PlannerPod --> HikariPod
   Preferences --> storages
   QuizProvider --> HikariPod
   QuizScoreProvider --> HikariPod
@@ -50,6 +57,12 @@ flowchart LR
   login --> AsyncLoginNotifier
   tools --> ModuleConfigurationProvider
   tools --> VariantPod
+  transcriptRecords --> AssessmentSessions
+  transcriptRecords --> GoalPod
+  transcriptRecords --> Journal
+  transcriptRecords --> MilestonePod
+  transcriptRecords --> ModuleNotifier
+  transcriptRecords --> PlannerPod
   class MinVersion root;
   class packageInfo root;
   class storages root;
