@@ -9,15 +9,23 @@ part of 'transcript_records.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Evaluates [transcriptCatalog] against currently-loaded app state. No
-/// network call — every dependency here is a `keepAlive` provider already
-/// populated for the rest of the app.
+/// dedicated transcript-records network call — this reuses the app's
+/// existing `keepAlive` providers, each of which fetches from Hikari on
+/// its own first use and is cached afterward. Because this awaits all six
+/// via `Future.wait`, any one of them failing surfaces as an error for
+/// this whole screen (consistent with how `moduleProvider` itself already
+/// composes multiple providers) rather than degrading per-condition.
 
 @ProviderFor(transcriptRecords)
 final transcriptRecordsProvider = TranscriptRecordsProvider._();
 
 /// Evaluates [transcriptCatalog] against currently-loaded app state. No
-/// network call — every dependency here is a `keepAlive` provider already
-/// populated for the rest of the app.
+/// dedicated transcript-records network call — this reuses the app's
+/// existing `keepAlive` providers, each of which fetches from Hikari on
+/// its own first use and is cached afterward. Because this awaits all six
+/// via `Future.wait`, any one of them failing surfaces as an error for
+/// this whole screen (consistent with how `moduleProvider` itself already
+/// composes multiple providers) rather than degrading per-condition.
 
 final class TranscriptRecordsProvider
     extends
@@ -30,8 +38,12 @@ final class TranscriptRecordsProvider
         $FutureModifier<List<TranscriptRecord>>,
         $FutureProvider<List<TranscriptRecord>> {
   /// Evaluates [transcriptCatalog] against currently-loaded app state. No
-  /// network call — every dependency here is a `keepAlive` provider already
-  /// populated for the rest of the app.
+  /// dedicated transcript-records network call — this reuses the app's
+  /// existing `keepAlive` providers, each of which fetches from Hikari on
+  /// its own first use and is cached afterward. Because this awaits all six
+  /// via `Future.wait`, any one of them failing surfaces as an error for
+  /// this whole screen (consistent with how `moduleProvider` itself already
+  /// composes multiple providers) rather than degrading per-condition.
   TranscriptRecordsProvider._()
     : super(
         from: null,
@@ -101,4 +113,4 @@ final class TranscriptRecordsProvider
   }
 }
 
-String _$transcriptRecordsHash() => r'04e12de531804231380fb6c21d3f024bc3afa7bb';
+String _$transcriptRecordsHash() => r'bb449196fb026e791b9994f767e50f1d090d4fe8';

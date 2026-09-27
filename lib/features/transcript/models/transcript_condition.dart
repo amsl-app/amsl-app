@@ -152,7 +152,9 @@ class RecurringAssessment extends TranscriptCondition {
             .map((s) => s.completed!)
             .toList()
           ..sort();
-    if (completedDates.length < minCount) return false;
+    if (completedDates.isEmpty || completedDates.length < minCount) {
+      return false;
+    }
     return completedDates.last.difference(completedDates.first) >=
         minSpacing;
   }
@@ -172,9 +174,12 @@ class RecurringPlannerEntries extends TranscriptCondition {
 
   @override
   bool isMet(TranscriptContext context) {
-    if (context.plannerEntries.length < minCount) return false;
+    if (context.plannerEntries.isEmpty ||
+        context.plannerEntries.length < minCount) {
+      return false;
+    }
     final dates =
-        context.plannerEntries.map((e) => e.effectiveDate).toList()..sort();
+        context.plannerEntries.map((e) => e.createdAt).toList()..sort();
     return dates.last.difference(dates.first) >= minSpacing;
   }
 }
