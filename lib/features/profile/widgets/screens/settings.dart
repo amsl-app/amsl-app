@@ -1,5 +1,6 @@
 import 'package:amsl_app/authentication/async_login_provider.dart';
 import 'package:amsl_app/constants.dart';
+import 'package:amsl_app/features/modules/providers/module_configuration.dart';
 import 'package:amsl_app/features/profile/providers/user_provider.dart';
 import 'package:amsl_app/features/profile/providers/variant_provider.dart';
 import 'package:amsl_app/flavors.dart';
@@ -13,6 +14,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../widgets/buttons/rounded_corner_button.dart';
 import '../../../../widgets/dialogs/amsl_dialog.dart';
+import '../../../../widgets/error/error_bar.dart';
 import '../settings/settings_button.dart';
 
 class Settings extends HookConsumerWidget {
@@ -54,6 +56,36 @@ class Settings extends HookConsumerWidget {
                 icon: Icons.workspace_premium_outlined,
                 onTap: () {
                   context.goNamed('transcript_records');
+                },
+              ),
+              const Gap(16),
+              SettingsButton(
+                label: "Onboarding wiederholen",
+                icon: Icons.replay,
+                onTap: () {
+                  final onboarding = ref
+                      .read(moduleConfigurationProviderProvider)
+                      .asData
+                      ?.value
+                      .onboarding
+                      ?.module;
+                  if (onboarding == null) {
+                    showMessage(
+                      context,
+                      label: "Onboarding ist aktuell nicht verfügbar.",
+                    );
+                    return;
+                  }
+                  final session =
+                      onboarding.defaultSession ??
+                      onboarding.sessions.valueAt(0);
+                  context.pushNamed(
+                    'chat',
+                    pathParameters: {
+                      'moduleID': onboarding.id,
+                      'sessionID': session.id,
+                    },
+                  );
                 },
               ),
               if (journalEnabled) const Gap(16),

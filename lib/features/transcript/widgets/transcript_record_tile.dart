@@ -17,22 +17,40 @@ class TranscriptRecordTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final colors = theme.colorScheme;
+
+    final backgroundColor = record.unlocked
+        ? colors.tertiaryContainer
+        : colors.secondaryContainer.withValues(alpha: 0.08);
+    final badgeColor = record.unlocked
+        ? colors.tertiary
+        : colors.secondary.withValues(alpha: 0.15);
     final textColor = record.unlocked
-        ? theme.colorScheme.onSurface
-        : theme.colorScheme.onSurface.withValues(alpha: 0.5);
+        ? colors.onTertiaryContainer
+        : colors.onSurface.withValues(alpha: 0.15);
 
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: theme.colorScheme.surfaceContainer,
+        color: backgroundColor,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            record.title,
-            style: theme.textTheme.titleMedium!.copyWith(color: textColor),
+          Row(
+            children: [
+              Icon(Icons.workspace_premium, color: badgeColor, size: 28),
+              const Gap(8),
+              Expanded(
+                child: Text(
+                  record.title,
+                  style: theme.textTheme.titleMedium!.copyWith(
+                    color: textColor,
+                  ),
+                ),
+              ),
+            ],
           ),
           const Gap(4),
           Text(
@@ -51,14 +69,17 @@ class TranscriptRecordTile extends StatelessWidget {
                         : Icons.radio_button_unchecked,
                     size: 18,
                     color: requirement.met
-                        ? theme.colorScheme.primary
-                        : theme.colorScheme.onSurface.withValues(alpha: 0.4),
+                        ? colors.secondary
+                        : colors.onSurface.withValues(alpha: 0.4),
                   ),
                   const Gap(8),
                   Expanded(
                     child: Text(
                       requirement.label,
-                      style: theme.textTheme.bodySmall,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: requirement.met ? colors.secondary : null,
+                        fontWeight: requirement.met ? FontWeight.bold : null,
+                      ),
                     ),
                   ),
                 ],
@@ -70,8 +91,8 @@ class TranscriptRecordTile extends StatelessWidget {
             RoundedCornerButton(
               label: "Als PDF exportieren",
               icon: Icons.picture_as_pdf_outlined,
-              buttonColor: theme.colorScheme.primary,
-              labelColor: theme.colorScheme.onPrimary,
+              buttonColor: colors.tertiary,
+              labelColor: colors.onTertiary,
               onTap: () =>
                   TranscriptPdfGenerator.exportRecord(record, userId: userId!),
             ),

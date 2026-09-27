@@ -18,6 +18,11 @@ part 'transcript_records.g.dart';
 /// via `Future.wait`, any one of them failing surfaces as an error for
 /// this whole screen (consistent with how `moduleProvider` itself already
 /// composes multiple providers) rather than degrading per-condition.
+///
+/// TODO: [transcriptCatalog] is a hardcoded, frontend-only stand-in until
+/// the backend can serve transcript definitions — see the TODO on
+/// [transcriptCatalog] itself (`transcript_catalog.dart`). Once that lands,
+/// replace the `transcriptCatalog` reference below with a fetch.
 @Riverpod(
   dependencies: [
     ModuleNotifier,
@@ -45,21 +50,32 @@ Future<List<TranscriptRecord>> transcriptRecords(Ref ref) async {
     journalEntries: await journalEntriesFuture,
   );
 
-  return transcriptCatalog.map((definition) {
-    final requirements = definition.conditions
-        .map(
-          (condition) => TranscriptRequirement(
-            label: condition.label,
-            met: condition.isMet(context),
-          ),
-        )
-        .toList();
-    return TranscriptRecord(
-      id: definition.id,
-      title: definition.title,
-      description: definition.description,
-      unlocked: requirements.every((r) => r.met),
-      requirements: requirements,
-    );
-  }).toList();
+  // A definition is only shown if every condition it references actually
+  // exists for this user (the module/session/assessment was found) — an
+  // unresolvable condition could never be fulfilled, so showing it would
+  // just be a permanently-locked, frustrating dead end.
+  return transcriptCatalog
+      .where(
+        (definition) => definition.conditions.every(
+          (condition) => condition.existsIn(context),
+        ),
+      )
+      .map((definition) {
+        final requirements = definition.conditions
+            .map(
+              (condition) => TranscriptRequirement(
+                label: condition.label,
+                met: condition.isMet(context),
+              ),
+            )
+            .toList();
+        return TranscriptRecord(
+          id: definition.id,
+          title: definition.title,
+          description: definition.description,
+          unlocked: requirements.every((r) => r.met),
+          requirements: requirements,
+        );
+      })
+      .toList();
 }
