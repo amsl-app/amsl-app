@@ -1,6 +1,8 @@
 import 'dart:math';
 import 'dart:ui';
 
+import 'package:amsl_app/features/assessment/providers/assessment_sessions.dart';
+import 'package:amsl_app/features/assessment/providers/assessments.dart';
 import 'package:amsl_app/features/notifications/notification.dart';
 import 'package:amsl_app/features/preferences/preferences.dart';
 import 'package:amsl_app/features/profile/providers/variant_provider.dart';
@@ -70,6 +72,10 @@ class _AppScreenState extends ConsumerState<AppScreen>
         );
       }),
 
+      ref.listenManual(assessmentSessionsProvider, (previous, next) {
+        ref.read(assessmentPodProvider.notifier).reloadAssessments();
+      }),
+
       // Preference Listeners
       ref.listenManual<PreferencesState>(preferencesProvider, (previous, next) {
         final analyticsPermission = next.trackingPermission;
@@ -89,25 +95,28 @@ class _AppScreenState extends ConsumerState<AppScreen>
               ?.value,
         );
       }, fireImmediately: true),
+      ref.listenManual<AsyncValue<Variant>>(variantPodProvider, (
+        previous,
+        next,
+      ) {
+        final variantName = next.value?.variantName;
+        if (variantName != null) {
+          trackDimension(
+            dimension: TrackingDimension.variant,
+            value: variantName,
+          );
+        }
+      }),
     ]);
-
-    ref.listenManual<AsyncValue<Variant>>(variantPodProvider, (previous, next) {
-      final variantName = next.value?.variantName;
-      if (variantName != null) {
-        trackDimension(
-          dimension: TrackingDimension.variant,
-          value: variantName,
-        );
-      }
-    });
   }
 
   @override
   void dispose() {
+    log.info("AppScreenState dispose called");
     WidgetsBinding.instance.removeObserver(this);
-    // for (final listener in listeners) {
-    //   listener.close();
-    // }
+    for (final listener in listeners) {
+      listener.close();
+    }
     super.dispose();
   }
 

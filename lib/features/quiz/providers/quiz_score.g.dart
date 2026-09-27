@@ -46,7 +46,7 @@ final class QuizScoreProviderProvider
   QuizScoreProvider create() => QuizScoreProvider();
 }
 
-String _$quizScoreProviderHash() => r'3b99300e793f0635c5e350a81e11da3c0c43b4fd';
+String _$quizScoreProviderHash() => r'f83cfb4fb8270d50c1de53d39340a85cb066767a';
 
 abstract class _$QuizScoreProvider extends $AsyncNotifier<List<Score>> {
   FutureOr<List<Score>> build();

@@ -114,8 +114,8 @@ class QuizProvider extends _$QuizProvider {
     }
   }
 
-  void _upsertQuestionInQuiz(String quizId, Question updatedQuestion) {
-    update((state) async {
+  void _upsertQuestionInQuiz(String quizId, Question updatedQuestion) async {
+    await update((state) async {
       return state.map((quiz) {
         if (quiz.id == quizId) {
           final questionIndex = quiz.questions.indexWhere(

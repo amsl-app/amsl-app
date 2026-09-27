@@ -11,7 +11,6 @@ enum StorageKey {
   allowCrashReporting("allow_crash_reporting"),
   lastInteraction("lastInteraction"),
   lastSummaryTrigger("last_summary_trigger"),
-  showEvaluationHint("showEvaluationHint"),
   firstAssessmentDone("firstAssessmentDone"),
   hintAlreadyShown("hintAlreadyShown"),
   activateClickableSession("activate_clickable_session"),

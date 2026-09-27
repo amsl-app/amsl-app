@@ -1,3 +1,4 @@
+import 'package:amsl_app/features/assessment/widgets/screens/self_assessment_overview_screen.dart';
 import 'package:amsl_app/features/focus_timer/widgets/focus_timer.dart';
 import 'package:amsl_app/features/journal/widgets/screens/reflection_screen.dart';
 import 'package:amsl_app/features/modules/providers/module_configuration.dart';
@@ -22,14 +23,13 @@ Future<Map<String, Tool>> tools(Ref ref) async {
   final quizEnabled = moduleConfig.quizzableModules.isNotEmpty;
 
   return {
-    "focus_timer": Tool(
-      id: "focus_timer",
-      name: "Fokus Timer",
-      widget: const FocusTimer(),
+    "planner": Tool(
+      id: "planner",
+      name: "Planner",
+      widget: const PlannerScreen(),
       decoration: Builder(
         builder: (BuildContext context) {
           final theme = Theme.of(context);
-
           return Align(
             alignment: Alignment.centerRight,
             child: Container(
@@ -38,12 +38,10 @@ Future<Map<String, Tool>> tools(Ref ref) async {
                 heightFactor: 0.7,
                 child: AspectRatio(
                   aspectRatio: 1,
-                  child: Container(
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: theme.toolCardTheme.decorationColor,
-                    ),
+                  child: Icon(
+                    Icons.calendar_month,
+                    size: 58,
+                    color: theme.toolCardTheme.decorationColor,
                   ),
                 ),
               ),
@@ -52,6 +50,34 @@ Future<Map<String, Tool>> tools(Ref ref) async {
         },
       ),
     ),
+    if (variant.assessmentEnabled)
+      "self_assessment": Tool(
+        id: "self_assessment",
+        name: "Lernstrategien Assessment",
+        widget: const SelfAssessmentOverviewScreen(),
+        decoration: Builder(
+          builder: (BuildContext context) {
+            final theme = Theme.of(context);
+            return Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                padding: const EdgeInsets.only(right: 8),
+                child: FractionallySizedBox(
+                  heightFactor: 1,
+                  child: AspectRatio(
+                    aspectRatio: 1,
+                    child: Icon(
+                      Icons.checklist_outlined,
+                      size: 68,
+                      color: theme.toolCardTheme.decorationColor,
+                    ),
+                  ),
+                ),
+              ),
+            );
+          },
+        ),
+      ),
     if (variant.journalEnabled)
       "reflection": Tool(
         id: "reflection",
@@ -112,13 +138,14 @@ Future<Map<String, Tool>> tools(Ref ref) async {
           },
         ),
       ),
-    "planner": Tool(
-      id: "planner",
-      name: "Planner",
-      widget: const PlannerScreen(),
+    "focus_timer": Tool(
+      id: "focus_timer",
+      name: "Fokus Timer",
+      widget: const FocusTimer(),
       decoration: Builder(
         builder: (BuildContext context) {
           final theme = Theme.of(context);
+
           return Align(
             alignment: Alignment.centerRight,
             child: Container(
@@ -127,10 +154,12 @@ Future<Map<String, Tool>> tools(Ref ref) async {
                 heightFactor: 0.7,
                 child: AspectRatio(
                   aspectRatio: 1,
-                  child: Icon(
-                    Icons.calendar_month,
-                    size: 58,
-                    color: theme.toolCardTheme.decorationColor,
+                  child: Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: theme.toolCardTheme.decorationColor,
+                    ),
                   ),
                 ),
               ),
