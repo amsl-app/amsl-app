@@ -9,7 +9,7 @@ part of 'assessment.dart';
 Assessment _$AssessmentFromJson(Map<String, dynamic> json) => Assessment(
   assessmentId: json['assessment_id'] as String,
   title: json['title'] as String,
-  hidden: json['hidden'] as bool,
+  hidden: json['hidden'] as bool? ?? false,
   questions: (json['questions'] as List<dynamic>)
       .map((e) => Question.fromJson(e as Map<String, dynamic>))
       .toList(),

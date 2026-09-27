@@ -71,7 +71,7 @@ class SelfAssessmentContent extends StatelessWidget {
         children: [
           Text(
             "Mit diesem Tool kannst du deine Lernstrategie Skills überprüfen."
-            "Starte einen Assessment und sehe, was du schon gut kannst, welche Aspekte noch "
+            " Starte ein Assessment und sehe, was du schon gut kannst, welche Aspekte noch "
             "Raum für Verbesserung haben und wie sich dein Score über die Zeit "
             "entwickelt.",
             style: theme.textTheme.bodyMedium?.copyWith(
