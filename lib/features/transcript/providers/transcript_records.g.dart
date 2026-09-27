@@ -15,6 +15,11 @@ part of 'transcript_records.dart';
 /// via `Future.wait`, any one of them failing surfaces as an error for
 /// this whole screen (consistent with how `moduleProvider` itself already
 /// composes multiple providers) rather than degrading per-condition.
+///
+/// TODO: [transcriptCatalog] is a hardcoded, frontend-only stand-in until
+/// the backend can serve transcript definitions — see the TODO on
+/// [transcriptCatalog] itself (`transcript_catalog.dart`). Once that lands,
+/// replace the `transcriptCatalog` reference below with a fetch.
 
 @ProviderFor(transcriptRecords)
 final transcriptRecordsProvider = TranscriptRecordsProvider._();
@@ -26,6 +31,11 @@ final transcriptRecordsProvider = TranscriptRecordsProvider._();
 /// via `Future.wait`, any one of them failing surfaces as an error for
 /// this whole screen (consistent with how `moduleProvider` itself already
 /// composes multiple providers) rather than degrading per-condition.
+///
+/// TODO: [transcriptCatalog] is a hardcoded, frontend-only stand-in until
+/// the backend can serve transcript definitions — see the TODO on
+/// [transcriptCatalog] itself (`transcript_catalog.dart`). Once that lands,
+/// replace the `transcriptCatalog` reference below with a fetch.
 
 final class TranscriptRecordsProvider
     extends
@@ -44,6 +54,11 @@ final class TranscriptRecordsProvider
   /// via `Future.wait`, any one of them failing surfaces as an error for
   /// this whole screen (consistent with how `moduleProvider` itself already
   /// composes multiple providers) rather than degrading per-condition.
+  ///
+  /// TODO: [transcriptCatalog] is a hardcoded, frontend-only stand-in until
+  /// the backend can serve transcript definitions — see the TODO on
+  /// [transcriptCatalog] itself (`transcript_catalog.dart`). Once that lands,
+  /// replace the `transcriptCatalog` reference below with a fetch.
   TranscriptRecordsProvider._()
     : super(
         from: null,
@@ -54,6 +69,7 @@ final class TranscriptRecordsProvider
         dependencies: <ProviderOrFamily>[
           moduleProvider,
           assessmentSessionsProvider,
+          assessmentPodProvider,
           plannerPodProvider,
           goalPodProvider,
           milestonePodProvider,
@@ -73,6 +89,7 @@ final class TranscriptRecordsProvider
           TranscriptRecordsProvider.$allTransitiveDependencies10,
           TranscriptRecordsProvider.$allTransitiveDependencies11,
           TranscriptRecordsProvider.$allTransitiveDependencies12,
+          TranscriptRecordsProvider.$allTransitiveDependencies13,
         },
       );
 
@@ -89,13 +106,14 @@ final class TranscriptRecordsProvider
       ModuleNotifierProvider.$allTransitiveDependencies4;
   static final $allTransitiveDependencies6 =
       ModuleNotifierProvider.$allTransitiveDependencies5;
-  static final $allTransitiveDependencies7 = plannerPodProvider;
-  static final $allTransitiveDependencies8 = goalPodProvider;
-  static final $allTransitiveDependencies9 = milestonePodProvider;
-  static final $allTransitiveDependencies10 = journalProvider;
-  static final $allTransitiveDependencies11 =
-      JournalProvider.$allTransitiveDependencies4;
+  static final $allTransitiveDependencies7 = assessmentPodProvider;
+  static final $allTransitiveDependencies8 = plannerPodProvider;
+  static final $allTransitiveDependencies9 = goalPodProvider;
+  static final $allTransitiveDependencies10 = milestonePodProvider;
+  static final $allTransitiveDependencies11 = journalProvider;
   static final $allTransitiveDependencies12 =
+      JournalProvider.$allTransitiveDependencies4;
+  static final $allTransitiveDependencies13 =
       JournalProvider.$allTransitiveDependencies5;
 
   @override
@@ -113,4 +131,4 @@ final class TranscriptRecordsProvider
   }
 }
 
-String _$transcriptRecordsHash() => r'bb449196fb026e791b9994f767e50f1d090d4fe8';
+String _$transcriptRecordsHash() => r'30c882824e82528ffa4d990103d4d1de6e9e4001';

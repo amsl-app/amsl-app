@@ -76,14 +76,11 @@ class Settings extends HookConsumerWidget {
                     );
                     return;
                   }
-                  final session =
-                      onboarding.defaultSession ??
-                      onboarding.sessions.valueAt(0);
                   context.pushNamed(
                     'chat',
                     pathParameters: {
                       'moduleID': onboarding.id,
-                      'sessionID': session.id,
+                      'sessionID': onboarding.startSession.id,
                     },
                   );
                 },

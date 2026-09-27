@@ -156,12 +156,7 @@ class _AppScreenState extends ConsumerState<AppScreen>
     startOnboarding() {
       if (onboarding != null) {
         log.info("Starting onboarding module ${onboarding.id}");
-        Session session;
-        if (onboarding.defaultSession != null) {
-          session = onboarding.defaultSession!;
-        } else {
-          session = onboarding.sessions.valueAt(0);
-        }
+        Session session = onboarding.startSession;
         final visitedSessionIds = <String>{session.id};
         while (session.status == hikari_session.SessionStatus.finished &&
             session.next != null) {

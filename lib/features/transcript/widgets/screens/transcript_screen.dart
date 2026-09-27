@@ -38,7 +38,7 @@ class TranscriptScreen extends ConsumerWidget {
             if (records == null || records.isEmpty) {
               return Center(
                 child: Text(
-                  "Du hast noch keine Leistungsnachweise.",
+                  "Du hast keine Leistungsnachweise. Füge neue Module hinzu, um Leistungsnachweise zu freizuschalten.",
                   style: theme.textTheme.bodyLarge,
                   textAlign: TextAlign.center,
                 ),
@@ -47,10 +47,8 @@ class TranscriptScreen extends ConsumerWidget {
             return ListView.separated(
               itemCount: records.length,
               separatorBuilder: (context, index) => const Gap(12),
-              itemBuilder: (context, index) => TranscriptRecordTile(
-                record: records[index],
-                userId: userId,
-              ),
+              itemBuilder: (context, index) =>
+                  TranscriptRecordTile(record: records[index], userId: userId),
             );
           },
         ),

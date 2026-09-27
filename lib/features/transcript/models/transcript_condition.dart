@@ -1,4 +1,4 @@
-import 'package:amsl_app/models/hikari/modules/session.dart' show SessionStatus;
+import 'package:amsl_app/models/tori/assessments/assessment.dart';
 import 'package:amsl_app/models/tori/assessments/assessment_session.dart';
 import 'package:amsl_app/models/tori/journal/journal_entry.dart';
 import 'package:amsl_app/models/tori/modules/module_assessment.dart';
@@ -7,20 +7,13 @@ import 'package:amsl_app/models/tori/planner/planner_entry.dart';
 import 'package:amsl_app/models/tori/planner/planner_goal.dart';
 import 'package:amsl_app/models/tori/planner/planner_milestone.dart';
 
-/// A session counts as "started" if it's not in its initial state, or if it
-/// has a completion date — covering the case where a session was completed,
-/// then a fresh attempt was started and aborted (which may leave status back
-/// at `notStarted` without necessarily clearing `completion`). Neither case
-/// should be penalized.
-bool _isSessionStarted(Session session) =>
-    session.status != SessionStatus.notStarted || session.completion != null;
-
 /// Snapshot of already-loaded app data that [TranscriptCondition]s are
 /// evaluated against. Built fresh each time the transcript catalog is
 /// computed (see `transcript_records.dart`).
 class TranscriptContext {
   final Map<String, ModuleAssessmentSet> modules;
   final Map<String, ToriAssessmentSession> assessmentSessions;
+  final Map<String, Assessment> assessments;
   final List<PlannerEntry> plannerEntries;
   final Map<String, PlannerMilestone> milestones;
   final Map<String, PlannerGoal> goals;
@@ -29,6 +22,7 @@ class TranscriptContext {
   const TranscriptContext({
     required this.modules,
     required this.assessmentSessions,
+    required this.assessments,
     required this.plannerEntries,
     required this.milestones,
     required this.goals,
@@ -36,13 +30,20 @@ class TranscriptContext {
   });
 }
 
-/// Whether [assessmentId] is a real assessment configured on any of the
-/// user's modules (as their "pre" or "post" assessment) — as opposed to an
-/// ID that was never wired up, which could otherwise never be completed.
-bool _assessmentExists(TranscriptContext context, String assessmentId) =>
-    context.modules.values.any(
-      (m) => m.module.assessments?.values.contains(assessmentId) ?? false,
-    );
+/// Whether [assessmentId] is a real, non-hidden assessment known to the
+/// backend's assessment catalog — as opposed to an ID that was never wired
+/// up, which could otherwise never be completed.
+bool _assessmentExists(TranscriptContext context, String assessmentId) {
+  final assessment = context.assessments[assessmentId];
+  return assessment != null && !assessment.hidden;
+}
+
+/// The non-hidden sessions of the module identified by [moduleId], or null
+/// if that module doesn't exist.
+Iterable<Session>? _visibleSessions(
+  TranscriptContext context,
+  String moduleId,
+) => context.modules[moduleId]?.module.sessions.values.where((s) => !s.hide);
 
 /// A single unlock requirement for a transcript. [label] is the
 /// user-facing checklist text; [isMet] evaluates the requirement against
@@ -66,8 +67,6 @@ sealed class TranscriptCondition {
   bool existsIn(TranscriptContext context) => true;
 }
 
-/// Met when the session identified by [moduleId]/[sessionId] has a
-/// completion date.
 class SessionCompleted extends TranscriptCondition {
   final String moduleId;
   final String sessionId;
@@ -80,16 +79,13 @@ class SessionCompleted extends TranscriptCondition {
 
   @override
   bool isMet(TranscriptContext context) =>
-      context.modules[moduleId]?.module.sessions[sessionId]?.completion !=
-      null;
+      context.modules[moduleId]?.module.sessions[sessionId]?.completion != null;
 
   @override
   bool existsIn(TranscriptContext context) =>
       context.modules[moduleId]?.module.sessions[sessionId] != null;
 }
 
-/// Met when the module identified by [moduleId] has a completion date
-/// (i.e. all of its sessions are done).
 class ModuleCompleted extends TranscriptCondition {
   final String moduleId;
 
@@ -101,12 +97,11 @@ class ModuleCompleted extends TranscriptCondition {
       context.modules[moduleId]?.module.completion != null;
 
   @override
-  bool existsIn(TranscriptContext context) =>
-      context.modules[moduleId] != null;
+  bool existsIn(TranscriptContext context) => context.modules[moduleId] != null;
 }
 
 /// Met when the session identified by [moduleId]/[sessionId] has been
-/// started (see [_isSessionStarted]).
+/// started (see [Session.started]).
 class SessionStarted extends TranscriptCondition {
   final String moduleId;
   final String sessionId;
@@ -118,10 +113,8 @@ class SessionStarted extends TranscriptCondition {
   }) : super(label);
 
   @override
-  bool isMet(TranscriptContext context) {
-    final session = context.modules[moduleId]?.module.sessions[sessionId];
-    return session != null && _isSessionStarted(session);
-  }
+  bool isMet(TranscriptContext context) =>
+      context.modules[moduleId]?.module.sessions[sessionId]?.started ?? false;
 
   @override
   bool existsIn(TranscriptContext context) =>
@@ -129,7 +122,7 @@ class SessionStarted extends TranscriptCondition {
 }
 
 /// Met when any non-hidden session in the module identified by [moduleId]
-/// has been started (see [_isSessionStarted]).
+/// has been started.
 class ModuleStarted extends TranscriptCondition {
   final String moduleId;
 
@@ -137,22 +130,16 @@ class ModuleStarted extends TranscriptCondition {
     : super(label);
 
   @override
-  bool isMet(TranscriptContext context) {
-    final sessions = context.modules[moduleId]?.module.sessions.values;
-    if (sessions == null) return false;
-    return sessions.any((s) => !s.hide && _isSessionStarted(s));
-  }
+  bool isMet(TranscriptContext context) =>
+      _visibleSessions(context, moduleId)?.any((s) => s.started) ?? false;
 
   @override
   bool existsIn(TranscriptContext context) =>
-      context.modules[moduleId]?.module.sessions.values.any(
-        (s) => !s.hide,
-      ) ??
-      false;
+      _visibleSessions(context, moduleId)?.isNotEmpty ?? false;
 }
 
 /// Met when every non-hidden session in the module identified by [moduleId]
-/// has been started (see [_isSessionStarted]).
+/// has been started.
 class AllSessionsStarted extends TranscriptCondition {
   final String moduleId;
 
@@ -161,19 +148,14 @@ class AllSessionsStarted extends TranscriptCondition {
 
   @override
   bool isMet(TranscriptContext context) {
-    final sessions = context.modules[moduleId]?.module.sessions.values;
-    if (sessions == null) return false;
-    final visible = sessions.where((s) => !s.hide);
-    if (visible.isEmpty) return false;
-    return visible.every(_isSessionStarted);
+    final visible = _visibleSessions(context, moduleId);
+    if (visible == null || visible.isEmpty) return false;
+    return visible.every((s) => s.started);
   }
 
   @override
   bool existsIn(TranscriptContext context) =>
-      context.modules[moduleId]?.module.sessions.values.any(
-        (s) => !s.hide,
-      ) ??
-      false;
+      _visibleSessions(context, moduleId)?.isNotEmpty ?? false;
 }
 
 /// Met when at least one completed assessment session exists for
@@ -181,10 +163,8 @@ class AllSessionsStarted extends TranscriptCondition {
 class AssessmentCompleted extends TranscriptCondition {
   final String assessmentId;
 
-  const AssessmentCompleted({
-    required this.assessmentId,
-    required String label,
-  }) : super(label);
+  const AssessmentCompleted({required this.assessmentId, required String label})
+    : super(label);
 
   @override
   bool isMet(TranscriptContext context) => context.assessmentSessions.values
@@ -195,7 +175,6 @@ class AssessmentCompleted extends TranscriptCondition {
       _assessmentExists(context, assessmentId);
 }
 
-/// Met when at least [count] planner entries have been created.
 class MinPlannerEntries extends TranscriptCondition {
   final int count;
 
@@ -207,7 +186,6 @@ class MinPlannerEntries extends TranscriptCondition {
       context.plannerEntries.length >= count;
 }
 
-/// Met when at least [count] planner milestones have been created.
 class MinPlannerMilestones extends TranscriptCondition {
   final int count;
 
@@ -218,7 +196,6 @@ class MinPlannerMilestones extends TranscriptCondition {
   bool isMet(TranscriptContext context) => context.milestones.length >= count;
 }
 
-/// Met when at least [count] planner goals have been created.
 class MinPlannerGoals extends TranscriptCondition {
   final int count;
 
@@ -229,7 +206,6 @@ class MinPlannerGoals extends TranscriptCondition {
   bool isMet(TranscriptContext context) => context.goals.length >= count;
 }
 
-/// Met when at least [count] journal entries have been created.
 class MinJournalEntries extends TranscriptCondition {
   final int count;
 
@@ -267,8 +243,7 @@ class RecurringAssessment extends TranscriptCondition {
     if (completedDates.isEmpty || completedDates.length < minCount) {
       return false;
     }
-    return completedDates.last.difference(completedDates.first) >=
-        minSpacing;
+    return completedDates.last.difference(completedDates.first) >= minSpacing;
   }
 
   @override
@@ -294,8 +269,8 @@ class RecurringPlannerEntries extends TranscriptCondition {
         context.plannerEntries.length < minCount) {
       return false;
     }
-    final dates =
-        context.plannerEntries.map((e) => e.createdAt).toList()..sort();
+    final dates = context.plannerEntries.map((e) => e.createdAt).toList()
+      ..sort();
     return dates.last.difference(dates.first) >= minSpacing;
   }
 }

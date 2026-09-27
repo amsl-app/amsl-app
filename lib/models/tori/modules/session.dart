@@ -143,6 +143,13 @@ class Session {
     return false;
   }
 
+  /// Whether this session has been started: its status has moved past the
+  /// initial state, or it has a completion date. Checking both covers a
+  /// session that was completed, then a fresh attempt was started and
+  /// aborted (which may leave status back at `notStarted` without
+  /// necessarily clearing `completion`) — that shouldn't count as unstarted.
+  bool get started => status != SessionStatus.notStarted || completion != null;
+
   @override
   String toString() {
     return 'Session{module: $module, index: $index, id: $id, title: $title, status: $status, completion: $completion, lockedUntil: $lockedUntil, subtitle: $subtitle, description: $description, icon: $icon, banner: $banner, botflow: $botflow, text: $text, journalingType: $journalingType, next: ${next?.moduleId} - ${next?.sessionId} - force: ${next?.force}, metadata: $metadata, isLLm: $isLlm}';

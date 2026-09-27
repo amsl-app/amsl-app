@@ -19,14 +19,20 @@ class TranscriptRecordTile extends StatelessWidget {
     final theme = Theme.of(context);
     final colors = theme.colorScheme;
 
+    // Same blue hue for both states, so a locked tile reads as a faded
+    // version of its unlocked self rather than a different color entirely.
+    // Unlocked uses the app's dark navy `primary` as a card background
+    // (like a plaque), with the brighter secondaryContainer blue as the
+    // badge accent on top. Yellow is reserved as a small, deliberate accent
+    // (the met-requirement checkmarks below), not a second base color.
     final backgroundColor = record.unlocked
-        ? colors.tertiaryContainer
-        : colors.secondaryContainer.withValues(alpha: 0.08);
+        ? colors.primary
+        : colors.primary.withValues(alpha: 0.08);
     final badgeColor = record.unlocked
-        ? colors.tertiary
-        : colors.secondary.withValues(alpha: 0.15);
+        ? colors.secondaryContainer
+        : colors.secondaryContainer.withValues(alpha: 0.15);
     final textColor = record.unlocked
-        ? colors.onTertiaryContainer
+        ? colors.onPrimary
         : colors.onSurface.withValues(alpha: 0.15);
 
     return Container(
@@ -69,7 +75,7 @@ class TranscriptRecordTile extends StatelessWidget {
                         : Icons.radio_button_unchecked,
                     size: 18,
                     color: requirement.met
-                        ? colors.secondary
+                        ? colors.tertiary
                         : colors.onSurface.withValues(alpha: 0.4),
                   ),
                   const Gap(8),
@@ -77,7 +83,7 @@ class TranscriptRecordTile extends StatelessWidget {
                     child: Text(
                       requirement.label,
                       style: theme.textTheme.bodySmall?.copyWith(
-                        color: requirement.met ? colors.secondary : null,
+                        color: requirement.met ? colors.tertiary : null,
                         fontWeight: requirement.met ? FontWeight.bold : null,
                       ),
                     ),
@@ -91,8 +97,8 @@ class TranscriptRecordTile extends StatelessWidget {
             RoundedCornerButton(
               label: "Als PDF exportieren",
               icon: Icons.picture_as_pdf_outlined,
-              buttonColor: colors.tertiary,
-              labelColor: colors.onTertiary,
+              buttonColor: colors.secondary,
+              labelColor: colors.onSecondary,
               onTap: () =>
                   TranscriptPdfGenerator.exportRecord(record, userId: userId!),
             ),

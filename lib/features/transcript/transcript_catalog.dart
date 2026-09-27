@@ -11,10 +11,9 @@ import 'package:amsl_app/features/transcript/models/transcript_definition.dart';
 /// regardless of where the catalog data comes from, so once the backend can
 /// serve `TranscriptDefinition`s, this constant should be replaced by a
 /// fetch in `transcriptRecords` (`transcript_records.dart`).
+const _eightWeeks = Duration(days: 56);
+
 const List<TranscriptDefinition> transcriptCatalog = [
-  // Demo entry with a trivially-satisfied condition (any planner entry
-  // count is >= 0) so the unlocked visual state can be verified without
-  // real backend data. Remove once real catalog entries are configured.
   TranscriptDefinition(
     id: 'onboarding_completed',
     title: 'Onboarding abgeschlossen',
@@ -30,7 +29,8 @@ const List<TranscriptDefinition> transcriptCatalog = [
   TranscriptDefinition(
     id: 'session_module_planner_usage',
     title: 'AMSL-Nutzer',
-    description: 'Du hast die App kennengelernt und deinen Lernalltag strukturiert',
+    description:
+        'Du hast die App kennengelernt und deinen Lernalltag strukturiert',
     conditions: [
       AllSessionsStarted(
         moduleId: 'lernstrategien',
@@ -43,6 +43,10 @@ const List<TranscriptDefinition> transcriptCatalog = [
       AssessmentCompleted(
         assessmentId: 'LIST-K-META',
         label: 'Assessment zur Metakognition abgeschlossen',
+      ),
+      AssessmentCompleted(
+        assessmentId: 'LIST-K-RES',
+        label: 'Assessment zum Resource Management abgeschlossen',
       ),
       MinPlannerGoals(count: 1, label: '1 Ziel im Planer'),
       MinPlannerMilestones(count: 1, label: '1 Meilenstein im Planer'),
@@ -57,18 +61,26 @@ const List<TranscriptDefinition> transcriptCatalog = [
       RecurringAssessment(
         assessmentId: 'LIST-K-KOG',
         minCount: 2,
-        minSpacing: Duration(days: 56),
+        minSpacing: _eightWeeks,
         label: 'Assessment zur Kognition im Abstand von 8 Wochen wiederholt',
       ),
       RecurringAssessment(
         assessmentId: 'LIST-K-META',
         minCount: 2,
-        minSpacing: Duration(days: 56),
-        label: 'Assessment zur Metakognition im Abstand von 8 Wochen wiederholt',
+        minSpacing: _eightWeeks,
+        label:
+            'Assessment zur Metakognition im Abstand von 8 Wochen wiederholt',
+      ),
+      RecurringAssessment(
+        assessmentId: 'LIST-K-RES',
+        minCount: 2,
+        minSpacing: _eightWeeks,
+        label:
+            'Assessment zum Resource Management im Abstand von 8 Wochen wiederholt',
       ),
       RecurringPlannerEntries(
         minCount: 2,
-        minSpacing: Duration(days: 56),
+        minSpacing: _eightWeeks,
         label: 'Planer-Einträge über mind. 8 Wochen hinweg',
       ),
     ],
